@@ -54,6 +54,7 @@ namespace MazeCreator
                 dataGridView1.Columns.Add(c);
             }
             dataGridView1.Columns.RemoveAt(0);
+            ReloadColors();
         }
 
         private void Export(string path)
@@ -130,8 +131,26 @@ namespace MazeCreator
             return boxList;
         }
 
+        private void ReloadColors()
+        {
+            for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+            {
+                for (int j = 0; j < X_COUNT; j++)  {// Loop all columns
+                    SetCellBackColor(i, j);
+                }
+            }
+        }
 
-#region Tools
+        private void SetCellBackColor(int i, int j)
+        {
+            if (dataGridView1.Rows[i].Cells[j].Value != null && (bool)dataGridView1.Rows[i].Cells[j].Value)
+                dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Red;
+            else
+                dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+        }
+
+
+        #region Tools
         private void FillBorders()
         {
             for (int i = 0; i < Y_COUNT; i++)
@@ -147,18 +166,16 @@ namespace MazeCreator
                     dataGridView1.Rows[i].Cells[X_COUNT - 1].Value = true;
                 }
             }
+            ReloadColors();
         }
-#endregion
+        #endregion
 
 
-
-#region UI Handlers
+        #region UI Handlers
         private void fillBordersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FillBorders();
         }
-
-#endregion
 
         private void exportToSQLToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -172,6 +189,14 @@ namespace MazeCreator
             System.Diagnostics.Process.Start("https://github.com/RStijn/MazeCreator");
         }
 
-        
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            var sel = dataGridView1.SelectedCells[0];
+            SetCellBackColor(sel.RowIndex, sel.ColumnIndex);
+        }
+        #endregion
+
+
+
     }
 }
