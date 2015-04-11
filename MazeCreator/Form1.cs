@@ -19,7 +19,7 @@ namespace MazeCreator
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String[] mazeConfig = new String[12];
+            String[] mazeConfig = new String[11];
             mazeConfig[0] = textBox1.Text;
             mazeConfig[1] = textBox2.Text.Replace('.',',');
             mazeConfig[2] = textBox3.Text;
@@ -31,7 +31,6 @@ namespace MazeCreator
             mazeConfig[8] = textBox7.Text.Replace('.', ',');
             mazeConfig[9] = textBox8.Text.Replace('.', ',');
             mazeConfig[10] = textBox9.Text;
-            mazeConfig[11] = checkBox3.Checked.ToString();
             this.Hide();
             Creator c = new Creator(mazeConfig);
             try
