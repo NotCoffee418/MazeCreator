@@ -12,13 +12,14 @@ namespace MazeCreator
 {
     public partial class Creator : Form
     {
-        int     GAMEOBJECT;
-        double  SPACING;
-        int     WALLHEIGHT;
-        int     X_COUNT;
-        int     Y_COUNT;
-        bool    FLOOR;
-        bool    ROOF;
+        int         GAMEOBJECT;
+        double      SPACING;
+        int         WALLHEIGHT;
+        int         X_COUNT;
+        int         Y_COUNT;
+        bool        FLOOR;
+        bool        ROOF;
+        double[]    STARTCOORDS = new double[4]; // x,y,z,map
 
         public Creator(string[] mazeConfig)
         {
@@ -32,6 +33,10 @@ namespace MazeCreator
             Y_COUNT = int.Parse(mazeConfig[4]);
             FLOOR = bool.Parse(mazeConfig[5]);
             ROOF = bool.Parse(mazeConfig[6]);
+            STARTCOORDS[0] = double.Parse(mazeConfig[7]);
+            STARTCOORDS[1] = double.Parse(mazeConfig[8]);
+            STARTCOORDS[2] = double.Parse(mazeConfig[9]);
+            STARTCOORDS[3] = double.Parse(mazeConfig[10]);
 
             LoadTemplate();
             Show();
@@ -52,49 +57,66 @@ namespace MazeCreator
 
         private void Export(string path)
         {
-            GenerateMaze();
+            string sql = String.Empty;
+            List<double[]> maze = GenerateMaze();
+            foreach (double[] box in maze)
+            {
+                sql += "INSERT INTO `gameobject`(`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) "+
+                    "VALUES (" + GAMEOBJECT + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0,0);\n";
+
+            }
+
+            System.IO.File.WriteAllText(path, sql);
         }
 
         private List<double[]> GenerateMaze()
         {
+            // Generate object locations
             List<double[]> boxList = new List<double[]>();
             for (int i = 0; i < Y_COUNT; i++) // Loop all rows
             {
                 for (int j = 0; j < X_COUNT; j++)// Loop all columns 
                 {
-                    double[] box = new double[3];
+                    double[] box = new double[4]; // x,y,z,map
                     // Floor
                     if (FLOOR)
                     {
-                        box[0] = i * SPACING;
-                        box[1] = j * SPACING;
-                        box[2] = 0;
+                        box[0] = SPACING * i + STARTCOORDS[0];
+                        box[1] = SPACING * j + STARTCOORDS[1];
+                        box[2] = STARTCOORDS[2];
+                        box[3] = STARTCOORDS[3];
                         boxList.Add(box);
+                        box = new double[4];
                     }
 
                     // Walls
-                    if ((bool)dataGridView1.Rows[i].Cells[j].Value)
+                    if (dataGridView1.Rows[i].Cells[j].Value != null && (bool)dataGridView1.Rows[i].Cells[j].Value)
                     {
                         // Create wall
                         for (int k = 1; k <= WALLHEIGHT; k++)
                         {
-                            box[0] = i * SPACING;
-                            box[1] = j * SPACING;
-                            box[2] = k * SPACING;
+                            box[0] = SPACING * i + STARTCOORDS[0];
+                            box[1] = SPACING * j + STARTCOORDS[1];
+                            box[2] = SPACING * k + STARTCOORDS[2];
+                            box[3] = STARTCOORDS[3];
                             boxList.Add(box);
+                            box = new double[4];
                         }
                     }
 
                     // Roof
                     if (ROOF)
                     {
-                        box[0] = i * SPACING;
-                        box[1] = j * SPACING;
-                        box[2] = WALLHEIGHT + 1 * SPACING;
+                        box[0] = SPACING * i + STARTCOORDS[0];
+                        box[1] = SPACING * j + STARTCOORDS[1];
+                        box[2] = SPACING * (WALLHEIGHT + 1) + STARTCOORDS[2];
+                        box[3] = STARTCOORDS[3];
                         boxList.Add(box);
+                        box = new double[4];
                     }
                 }
             }
+
             return boxList;
         }
 
