@@ -20,6 +20,7 @@ namespace MazeCreator
         bool        FLOOR;
         bool        ROOF;
         double[]    STARTCOORDS = new double[4]; // x,y,z,map
+        bool        CREATE_GO_TEMPLATE;
 
         public Creator(string[] mazeConfig)
         {
@@ -37,6 +38,7 @@ namespace MazeCreator
             STARTCOORDS[1] = double.Parse(mazeConfig[8]);
             STARTCOORDS[2] = double.Parse(mazeConfig[9]);
             STARTCOORDS[3] = double.Parse(mazeConfig[10]);
+            CREATE_GO_TEMPLATE = bool.Parse(mazeConfig[11]);
 
             LoadTemplate();
             Show();
@@ -65,6 +67,11 @@ namespace MazeCreator
                     "VALUES (" + GAMEOBJECT + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0,0);\n";
 
             }
+
+            // Add gameobject_template for Maze Crate
+            if (CREATE_GO_TEMPLATE)
+                sql += "INSERT IGNORE INTO `mang_mangos`.`gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `mingold`, `maxgold`, `ScriptName`) " +
+                    "VALUES ('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '')";
 
             System.IO.File.WriteAllText(path, sql);
         }
@@ -155,6 +162,11 @@ namespace MazeCreator
             var save = saveFileDialog1.ShowDialog();
             if (save == DialogResult.OK) 
                 Export(saveFileDialog1.FileName);
+        }
+
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/RStijn/MazeCreator");
         }
 
         
