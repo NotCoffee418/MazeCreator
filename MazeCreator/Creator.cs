@@ -168,6 +168,20 @@ namespace MazeCreator
             }
             ReloadColors();
         }
+        private void FillMaze(bool empty=false)
+        {
+            for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+            {
+                for (int j = 0; j < X_COUNT; j++)// Loop all columns 
+                {
+                    if (empty)
+                        dataGridView1.Rows[i].Cells[j].Value = false;
+                    else
+                        dataGridView1.Rows[i].Cells[j].Value = true;
+                }
+            }
+            ReloadColors();
+        }
         #endregion
 
 
@@ -195,6 +209,16 @@ namespace MazeCreator
             SetCellBackColor(sel.RowIndex, sel.ColumnIndex);
         }
         #endregion
+
+        private void fillWholeMazeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FillMaze();
+        }
+
+        private void clearWholeMazeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FillMaze(empty:true);
+        }
 
 
 

@@ -33,11 +33,13 @@
             this.exportToSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillBordersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.autoGeneratesoonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.fillWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -73,6 +75,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fillBordersToolStripMenuItem,
+            this.fillWholeMazeToolStripMenuItem,
+            this.clearWholeMazeToolStripMenuItem,
             this.autoGeneratesoonToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
@@ -84,23 +88,6 @@
             this.fillBordersToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.fillBordersToolStripMenuItem.Text = "Fill borders";
             this.fillBordersToolStripMenuItem.Click += new System.EventHandler(this.fillBordersToolStripMenuItem_Click);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 24);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(976, 489);
-            this.dataGridView1.TabIndex = 2;
-            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.DefaultExt = "sql";
-            this.saveFileDialog1.FileName = "Maze";
-            this.saveFileDialog1.Filter = "SQL File|*.sql";
             // 
             // autoGeneratesoonToolStripMenuItem
             // 
@@ -119,9 +106,40 @@
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(0, 24);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(976, 489);
+            this.dataGridView1.TabIndex = 2;
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "sql";
+            this.saveFileDialog1.FileName = "Maze";
+            this.saveFileDialog1.Filter = "SQL File|*.sql";
+            // 
+            // fillWholeMazeToolStripMenuItem
+            // 
+            this.fillWholeMazeToolStripMenuItem.Name = "fillWholeMazeToolStripMenuItem";
+            this.fillWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.fillWholeMazeToolStripMenuItem.Text = "Fill maze";
+            this.fillWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.fillWholeMazeToolStripMenuItem_Click);
+            // 
+            // clearWholeMazeToolStripMenuItem
+            // 
+            this.clearWholeMazeToolStripMenuItem.Name = "clearWholeMazeToolStripMenuItem";
+            this.clearWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.clearWholeMazeToolStripMenuItem.Text = "Clear maze";
+            this.clearWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.clearWholeMazeToolStripMenuItem_Click);
             // 
             // Creator
             // 
@@ -153,5 +171,7 @@
         private System.Windows.Forms.ToolStripMenuItem autoGeneratesoonToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fillWholeMazeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearWholeMazeToolStripMenuItem;
     }
 }
