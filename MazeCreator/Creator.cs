@@ -7,11 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace MazeCreator
 {
     public partial class Creator : Form
     {
+        string    mazeConfigText; // for saving
         int         GAMEOBJECT;
         double      SPACING;
         int         WALLHEIGHT;
@@ -27,6 +29,7 @@ namespace MazeCreator
             InitializeComponent();
 
             // TODO: Complete member initialization
+            mazeConfigText = string.Join("|", mazeConfig);
             GAMEOBJECT = int.Parse(mazeConfig[0]);
             SPACING = double.Parse(mazeConfig[1]);
             WALLHEIGHT = int.Parse(mazeConfig[2]);
@@ -45,6 +48,13 @@ namespace MazeCreator
 
         private void LoadTemplate()
         {
+            // Clear datagrid
+            while (dataGridView1.Columns.Count > 0)
+            {
+                dataGridView1.Columns.RemoveAt(0);
+            }
+
+            // Set columns & rows
             dataGridView1.RowCount = Y_COUNT;
             for (int i = 0; i < X_COUNT; i++)
             {
@@ -74,10 +84,76 @@ namespace MazeCreator
 
             // Add gameobject_template for Maze Crate
             if (GAMEOBJECT == 745000)
-                sql += "INSERT IGNORE INTO `mang_mangos`.`gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `mingold`, `maxgold`, `ScriptName`) VALUES\n" +
+                sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `mingold`, `maxgold`, `ScriptName`) VALUES\n" +
                     "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');";
 
-            System.IO.File.WriteAllText(path, sql);
+            File.WriteAllText(path, sql);
+        }
+
+        private void OpenFile()
+        {
+            // Load file
+            string content = String.Empty;
+            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+                content = File.ReadAllText(openFileDialog1.FileName);
+            else return;
+            
+            // Load data
+            String[] data = content.Split('\n');
+
+            // set config
+            String[] mazeConfig = data[0].Split('|');
+            GAMEOBJECT = int.Parse(mazeConfig[0]);
+            SPACING = double.Parse(mazeConfig[1]);
+            WALLHEIGHT = int.Parse(mazeConfig[2]);
+            X_COUNT = int.Parse(mazeConfig[3]);
+            Y_COUNT = int.Parse(mazeConfig[4]);
+            FLOOR = bool.Parse(mazeConfig[5]);
+            ROOF = bool.Parse(mazeConfig[6]);
+            STARTCOORDS[0] = double.Parse(mazeConfig[7]);
+            STARTCOORDS[1] = double.Parse(mazeConfig[8]);
+            STARTCOORDS[2] = double.Parse(mazeConfig[9]);
+            STARTCOORDS[3] = double.Parse(mazeConfig[10]);
+            LoadTemplate();
+
+            // Load maze points
+            for (int i = 1; i < data.Count(); i++ )
+            {
+                // -1 because config line
+                int row = i-1;
+                int col = 0;
+                foreach (char c in data[i])
+                {
+                    bool v = false;
+                    if (c == '1') v = true;
+                    dataGridView1.Rows[row].Cells[col].Value = v;
+                    col++;
+                }
+            }
+            ReloadColors();
+        }
+
+        // Save file content
+        private void SaveFile()
+        {
+            // config
+            string content = mazeConfigText;
+            
+            // Maze
+            for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+            {
+                content += "\n";
+                for (int j = 0; j < X_COUNT; j++)// Loop all columns 
+                {
+                    if (dataGridView1.Rows[i].Cells[j].Value == null || !(bool)dataGridView1.Rows[i].Cells[j].Value)
+                        content += "0";
+                    else content += "1";
+                }
+            }
+            var save = saveToFileDialog.ShowDialog();
+            if (save == DialogResult.OK)
+                System.IO.File.WriteAllText(saveToFileDialog.FileName, content);
         }
 
         private List<double[]> GenerateMaze()
@@ -133,6 +209,7 @@ namespace MazeCreator
 
         private void ReloadColors()
         {
+            dataGridView1.ClearSelection();
             for (int i = 0; i < Y_COUNT; i++) // Loop all rows
             {
                 for (int j = 0; j < X_COUNT; j++)  {// Loop all columns
@@ -151,6 +228,7 @@ namespace MazeCreator
 
 
         #region Tools
+
         private void FillBorders()
         {
             for (int i = 0; i < Y_COUNT; i++)
@@ -193,9 +271,9 @@ namespace MazeCreator
 
         private void exportToSQLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var save = saveFileDialog1.ShowDialog();
+            var save = ExportSqlDialog.ShowDialog();
             if (save == DialogResult.OK) 
-                Export(saveFileDialog1.FileName);
+                Export(ExportSqlDialog.FileName);
         }
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -205,8 +283,13 @@ namespace MazeCreator
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            var sel = dataGridView1.SelectedCells[0];
-            SetCellBackColor(sel.RowIndex, sel.ColumnIndex);
+            try
+            {
+                var sel = dataGridView1.SelectedCells[0];
+                SetCellBackColor(sel.RowIndex, sel.ColumnIndex);
+            }
+            catch (Exception ex)
+            { }
         }
         #endregion
 
@@ -218,6 +301,16 @@ namespace MazeCreator
         private void clearWholeMazeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FillMaze(empty:true);
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFile();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFile();
         }
 
 

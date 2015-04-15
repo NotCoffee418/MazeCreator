@@ -53,12 +53,14 @@
             this.label13 = new System.Windows.Forms.Label();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBox1
             // 
             this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(137, 123);
+            this.textBox1.Location = new System.Drawing.Point(137, 139);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 20);
             this.textBox1.TabIndex = 8;
@@ -67,7 +69,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 126);
+            this.label1.Location = new System.Drawing.Point(12, 142);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(81, 13);
             this.label1.TabIndex = 1;
@@ -76,7 +78,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(243, 126);
+            this.label2.Location = new System.Drawing.Point(243, 142);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(80, 13);
             this.label2.TabIndex = 2;
@@ -85,7 +87,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 152);
+            this.label4.Location = new System.Drawing.Point(12, 168);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(119, 13);
             this.label4.TabIndex = 4;
@@ -94,7 +96,7 @@
             // textBox2
             // 
             this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(137, 149);
+            this.textBox2.Location = new System.Drawing.Point(137, 165);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 20);
             this.textBox2.TabIndex = 9;
@@ -103,7 +105,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 184);
+            this.label5.Location = new System.Drawing.Point(12, 200);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(62, 13);
             this.label5.TabIndex = 6;
@@ -111,7 +113,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(137, 181);
+            this.textBox3.Location = new System.Drawing.Point(137, 197);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 20);
             this.textBox3.TabIndex = 10;
@@ -120,7 +122,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(243, 188);
+            this.label7.Location = new System.Drawing.Point(243, 204);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(94, 13);
             this.label7.TabIndex = 10;
@@ -131,9 +133,9 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(12, 63);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(87, 13);
+            this.label8.Size = new System.Drawing.Size(56, 13);
             this.label8.TabIndex = 11;
-            this.label8.Text = "Amount of crates";
+            this.label8.Text = "Maze Size";
             // 
             // textBox4
             // 
@@ -165,7 +167,7 @@
             this.checkBox1.AutoSize = true;
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(15, 228);
+            this.checkBox1.Location = new System.Drawing.Point(15, 232);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(80, 17);
             this.checkBox1.TabIndex = 11;
@@ -177,7 +179,7 @@
             this.checkBox2.AutoSize = true;
             this.checkBox2.Checked = true;
             this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Location = new System.Drawing.Point(137, 228);
+            this.checkBox2.Location = new System.Drawing.Point(15, 257);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(78, 17);
             this.checkBox2.TabIndex = 12;
@@ -186,7 +188,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(246, 216);
+            this.button1.Location = new System.Drawing.Point(242, 236);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(91, 38);
             this.button1.TabIndex = 13;
@@ -274,7 +276,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(15, 98);
+            this.checkBox3.Location = new System.Drawing.Point(15, 114);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(231, 17);
             this.checkBox3.TabIndex = 7;
@@ -282,11 +284,32 @@
             this.checkBox3.UseVisualStyleBackColor = true;
             this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 83);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(216, 13);
+            this.label3.TabIndex = 27;
+            this.label3.Text = "Warning: Large mazes may cause server lag";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(137, 252);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(91, 24);
+            this.button2.TabIndex = 28;
+            this.button2.Text = "Open Maze File";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(350, 268);
+            this.ClientSize = new System.Drawing.Size(350, 288);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.textBox9);
@@ -346,6 +369,8 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button2;
     }
 }
 

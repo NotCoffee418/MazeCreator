@@ -33,13 +33,17 @@
             this.exportToSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillBordersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fillWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoGeneratesoonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.fillWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExportSqlDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -59,6 +63,8 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.saveToolStripMenuItem,
             this.exportToSQLToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -67,7 +73,7 @@
             // exportToSQLToolStripMenuItem
             // 
             this.exportToSQLToolStripMenuItem.Name = "exportToSQLToolStripMenuItem";
-            this.exportToSQLToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.exportToSQLToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exportToSQLToolStripMenuItem.Text = "Export to SQL";
             this.exportToSQLToolStripMenuItem.Click += new System.EventHandler(this.exportToSQLToolStripMenuItem_Click);
             // 
@@ -88,6 +94,20 @@
             this.fillBordersToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.fillBordersToolStripMenuItem.Text = "Fill borders";
             this.fillBordersToolStripMenuItem.Click += new System.EventHandler(this.fillBordersToolStripMenuItem_Click);
+            // 
+            // fillWholeMazeToolStripMenuItem
+            // 
+            this.fillWholeMazeToolStripMenuItem.Name = "fillWholeMazeToolStripMenuItem";
+            this.fillWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.fillWholeMazeToolStripMenuItem.Text = "Fill maze";
+            this.fillWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.fillWholeMazeToolStripMenuItem_Click);
+            // 
+            // clearWholeMazeToolStripMenuItem
+            // 
+            this.clearWholeMazeToolStripMenuItem.Name = "clearWholeMazeToolStripMenuItem";
+            this.clearWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.clearWholeMazeToolStripMenuItem.Text = "Clear maze";
+            this.clearWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.clearWholeMazeToolStripMenuItem_Click);
             // 
             // autoGeneratesoonToolStripMenuItem
             // 
@@ -121,25 +141,35 @@
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             // 
-            // saveFileDialog1
+            // ExportSqlDialog
             // 
-            this.saveFileDialog1.DefaultExt = "sql";
-            this.saveFileDialog1.FileName = "Maze";
-            this.saveFileDialog1.Filter = "SQL File|*.sql";
+            this.ExportSqlDialog.DefaultExt = "sql";
+            this.ExportSqlDialog.FileName = "Maze";
+            this.ExportSqlDialog.Filter = "SQL File|*.sql";
             // 
-            // fillWholeMazeToolStripMenuItem
+            // openToolStripMenuItem
             // 
-            this.fillWholeMazeToolStripMenuItem.Name = "fillWholeMazeToolStripMenuItem";
-            this.fillWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.fillWholeMazeToolStripMenuItem.Text = "Fill maze";
-            this.fillWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.fillWholeMazeToolStripMenuItem_Click);
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
-            // clearWholeMazeToolStripMenuItem
+            // saveToolStripMenuItem
             // 
-            this.clearWholeMazeToolStripMenuItem.Name = "clearWholeMazeToolStripMenuItem";
-            this.clearWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.clearWholeMazeToolStripMenuItem.Text = "Clear maze";
-            this.clearWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.clearWholeMazeToolStripMenuItem_Click);
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveToFileDialog
+            // 
+            this.saveToFileDialog.DefaultExt = "sql";
+            this.saveToFileDialog.FileName = "MyMaze";
+            this.saveToFileDialog.Filter = "Maze File|*.maze";
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "MyMaze.maze";
             // 
             // Creator
             // 
@@ -167,11 +197,15 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fillBordersToolStripMenuItem;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.SaveFileDialog ExportSqlDialog;
         private System.Windows.Forms.ToolStripMenuItem autoGeneratesoonToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fillWholeMazeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearWholeMazeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveToFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

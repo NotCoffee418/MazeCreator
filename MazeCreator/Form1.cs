@@ -59,5 +59,10 @@ namespace MazeCreator
                 textBox2.Enabled = false;
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("click 'Create Maze' and go to File > Open. (Still working on it)");
+        }
     }
 }
