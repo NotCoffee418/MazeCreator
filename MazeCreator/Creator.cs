@@ -13,7 +13,11 @@ namespace MazeCreator
 {
     public partial class Creator : Form
     {
-        string    mazeConfigText; // for saving
+        // vars
+        bool changedSinceSave = false;
+
+        // Config
+        string      mazeConfigText; // for saving
         int         GAMEOBJECT;
         double      SPACING;
         int         WALLHEIGHT;
@@ -24,12 +28,57 @@ namespace MazeCreator
         double[]    STARTCOORDS = new double[4]; // x,y,z,map
         bool        CREATE_GO_TEMPLATE;
 
-        public Creator(string[] mazeConfig)
+        public Creator(string data)
         {
             InitializeComponent();
+            LoadMaze(data);
+            Show();
+        }
 
-            // TODO: Complete member initialization
-            mazeConfigText = string.Join("|", mazeConfig);
+        private void OpenFile()
+        {
+            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            string saveData = String.Empty;
+            if (result == DialogResult.OK) // Test result.
+                saveData = File.ReadAllText(openFileDialog1.FileName);
+            else return;
+            LoadMaze(saveData);
+        }
+
+        private void LoadMaze(string data)
+        {
+            String[] rows = data.Split('\n');
+            LoadConfig(rows[0]);
+
+            if (rows.Count() > 1)
+                LoadSaveData(rows);
+        }
+
+        private void LoadSaveData(string[] rows)
+        {
+            // Load maze points
+            for (int i = 1; i < rows[1].Count(); i++)
+            {
+                // -1 because config line
+                int row = i - 1;
+                int col = 0;
+                foreach (char c in rows[i])
+                {
+                    bool v = false;
+                    if (c == '1') v = true;
+                    dataGridView1.Rows[row].Cells[col].Value = v;
+                    col++;
+                }
+            }
+            ReloadColors();
+        }
+
+        private void LoadConfig(string configString)
+        {
+            string[] mazeConfig = configString.Split('|');
+
+            // set config
+            mazeConfigText = configString;
             GAMEOBJECT = int.Parse(mazeConfig[0]);
             SPACING = double.Parse(mazeConfig[1]);
             WALLHEIGHT = int.Parse(mazeConfig[2]);
@@ -41,9 +90,7 @@ namespace MazeCreator
             STARTCOORDS[1] = double.Parse(mazeConfig[8]);
             STARTCOORDS[2] = double.Parse(mazeConfig[9]);
             STARTCOORDS[3] = double.Parse(mazeConfig[10]);
-
             LoadTemplate();
-            Show();
         }
 
         private void LoadTemplate()
@@ -72,7 +119,7 @@ namespace MazeCreator
             string sql = "INSERT INTO `gameobject`(`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES\n";
             string endLine = String.Empty;
             int curr = 0;
-            List<double[]> maze = GenerateMaze();
+            List<double[]> maze = GenerateMazeObjects();
             foreach (double[] box in maze)
             {
                 curr++;
@@ -90,73 +137,35 @@ namespace MazeCreator
             File.WriteAllText(path, sql);
         }
 
-        private void OpenFile()
-        {
-            // Load file
-            string content = String.Empty;
-            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
-            if (result == DialogResult.OK) // Test result.
-                content = File.ReadAllText(openFileDialog1.FileName);
-            else return;
-            
-            // Load data
-            String[] data = content.Split('\n');
-
-            // set config
-            String[] mazeConfig = data[0].Split('|');
-            GAMEOBJECT = int.Parse(mazeConfig[0]);
-            SPACING = double.Parse(mazeConfig[1]);
-            WALLHEIGHT = int.Parse(mazeConfig[2]);
-            X_COUNT = int.Parse(mazeConfig[3]);
-            Y_COUNT = int.Parse(mazeConfig[4]);
-            FLOOR = bool.Parse(mazeConfig[5]);
-            ROOF = bool.Parse(mazeConfig[6]);
-            STARTCOORDS[0] = double.Parse(mazeConfig[7]);
-            STARTCOORDS[1] = double.Parse(mazeConfig[8]);
-            STARTCOORDS[2] = double.Parse(mazeConfig[9]);
-            STARTCOORDS[3] = double.Parse(mazeConfig[10]);
-            LoadTemplate();
-
-            // Load maze points
-            for (int i = 1; i < data.Count(); i++ )
-            {
-                // -1 because config line
-                int row = i-1;
-                int col = 0;
-                foreach (char c in data[i])
-                {
-                    bool v = false;
-                    if (c == '1') v = true;
-                    dataGridView1.Rows[row].Cells[col].Value = v;
-                    col++;
-                }
-            }
-            ReloadColors();
-        }
-
         // Save file content
-        private void SaveFile()
+        private bool SaveFile()
         {
-            // config
-            string content = mazeConfigText;
-            
-            // Maze
-            for (int i = 0; i < Y_COUNT; i++) // Loop all rows
-            {
-                content += "\n";
-                for (int j = 0; j < X_COUNT; j++)// Loop all columns 
-                {
-                    if (dataGridView1.Rows[i].Cells[j].Value == null || !(bool)dataGridView1.Rows[i].Cells[j].Value)
-                        content += "0";
-                    else content += "1";
-                }
-            }
             var save = saveToFileDialog.ShowDialog();
             if (save == DialogResult.OK)
+            {
+                // config
+                string content = mazeConfigText;
+
+                // Maze
+                for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+                {
+                    content += "\n";
+                    for (int j = 0; j < X_COUNT; j++)// Loop all columns 
+                    {
+                        if (dataGridView1.Rows[i].Cells[j].Value == null || !(bool)dataGridView1.Rows[i].Cells[j].Value)
+                            content += "0";
+                        else content += "1";
+                    }
+                }
+
                 System.IO.File.WriteAllText(saveToFileDialog.FileName, content);
+                changedSinceSave = false;
+                return true;
+            }
+            else return false;
         }
 
-        private List<double[]> GenerateMaze()
+        private List<double[]> GenerateMazeObjects()
         {
             // Generate object locations
             List<double[]> boxList = new List<double[]>();
@@ -287,11 +296,11 @@ namespace MazeCreator
             {
                 var sel = dataGridView1.SelectedCells[0];
                 SetCellBackColor(sel.RowIndex, sel.ColumnIndex);
+                changedSinceSave = true;
             }
             catch (Exception ex)
             { }
         }
-        #endregion
 
         private void fillWholeMazeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -308,12 +317,37 @@ namespace MazeCreator
             OpenFile();
         }
 
+
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFile();
         }
 
+        private void Creator_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Environment.Exit(0);
+        }
 
+        private void Creator_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (changedSinceSave)
+            {
+                DialogResult result = MessageBox.Show(
+                    "Would you like to save your changes before you close?",
+                    "Save", MessageBoxButtons.YesNoCancel);
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        if (!SaveFile()) 
+                            e.Cancel = true;
+                        break;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                }
+            }
 
+        }
+        #endregion
     }
 }
