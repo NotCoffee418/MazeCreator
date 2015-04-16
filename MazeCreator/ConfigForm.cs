@@ -11,9 +11,9 @@ using System.IO;
 
 namespace MazeCreator
 {
-    public partial class Form1 : Form
+    public partial class ConfigForm : Form
     {
-        public Form1()
+        public ConfigForm()
         {
             InitializeComponent();
         }
@@ -23,15 +23,15 @@ namespace MazeCreator
             try
             {
                 string mazeConfig = textBox1.Text+
-                '|' + textBox2.Text + // .Replace('.', ',') +
+                '|' + SafeDouble(textBox2.Text) +
                 '|' + textBox3.Text +
                 '|' + textBox4.Text +
                 '|' + textBox5.Text +
                 '|' + checkBox1.Checked.ToString() +
                 '|' + checkBox2.Checked.ToString() +
-                '|' + textBox6.Text + // .Replace('.', ',') + 
-                '|' + textBox7.Text + // .Replace('.', ',') +
-                '|' + textBox8.Text + // .Replace('.', ',') +
+                '|' + SafeDouble(textBox6.Text) +
+                '|' + SafeDouble(textBox7.Text) +
+                '|' + SafeDouble(textBox8.Text) +
                 '|' + textBox9.Text;
                 this.Hide();
                 Creator c = new Creator(mazeConfig);
@@ -40,6 +40,34 @@ namespace MazeCreator
             {
                 MessageBox.Show("Some information was incorrectly entered.");
                 Environment.Exit(0);
+            }
+        }
+
+        /// <summary>
+        /// Makes sure input value doesn't become corrupted.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        private string SafeDouble(string p)
+        {
+            // Split double into parts
+            p = p.Replace('.', ',');
+            string[] n = p.Split(',');
+
+            int max = 8;
+            if (n[0].StartsWith("-")) max = 9;
+            if (n[0].Length > max) throw new Exception();
+
+            switch(n.Count())
+            {
+                case 1: 
+                    return n[0];
+                case 2:
+                    while (n[1].Length > 8) // Remove excessive numbers
+                        n[1] = n[1].Remove(n[1].Length - 1);
+                    return n[0] + ',' + n[1];
+                default: 
+                    throw new Exception();
             }
         }
 
