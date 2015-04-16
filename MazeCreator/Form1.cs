@@ -23,15 +23,15 @@ namespace MazeCreator
             try
             {
                 string mazeConfig = textBox1.Text+
-                '|' + textBox2.Text.Replace('.', ',') +
+                '|' + textBox2.Text + // .Replace('.', ',') +
                 '|' + textBox3.Text +
                 '|' + textBox4.Text +
                 '|' + textBox5.Text +
                 '|' + checkBox1.Checked.ToString() +
                 '|' + checkBox2.Checked.ToString() +
-                '|' + textBox6.Text.Replace('.', ',') +
-                '|' + textBox7.Text.Replace('.', ',') +
-                '|' + textBox8.Text.Replace('.', ',') +
+                '|' + textBox6.Text + // .Replace('.', ',') + 
+                '|' + textBox7.Text + // .Replace('.', ',') +
+                '|' + textBox8.Text + // .Replace('.', ',') +
                 '|' + textBox9.Text;
                 this.Hide();
                 Creator c = new Creator(mazeConfig);
