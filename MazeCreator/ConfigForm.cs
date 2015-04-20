@@ -32,34 +32,47 @@ namespace MazeCreator
 
         private void saveConfigButton_Click(object sender, EventArgs e)
         {
+            Program.creator.StoreMazeData();
             SetConfig();
+            Program.creator.LoadData(); // from stored
+            this.Hide();
+            Program.creator.Show();
         }
 
         private void openMazeButton_Click(object sender, EventArgs e)
         {
-
             Program.creator.OpenFile();
             this.Hide();
             Program.creator.Show();
         }
 
-        public void SetConfig(string mazeData = "")
+        /// <summary>
+        /// Loads config string to config form
+        /// </summary>
+        /// <param name="p"></param>
+        internal void LoadConfig(string configString)
+        {
+            string[] config = configString.Split('|');
+            objectIdTextBox.Text = config[0];
+            objectSpacingTextBox.Text = config[1];
+            wallHeightTextBox.Text = config[2];
+            xCountTextBox.Text = config[3];
+            yCountTextBox.Text = config[4];
+            floorCheckBox.Checked = bool.Parse(config[5]);
+            roofCheckBox.Checked = bool.Parse(config[6]);
+            xTextBox.Text = config[7];
+            yTextBox.Text = config[8];
+            zTextBox.Text = config[9];
+            mapTextBox.Text = config[10];
+        }
+
+        /// <summary>
+        /// Sets config form settings in Creator.
+        /// </summary>
+        public void SetConfig()
         {
             //try
             //{
-                // Set config text
-                Program.creator.mazeConfigText = objectIdTextBox.Text +
-                '|' + SafeDouble(objectSpacingTextBox.Text) +
-                '|' + wallHeightTextBox.Text +
-                '|' + xCountTextBox.Text +
-                '|' + yCountTextBox.Text +
-                '|' + floorCheckBox.Checked.ToString() +
-                '|' + roofCheckBox.Checked.ToString() +
-                '|' + SafeDouble(xTextBox.Text) +
-                '|' + SafeDouble(yTextBox.Text) +
-                '|' + SafeDouble(zTextBox.Text) +
-                '|' + mapTextBox.Text;
-
                 // Set creator data
                 Program.creator.GAMEOBJECT = int.Parse(objectIdTextBox.Text);
                 Program.creator.SPACING = double.Parse(SafeDouble(objectSpacingTextBox.Text));
@@ -73,15 +86,20 @@ namespace MazeCreator
                 Program.creator.STARTCOORDS[2] = double.Parse(SafeDouble(zTextBox.Text));
                 Program.creator.STARTCOORDS[3] = int.Parse(mapTextBox.Text);
 
-                // store any maze data
-                if (mazeData == "") mazeData = Program.creator.GetMazeData();
-                string loadData = Program.creator.mazeConfigText + '\n' + mazeData;
-
-
-                // Switch to creator
-                this.Hide();
-                Program.creator.LoadMaze(loadData);
-                Program.creator.Show();
+                // Set config text
+                if (Program.creator.MAZEDATA == null)
+                    Program.creator.MAZEDATA = new string[Program.creator.Y_COUNT + 1];
+                Program.creator.MAZEDATA[0] = objectIdTextBox.Text +
+                '|' + SafeDouble(objectSpacingTextBox.Text) +
+                '|' + wallHeightTextBox.Text +
+                '|' + xCountTextBox.Text +
+                '|' + yCountTextBox.Text +
+                '|' + floorCheckBox.Checked.ToString() +
+                '|' + roofCheckBox.Checked.ToString() +
+                '|' + SafeDouble(xTextBox.Text) +
+                '|' + SafeDouble(yTextBox.Text) +
+                '|' + SafeDouble(zTextBox.Text) +
+                '|' + mapTextBox.Text;
             /*}
             catch (Exception ex)
             {
@@ -134,7 +152,5 @@ namespace MazeCreator
                 objectSpacingTextBox.Enabled = false;
             }
         }
-
-       
     }
 }
