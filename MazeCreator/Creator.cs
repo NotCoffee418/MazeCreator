@@ -17,7 +17,7 @@ namespace MazeCreator
         bool changedSinceSave = false;
 
         // Config
-        public string   mazeConfigText; // for saving
+        public string[] MAZEDATA;
         public int      GAMEOBJECT;
         public double   SPACING;
         public int      WALLHEIGHT;
@@ -40,6 +40,10 @@ namespace MazeCreator
             if (result == DialogResult.OK) // Test result.
                 saveData = File.ReadAllText(openFileDialog1.FileName);
             else return;
+
+            string[] data = saveData.Split('\n');
+            Program.configForm.LoadConfig(data[0]);
+            Program.configForm.SetConfig();
             LoadMaze(saveData);
         }
 
@@ -53,7 +57,7 @@ namespace MazeCreator
                 LoadData(rows);
         }
 
-        private void LoadData(string[] rows)
+        public void LoadData(string[] rows = null)
         {
             // Clear datagrid
             while (mazeGrid.Columns.Count > 0)
@@ -72,17 +76,25 @@ namespace MazeCreator
                 mazeGrid.Columns.RemoveAt(0);
 
             // Load maze points
-            for (int i = 1; i <= rows[1].Count(); i++)
+            if (rows == null)
+                rows = MAZEDATA;
+            if (rows[0] != "" && rows[1] != null)
             {
-                // -1 because config line
-                int row = i - 1;
-                int col = 0;
-                foreach (char c in rows[i])
+                for (int i = 1; i <= rows[1].Count(); i++)
                 {
-                    bool v = false;
-                    if (c == '1') v = true;
-                    mazeGrid.Rows[row].Cells[col].Value = v;
-                    col++;
+                    // -1 because config line
+                    int row = i - 1;
+                    int col = 0;
+                    foreach (char c in rows[i])
+                    {
+                        if (c != '\r')
+                        {
+                            bool v = false;
+                            if (c == '1') v = true;
+                            mazeGrid.Rows[row].Cells[col].Value = v;
+                            col++;
+                        }
+                    }
                 }
             }
             ReloadColors();
@@ -117,21 +129,38 @@ namespace MazeCreator
             var save = saveToFileDialog.ShowDialog();
             if (save == DialogResult.OK)
             {
-                string content = mazeConfigText + '\n' + GetMazeData();
+                Program.creator.StoreMazeData();
+                Program.configForm.SetConfig();
 
-                System.IO.File.WriteAllText(saveToFileDialog.FileName, content);
+                System.IO.File.WriteAllLines(saveToFileDialog.FileName, MAZEDATA);
                 changedSinceSave = false;
                 return true;
             }
             else return false;
         }
 
+        /// <summary>
+        /// Saves current maze data to MAZEDATA
+        /// </summary>
+        internal void StoreMazeData()
+        {
+            string[] d = GetMazeData().Split('\n');
+            MAZEDATA = new string[d.Count() + 1];
+            for (int i = 0; i < d.Count(); i++)
+                MAZEDATA[i + 1] = d[i];
+        }
+
+        /// <summary>
+        /// Returns maze as string
+        /// </summary>
+        /// <returns></returns>
         public string GetMazeData()
         {
             // config
             string content = String.Empty;
             try
             {
+                mazeGrid.EndEdit();
                 // Maze
                 for (int i = 0; i < Y_COUNT; i++) // Loop all rows
                 {
@@ -338,6 +367,6 @@ namespace MazeCreator
             Program.configForm.DisplayConfigForm();
             this.Hide();
         }
-        #endregion
+        #endregion        
     }
 }
