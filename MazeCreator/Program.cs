@@ -8,6 +8,9 @@ namespace MazeCreator
 {
     static class Program
     {
+        public static ConfigForm configForm;
+        public static Creator creator;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -16,7 +19,10 @@ namespace MazeCreator
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ConfigForm());
+
+            configForm = new ConfigForm();
+            creator = new Creator();
+            Application.Run(configForm);
         }
     }
 }

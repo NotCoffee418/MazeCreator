@@ -17,25 +17,23 @@ namespace MazeCreator
         bool changedSinceSave = false;
 
         // Config
-        string      mazeConfigText; // for saving
-        int         GAMEOBJECT;
-        double      SPACING;
-        int         WALLHEIGHT;
-        int         X_COUNT;
-        int         Y_COUNT;
-        bool        FLOOR;
-        bool        ROOF;
-        double[]    STARTCOORDS = new double[4]; // x,y,z,map
-        bool        CREATE_GO_TEMPLATE;
+        public string   mazeConfigText; // for saving
+        public int      GAMEOBJECT;
+        public double   SPACING;
+        public int      WALLHEIGHT;
+        public int      X_COUNT;
+        public int      Y_COUNT;
+        public bool     FLOOR;
+        public bool     ROOF;
+        public double[] STARTCOORDS = new double[4]; // x,y,z,map
+        public bool     CREATE_GO_TEMPLATE;
 
-        public Creator(string data)
+        public Creator()
         {
             InitializeComponent();
-            LoadMaze(data);
-            Show();
         }
 
-        private void OpenFile()
+        public void OpenFile()
         {
             DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
             string saveData = String.Empty;
@@ -45,19 +43,36 @@ namespace MazeCreator
             LoadMaze(saveData);
         }
 
-        private void LoadMaze(string data)
+        public void LoadMaze(string data)
         {
-            String[] rows = data.Split('\n');
-            LoadConfig(rows[0]);
-
+            LoadMaze(data.Split('\n'));
+        }
+        public void LoadMaze(string[] rows)
+        {
             if (rows.Count() > 1)
-                LoadSaveData(rows);
+                LoadData(rows);
         }
 
-        private void LoadSaveData(string[] rows)
+        private void LoadData(string[] rows)
         {
+            // Clear datagrid
+            while (mazeGrid.Columns.Count > 0)
+                mazeGrid.Columns.RemoveAt(0);
+
+            // Set columns & rows
+            mazeGrid.RowCount = Y_COUNT;
+            for (int i = 0; i < X_COUNT; i++)
+            {
+                DataGridViewColumn c = new DataGridViewCheckBoxColumn();
+                c.Width = 20;
+                c.HeaderText = (i + 1).ToString();
+                mazeGrid.Columns.Add(c);
+            }
+            if (mazeGrid.Columns.Count == 1 + X_COUNT)
+                mazeGrid.Columns.RemoveAt(0);
+
             // Load maze points
-            for (int i = 1; i < rows[1].Count(); i++)
+            for (int i = 1; i <= rows[1].Count(); i++)
             {
                 // -1 because config line
                 int row = i - 1;
@@ -66,51 +81,10 @@ namespace MazeCreator
                 {
                     bool v = false;
                     if (c == '1') v = true;
-                    dataGridView1.Rows[row].Cells[col].Value = v;
+                    mazeGrid.Rows[row].Cells[col].Value = v;
                     col++;
                 }
             }
-            ReloadColors();
-        }
-
-        private void LoadConfig(string configString)
-        {
-            string[] mazeConfig = configString.Split('|');
-
-            // set config
-            mazeConfigText = configString;
-            GAMEOBJECT = int.Parse(mazeConfig[0]);
-            SPACING = double.Parse(mazeConfig[1]);
-            WALLHEIGHT = int.Parse(mazeConfig[2]);
-            X_COUNT = int.Parse(mazeConfig[3]);
-            Y_COUNT = int.Parse(mazeConfig[4]);
-            FLOOR = bool.Parse(mazeConfig[5]);
-            ROOF = bool.Parse(mazeConfig[6]);
-            STARTCOORDS[0] = double.Parse(mazeConfig[7]);
-            STARTCOORDS[1] = double.Parse(mazeConfig[8]);
-            STARTCOORDS[2] = double.Parse(mazeConfig[9]);
-            STARTCOORDS[3] = double.Parse(mazeConfig[10]);
-            LoadTemplate();
-        }
-
-        private void LoadTemplate()
-        {
-            // Clear datagrid
-            while (dataGridView1.Columns.Count > 0)
-            {
-                dataGridView1.Columns.RemoveAt(0);
-            }
-
-            // Set columns & rows
-            dataGridView1.RowCount = Y_COUNT;
-            for (int i = 0; i < X_COUNT; i++)
-            {
-                DataGridViewColumn c = new DataGridViewCheckBoxColumn();
-                c.Width = 20;
-                c.HeaderText = (i+1).ToString();
-                dataGridView1.Columns.Add(c);
-            }
-            dataGridView1.Columns.RemoveAt(0);
             ReloadColors();
         }
 
@@ -143,26 +117,35 @@ namespace MazeCreator
             var save = saveToFileDialog.ShowDialog();
             if (save == DialogResult.OK)
             {
-                // config
-                string content = mazeConfigText;
-
-                // Maze
-                for (int i = 0; i < Y_COUNT; i++) // Loop all rows
-                {
-                    content += "\n";
-                    for (int j = 0; j < X_COUNT; j++)// Loop all columns 
-                    {
-                        if (dataGridView1.Rows[i].Cells[j].Value == null || !(bool)dataGridView1.Rows[i].Cells[j].Value)
-                            content += "0";
-                        else content += "1";
-                    }
-                }
+                string content = mazeConfigText + '\n' + GetMazeData();
 
                 System.IO.File.WriteAllText(saveToFileDialog.FileName, content);
                 changedSinceSave = false;
                 return true;
             }
             else return false;
+        }
+
+        public string GetMazeData()
+        {
+            // config
+            string content = String.Empty;
+            try
+            {
+                // Maze
+                for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+                {
+                    for (int j = 0; j < X_COUNT; j++)// Loop all columns 
+                    {
+                        if (mazeGrid.Rows[i].Cells[j].Value == null || !(bool)mazeGrid.Rows[i].Cells[j].Value)
+                            content += "0";
+                        else content += "1";
+                    }
+                    if (i < Y_COUNT-1) content += "\n";
+                }
+            }
+            catch (Exception e)  { }
+            return content;
         }
 
         private List<double[]> GenerateMazeObjects()
@@ -186,7 +169,7 @@ namespace MazeCreator
                     }
 
                     // Walls
-                    if (dataGridView1.Rows[i].Cells[j].Value != null && (bool)dataGridView1.Rows[i].Cells[j].Value)
+                    if (mazeGrid.Rows[i].Cells[j].Value != null && (bool)mazeGrid.Rows[i].Cells[j].Value)
                     {
                         // Create wall
                         for (int k = 1; k <= WALLHEIGHT; k++)
@@ -218,10 +201,11 @@ namespace MazeCreator
 
         private void ReloadColors()
         {
-            dataGridView1.ClearSelection();
+            mazeGrid.ClearSelection();
             for (int i = 0; i < Y_COUNT; i++) // Loop all rows
             {
-                for (int j = 0; j < X_COUNT; j++)  {// Loop all columns
+                for (int j = 0; j < X_COUNT; j++)
+                {// Loop all columns
                     SetCellBackColor(i, j);
                 }
             }
@@ -229,10 +213,10 @@ namespace MazeCreator
 
         private void SetCellBackColor(int i, int j)
         {
-            if (dataGridView1.Rows[i].Cells[j].Value != null && (bool)dataGridView1.Rows[i].Cells[j].Value)
-                dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Red;
+            if (mazeGrid.Rows[i].Cells[j].Value != null && (bool)mazeGrid.Rows[i].Cells[j].Value)
+                mazeGrid.Rows[i].Cells[j].Style.BackColor = Color.Red;
             else
-                dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+                mazeGrid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
         }
 
 
@@ -245,12 +229,12 @@ namespace MazeCreator
                 if (i == 0 || i == Y_COUNT - 1)
                 {
                     for (int j = 0; j < X_COUNT; j++)
-                        dataGridView1.Rows[i].Cells[j].Value = true;
+                        mazeGrid.Rows[i].Cells[j].Value = true;
                 }
                 else
                 {
-                    dataGridView1.Rows[i].Cells[0].Value = true;
-                    dataGridView1.Rows[i].Cells[X_COUNT - 1].Value = true;
+                    mazeGrid.Rows[i].Cells[0].Value = true;
+                    mazeGrid.Rows[i].Cells[X_COUNT - 1].Value = true;
                 }
             }
             ReloadColors();
@@ -262,9 +246,9 @@ namespace MazeCreator
                 for (int j = 0; j < X_COUNT; j++)// Loop all columns 
                 {
                     if (empty)
-                        dataGridView1.Rows[i].Cells[j].Value = false;
+                        mazeGrid.Rows[i].Cells[j].Value = false;
                     else
-                        dataGridView1.Rows[i].Cells[j].Value = true;
+                        mazeGrid.Rows[i].Cells[j].Value = true;
                 }
             }
             ReloadColors();
@@ -294,7 +278,7 @@ namespace MazeCreator
         {
             try
             {
-                var sel = dataGridView1.SelectedCells[0];
+                var sel = mazeGrid.SelectedCells[0];
                 SetCellBackColor(sel.RowIndex, sel.ColumnIndex);
                 changedSinceSave = true;
             }
@@ -347,6 +331,12 @@ namespace MazeCreator
                 }
             }
 
+        }
+
+        private void changeConfigToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.configForm.DisplayConfigForm();
+            this.Hide();
         }
         #endregion
     }
