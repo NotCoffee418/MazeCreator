@@ -41,9 +41,17 @@ namespace MazeCreator
                 saveData = File.ReadAllText(openFileDialog1.FileName);
             else return;
 
-            string[] data = saveData.Split('\n');
-            Program.configForm.LoadConfig(data[0]);
-            Program.configForm.SetConfig();
+            // Opens and cleans file
+            string[] temp = saveData.Split('\n');
+            List<string> cleanData = new List<string>();
+            foreach (string s in temp)
+            {
+                string v = s.Replace("\r","");
+                if (v != String.Empty)
+                    cleanData.Add(v);
+            }
+
+            Program.configForm.LoadConfig(cleanData[0]);
             LoadMaze(saveData);
         }
 
@@ -75,27 +83,24 @@ namespace MazeCreator
             if (mazeGrid.Columns.Count == 1 + X_COUNT)
                 mazeGrid.Columns.RemoveAt(0);
 
-            // Load maze points
-            if (rows == null)
+            // Sets rows if none given
+            if (rows == null) // From existing if no rows were given
                 rows = MAZEDATA;
-            if (rows[0] != "" && rows[1] != null)
+
+            // Loads data to grid
+            for (int i = 1; i <= Y_COUNT; i++)
             {
-                for (int i = 1; i <= rows[1].Count(); i++)
-                {
-                    // -1 because config line
-                    int row = i - 1;
-                    int col = 0;
-                    foreach (char c in rows[i])
+                // -1 because config line
+                int row = i - 1;
+                int col = 0;
+                if (i+1 < rows.Count())
+                    for (int j = 0; j < X_COUNT; j++)
                     {
-                        if (c != '\r')
-                        {
-                            bool v = false;
-                            if (c == '1') v = true;
-                            mazeGrid.Rows[row].Cells[col].Value = v;
-                            col++;
-                        }
+                        bool v = false;
+                        if (rows[i][j] == '1') v = true;
+                        mazeGrid.Rows[row].Cells[col].Value = v;
+                        col++;
                     }
-                }
             }
             ReloadColors();
         }
@@ -142,19 +147,19 @@ namespace MazeCreator
         /// <summary>
         /// Saves current maze data to MAZEDATA
         /// </summary>
-        internal void StoreMazeData()
+        public void StoreMazeData()
         {
-            string[] d = GetMazeData().Split('\n');
+            string[] d = GetMaze().Split('\n');
             MAZEDATA = new string[d.Count() + 1];
             for (int i = 0; i < d.Count(); i++)
                 MAZEDATA[i + 1] = d[i];
         }
 
         /// <summary>
-        /// Returns maze as string
+        /// Returns maze as string without config
         /// </summary>
         /// <returns></returns>
-        public string GetMazeData()
+        public string GetMaze()
         {
             // config
             string content = String.Empty;
@@ -247,6 +252,93 @@ namespace MazeCreator
             else
                 mazeGrid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
         }
+
+        #region Edit
+        /// <summary>
+        /// Adds an row or column in a specific location
+        /// </summary>
+        /// <param name="loc">1: Left - 2: Right - 3: Top - 4: Bottom</param>
+        private void AddLine(int loc)
+        {
+            if (loc == 1 || loc == 2)
+            {
+                // Change in config
+                int newCount = X_COUNT + 1;
+                Program.configForm.LoadConfig(String.Empty, 3, newCount.ToString());
+                X_COUNT = newCount;
+
+                // Change in creator
+                var c = new DataGridViewCheckBoxColumn();
+                c.Width = 20;
+                if (loc == 1) // left
+                    mazeGrid.Columns.Insert(0, c);
+                else // 2 - right
+                    mazeGrid.Columns.Add(c);
+            }
+            else if (loc == 3 || loc == 4)
+            {
+                // Change in config
+                int newCount = Y_COUNT + 1;
+                Program.configForm.LoadConfig(String.Empty, 4, newCount.ToString());
+                Y_COUNT = newCount;
+
+                // Change in creator
+                if (loc == 3) // left
+                    mazeGrid.Rows.Insert(0);
+                else // 2 - right
+                    mazeGrid.Rows.Add();
+            }
+            ReloadColors();
+        }
+
+        /// <summary>
+        /// Removes the selected row or column
+        /// </summary>
+        /// <param name="type">1: Row - 2: Column</param>
+        private void RemoveLine(int type)
+        {
+            var selected = mazeGrid.CurrentCell;
+            if (type == 1) // row
+            {
+                // Select in grid
+                int i = selected.RowIndex;
+                mazeGrid.Rows[i].Selected = true;
+
+                var result = MessageBox.Show("Are you sure you want to remove this row?",
+                    "Remove row", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    // Change in config
+                    int newCount = Y_COUNT - 1;
+                    Program.configForm.LoadConfig(String.Empty, 4, newCount.ToString());
+                    Y_COUNT = newCount;
+
+                    // Change in grid
+                    mazeGrid.Rows.RemoveAt(i);
+                }
+            }
+            else if (type == 2) // column
+            {
+                // Select in grid
+                int i = selected.ColumnIndex;
+                for (int r = 0; r < mazeGrid.RowCount; r++)
+                    mazeGrid[i, r].Selected = true;
+
+                var result = MessageBox.Show("Are you sure you want to remove this column?",
+                    "Remove column", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    // Change in config
+                    int newCount = X_COUNT - 1;
+                    Program.configForm.LoadConfig(String.Empty, 3, newCount.ToString());
+                    X_COUNT = newCount;
+
+                    // Change in grid
+                    mazeGrid.Columns.RemoveAt(i);
+                }
+            }
+        }
+        #endregion
 
 
         #region Tools
@@ -367,6 +459,37 @@ namespace MazeCreator
             Program.configForm.DisplayConfigForm();
             this.Hide();
         }
+
+        private void insertColumnLeftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddLine(1);
+        }
+
+        private void insertColumnRightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddLine(2);
+        }
+
+        private void insertRowTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddLine(3);
+        }
+
+        private void insertRowBottomToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddLine(4);
+        }
+
+        private void removeSelectedRowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveLine(1);
+        }
+        private void removeSelectedColumnsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveLine(2);
+        }
         #endregion        
+
+        
     }
 }

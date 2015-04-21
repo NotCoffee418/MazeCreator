@@ -41,18 +41,29 @@ namespace MazeCreator
 
         private void openMazeButton_Click(object sender, EventArgs e)
         {
-            Program.creator.OpenFile();
             this.Hide();
             Program.creator.Show();
+            Program.creator.OpenFile();
         }
 
+       
         /// <summary>
         /// Loads config string to config form
         /// </summary>
-        /// <param name="p"></param>
-        internal void LoadConfig(string configString)
+        /// <param name="configString">Config string to load</param>
+        /// <param name="change">index</param>
+        /// <param name="value">new value</param>
+        internal void LoadConfig(string configString = "", int change = -1, string value = "")
         {
+            if (configString == "")
+                configString = Program.creator.MAZEDATA[0];
             string[] config = configString.Split('|');
+
+            // Apply any change
+            if (change != -1)
+                config[change] = value;
+
+            // Load config to text boxes
             objectIdTextBox.Text = config[0];
             objectSpacingTextBox.Text = config[1];
             wallHeightTextBox.Text = config[2];
@@ -64,6 +75,9 @@ namespace MazeCreator
             yTextBox.Text = config[8];
             zTextBox.Text = config[9];
             mapTextBox.Text = config[10];
+
+            // Set config in Creator
+            Program.configForm.SetConfig();
         }
 
         /// <summary>
