@@ -36,12 +36,12 @@
             this.exportToSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.insertColumnLeftsoonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.insertColumnRightsoonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.insertRowTopsoonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.insertRowBottomsoonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeSelectedRowsoonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeSelectedColumnssoonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.insertColumnLeftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.insertColumnRightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.insertRowTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.insertRowBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeSelectedRowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeSelectedColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillBordersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -104,12 +104,12 @@
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.changeConfigToolStripMenuItem,
-            this.insertColumnLeftsoonToolStripMenuItem,
-            this.insertColumnRightsoonToolStripMenuItem,
-            this.insertRowTopsoonToolStripMenuItem,
-            this.insertRowBottomsoonToolStripMenuItem,
-            this.removeSelectedRowsoonToolStripMenuItem,
-            this.removeSelectedColumnssoonToolStripMenuItem});
+            this.insertColumnLeftToolStripMenuItem,
+            this.insertColumnRightToolStripMenuItem,
+            this.insertRowTopToolStripMenuItem,
+            this.insertRowBottomToolStripMenuItem,
+            this.removeSelectedRowToolStripMenuItem,
+            this.removeSelectedColumnsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -117,45 +117,51 @@
             // changeConfigToolStripMenuItem
             // 
             this.changeConfigToolStripMenuItem.Name = "changeConfigToolStripMenuItem";
-            this.changeConfigToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
+            this.changeConfigToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.changeConfigToolStripMenuItem.Text = "Change config";
             this.changeConfigToolStripMenuItem.Click += new System.EventHandler(this.changeConfigToolStripMenuItem_Click);
             // 
-            // insertColumnLeftsoonToolStripMenuItem
+            // insertColumnLeftToolStripMenuItem
             // 
-            this.insertColumnLeftsoonToolStripMenuItem.Name = "insertColumnLeftsoonToolStripMenuItem";
-            this.insertColumnLeftsoonToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-            this.insertColumnLeftsoonToolStripMenuItem.Text = "Insert column left (soon)";
+            this.insertColumnLeftToolStripMenuItem.Name = "insertColumnLeftToolStripMenuItem";
+            this.insertColumnLeftToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.insertColumnLeftToolStripMenuItem.Text = "Insert column left";
+            this.insertColumnLeftToolStripMenuItem.Click += new System.EventHandler(this.insertColumnLeftToolStripMenuItem_Click);
             // 
-            // insertColumnRightsoonToolStripMenuItem
+            // insertColumnRightToolStripMenuItem
             // 
-            this.insertColumnRightsoonToolStripMenuItem.Name = "insertColumnRightsoonToolStripMenuItem";
-            this.insertColumnRightsoonToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-            this.insertColumnRightsoonToolStripMenuItem.Text = "Insert column right (soon)";
+            this.insertColumnRightToolStripMenuItem.Name = "insertColumnRightToolStripMenuItem";
+            this.insertColumnRightToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.insertColumnRightToolStripMenuItem.Text = "Insert column right";
+            this.insertColumnRightToolStripMenuItem.Click += new System.EventHandler(this.insertColumnRightToolStripMenuItem_Click);
             // 
-            // insertRowTopsoonToolStripMenuItem
+            // insertRowTopToolStripMenuItem
             // 
-            this.insertRowTopsoonToolStripMenuItem.Name = "insertRowTopsoonToolStripMenuItem";
-            this.insertRowTopsoonToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-            this.insertRowTopsoonToolStripMenuItem.Text = "Insert row top (soon)";
+            this.insertRowTopToolStripMenuItem.Name = "insertRowTopToolStripMenuItem";
+            this.insertRowTopToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.insertRowTopToolStripMenuItem.Text = "Insert row top";
+            this.insertRowTopToolStripMenuItem.Click += new System.EventHandler(this.insertRowTopToolStripMenuItem_Click);
             // 
-            // insertRowBottomsoonToolStripMenuItem
+            // insertRowBottomToolStripMenuItem
             // 
-            this.insertRowBottomsoonToolStripMenuItem.Name = "insertRowBottomsoonToolStripMenuItem";
-            this.insertRowBottomsoonToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-            this.insertRowBottomsoonToolStripMenuItem.Text = "Insert row bottom (soon)";
+            this.insertRowBottomToolStripMenuItem.Name = "insertRowBottomToolStripMenuItem";
+            this.insertRowBottomToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.insertRowBottomToolStripMenuItem.Text = "Insert row bottom";
+            this.insertRowBottomToolStripMenuItem.Click += new System.EventHandler(this.insertRowBottomToolStripMenuItem_Click);
             // 
-            // removeSelectedRowsoonToolStripMenuItem
+            // removeSelectedRowToolStripMenuItem
             // 
-            this.removeSelectedRowsoonToolStripMenuItem.Name = "removeSelectedRowsoonToolStripMenuItem";
-            this.removeSelectedRowsoonToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-            this.removeSelectedRowsoonToolStripMenuItem.Text = "Remove selected rows (soon)";
+            this.removeSelectedRowToolStripMenuItem.Name = "removeSelectedRowToolStripMenuItem";
+            this.removeSelectedRowToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.removeSelectedRowToolStripMenuItem.Text = "Remove selected rows";
+            this.removeSelectedRowToolStripMenuItem.Click += new System.EventHandler(this.removeSelectedRowToolStripMenuItem_Click);
             // 
-            // removeSelectedColumnssoonToolStripMenuItem
+            // removeSelectedColumnsToolStripMenuItem
             // 
-            this.removeSelectedColumnssoonToolStripMenuItem.Name = "removeSelectedColumnssoonToolStripMenuItem";
-            this.removeSelectedColumnssoonToolStripMenuItem.Size = new System.Drawing.Size(249, 22);
-            this.removeSelectedColumnssoonToolStripMenuItem.Text = "Remove selected columns (soon)";
+            this.removeSelectedColumnsToolStripMenuItem.Name = "removeSelectedColumnsToolStripMenuItem";
+            this.removeSelectedColumnsToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.removeSelectedColumnsToolStripMenuItem.Text = "Remove selected columns";
+            this.removeSelectedColumnsToolStripMenuItem.Click += new System.EventHandler(this.removeSelectedColumnsToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -272,11 +278,11 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeConfigToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem insertColumnLeftsoonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem insertColumnRightsoonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem insertRowTopsoonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem insertRowBottomsoonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem removeSelectedRowsoonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem removeSelectedColumnssoonToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem insertColumnLeftToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem insertColumnRightToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem insertRowTopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem insertRowBottomToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeSelectedRowToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeSelectedColumnsToolStripMenuItem;
     }
 }
