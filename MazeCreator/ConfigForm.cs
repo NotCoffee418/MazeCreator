@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Globalization;
 
 namespace MazeCreator
 {
@@ -89,15 +90,15 @@ namespace MazeCreator
             //{
                 // Set creator data
                 Program.creator.GAMEOBJECT = int.Parse(objectIdTextBox.Text);
-                Program.creator.SPACING = double.Parse(SafeDouble(objectSpacingTextBox.Text));
+                Program.creator.SPACING = SafeDouble(objectSpacingTextBox.Text);
                 Program.creator.WALLHEIGHT = int.Parse(wallHeightTextBox.Text);
                 Program.creator.X_COUNT = int.Parse(xCountTextBox.Text);
                 Program.creator.Y_COUNT = int.Parse(yCountTextBox.Text);
                 Program.creator.FLOOR = floorCheckBox.Checked;
                 Program.creator.ROOF = roofCheckBox.Checked;
-                Program.creator.STARTCOORDS[0] = double.Parse(SafeDouble(xTextBox.Text));
-                Program.creator.STARTCOORDS[1] = double.Parse(SafeDouble(yTextBox.Text));
-                Program.creator.STARTCOORDS[2] = double.Parse(SafeDouble(zTextBox.Text));
+                Program.creator.STARTCOORDS[0] = SafeDouble(xTextBox.Text);
+                Program.creator.STARTCOORDS[1] = SafeDouble(yTextBox.Text);
+                Program.creator.STARTCOORDS[2] = SafeDouble(zTextBox.Text);
                 Program.creator.STARTCOORDS[3] = int.Parse(mapTextBox.Text);
 
                 // Set config text
@@ -127,27 +128,9 @@ namespace MazeCreator
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        private string SafeDouble(string p)
+        private double SafeDouble(string p)
         {
-            // Split double into parts
-            p = p.Replace('.', ',');
-            string[] n = p.Split(',');
-
-            int max = 8;
-            if (n[0].StartsWith("-")) max = 9;
-            if (n[0].Length > max) throw new Exception();
-
-            switch(n.Count())
-            {
-                case 1: 
-                    return n[0];
-                case 2:
-                    while (n[1].Length > 8) // Remove excessive numbers
-                        n[1] = n[1].Remove(n[1].Length - 1);
-                    return n[0] + ',' + n[1];
-                default: 
-                    throw new Exception();
-            }
+            return double.Parse(p, CultureInfo.InvariantCulture);
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
