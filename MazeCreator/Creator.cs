@@ -93,7 +93,7 @@ namespace MazeCreator
                 // -1 because config line
                 int row = i - 1;
                 int col = 0;
-                if (i+1 < rows.Count())
+                if (i < rows.Count())
                     for (int j = 0; j < X_COUNT; j++)
                     {
                         bool v = false;
@@ -175,10 +175,10 @@ namespace MazeCreator
                             content += "0";
                         else content += "1";
                     }
-                    if (i < Y_COUNT-1) content += "\n";
+                    if (i < Y_COUNT - 1) content += "\n";
                 }
             }
-            catch (Exception e)  { }
+            catch { }
             return content;
         }
 
@@ -403,8 +403,7 @@ namespace MazeCreator
                 SetCellBackColor(sel.RowIndex, sel.ColumnIndex);
                 changedSinceSave = true;
             }
-            catch (Exception ex)
-            { }
+            catch { }
         }
 
         private void fillWholeMazeToolStripMenuItem_Click(object sender, EventArgs e)
