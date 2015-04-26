@@ -77,6 +77,9 @@ namespace MazeCreator
             zTextBox.Text = config[9];
             mapTextBox.Text = config[10];
 
+            if (config.Count() == 12)
+                levelCountTextBox.Text = config[11];
+
             // Set config in Creator
             Program.configForm.SetConfig();
         }
@@ -86,8 +89,8 @@ namespace MazeCreator
         /// </summary>
         public void SetConfig()
         {
-            //try
-            //{
+            try
+            {
                 // Set creator data
                 Program.creator.GAMEOBJECT = int.Parse(objectIdTextBox.Text);
                 Program.creator.SPACING = SafeDouble(objectSpacingTextBox.Text);
@@ -100,6 +103,8 @@ namespace MazeCreator
                 Program.creator.STARTCOORDS[1] = SafeDouble(yTextBox.Text);
                 Program.creator.STARTCOORDS[2] = SafeDouble(zTextBox.Text);
                 Program.creator.STARTCOORDS[3] = int.Parse(mapTextBox.Text);
+                Program.creator.LEVEL_COUNT = int.Parse(levelCountTextBox.Text);
+
 
                 // Set config text
                 if (Program.creator.MAZEDATA == null)
@@ -114,13 +119,14 @@ namespace MazeCreator
                 '|' + SafeDouble(xTextBox.Text) +
                 '|' + SafeDouble(yTextBox.Text) +
                 '|' + SafeDouble(zTextBox.Text) +
-                '|' + mapTextBox.Text;
-            /*}
-            catch (Exception ex)
+                '|' + mapTextBox.Text +
+                '|' + levelCountTextBox.Text;
+            }
+            catch
             {
                 MessageBox.Show("Some information was incorrectly entered.");
                 Environment.Exit(0);
-            }*/
+            }
         }
 
         /// <summary>

@@ -48,12 +48,11 @@
             this.clearWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mazeGrid = new System.Windows.Forms.DataGridView();
             this.ExportSqlDialog = new System.Windows.Forms.SaveFileDialog();
             this.saveToFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.levelTabControl = new System.Windows.Forms.TabControl();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mazeGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -209,19 +208,6 @@
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
-            // mazeGrid
-            // 
-            this.mazeGrid.AllowUserToAddRows = false;
-            this.mazeGrid.AllowUserToDeleteRows = false;
-            this.mazeGrid.AllowUserToResizeColumns = false;
-            this.mazeGrid.AllowUserToResizeRows = false;
-            this.mazeGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mazeGrid.Location = new System.Drawing.Point(0, 24);
-            this.mazeGrid.Name = "mazeGrid";
-            this.mazeGrid.Size = new System.Drawing.Size(976, 489);
-            this.mazeGrid.TabIndex = 2;
-            this.mazeGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
-            // 
             // ExportSqlDialog
             // 
             this.ExportSqlDialog.DefaultExt = "sql";
@@ -238,12 +224,22 @@
             // 
             this.openFileDialog1.FileName = "MyMaze.maze";
             // 
+            // levelTabControl
+            // 
+            this.levelTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.levelTabControl.Location = new System.Drawing.Point(0, 24);
+            this.levelTabControl.Name = "levelTabControl";
+            this.levelTabControl.SelectedIndex = 0;
+            this.levelTabControl.Size = new System.Drawing.Size(976, 489);
+            this.levelTabControl.TabIndex = 3;
+            this.levelTabControl.SelectedIndexChanged += new System.EventHandler(this.levelTabControl_SelectedIndexChanged);
+            // 
             // Creator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(976, 513);
-            this.Controls.Add(this.mazeGrid);
+            this.Controls.Add(this.levelTabControl);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -253,7 +249,6 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Creator_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mazeGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -264,7 +259,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToSQLToolStripMenuItem;
-        private System.Windows.Forms.DataGridView mazeGrid;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fillBordersToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog ExportSqlDialog;
@@ -284,5 +278,6 @@
         private System.Windows.Forms.ToolStripMenuItem insertRowBottomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeSelectedRowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeSelectedColumnsToolStripMenuItem;
+        private System.Windows.Forms.TabControl levelTabControl;
     }
 }

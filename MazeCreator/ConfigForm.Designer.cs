@@ -57,6 +57,9 @@
             this.openMazeButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.label6 = new System.Windows.Forms.Label();
+            this.levelCountTextBox = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // objectIdTextBox
@@ -124,7 +127,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(243, 170);
+            this.label7.Location = new System.Drawing.Point(244, 166);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(94, 13);
             this.label7.TabIndex = 10;
@@ -169,7 +172,7 @@
             this.floorCheckBox.AutoSize = true;
             this.floorCheckBox.Checked = true;
             this.floorCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.floorCheckBox.Location = new System.Drawing.Point(15, 191);
+            this.floorCheckBox.Location = new System.Drawing.Point(18, 217);
             this.floorCheckBox.Name = "floorCheckBox";
             this.floorCheckBox.Size = new System.Drawing.Size(80, 17);
             this.floorCheckBox.TabIndex = 11;
@@ -181,7 +184,7 @@
             this.roofCheckBox.AutoSize = true;
             this.roofCheckBox.Checked = true;
             this.roofCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.roofCheckBox.Location = new System.Drawing.Point(15, 216);
+            this.roofCheckBox.Location = new System.Drawing.Point(18, 242);
             this.roofCheckBox.Name = "roofCheckBox";
             this.roofCheckBox.Size = new System.Drawing.Size(78, 17);
             this.roofCheckBox.TabIndex = 12;
@@ -190,7 +193,7 @@
             // 
             // saveConfigButton
             // 
-            this.saveConfigButton.Location = new System.Drawing.Point(242, 194);
+            this.saveConfigButton.Location = new System.Drawing.Point(245, 220);
             this.saveConfigButton.Name = "saveConfigButton";
             this.saveConfigButton.Size = new System.Drawing.Size(91, 38);
             this.saveConfigButton.TabIndex = 13;
@@ -288,7 +291,7 @@
             // 
             // openMazeButton
             // 
-            this.openMazeButton.Location = new System.Drawing.Point(137, 208);
+            this.openMazeButton.Location = new System.Drawing.Point(140, 234);
             this.openMazeButton.Name = "openMazeButton";
             this.openMazeButton.Size = new System.Drawing.Size(91, 24);
             this.openMazeButton.TabIndex = 28;
@@ -310,11 +313,40 @@
             this.label6.Text = "(Use edit menu)";
             this.label6.Visible = false;
             // 
+            // levelCountTextBox
+            // 
+            this.levelCountTextBox.Location = new System.Drawing.Point(137, 189);
+            this.levelCountTextBox.Name = "levelCountTextBox";
+            this.levelCountTextBox.Size = new System.Drawing.Size(100, 20);
+            this.levelCountTextBox.TabIndex = 31;
+            this.levelCountTextBox.Text = "1";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(12, 192);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(38, 13);
+            this.label14.TabIndex = 30;
+            this.label14.Text = "Levels";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(247, 192);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(91, 13);
+            this.label15.TabIndex = 32;
+            this.label15.Text = "Set for 3D mazing";
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(350, 242);
+            this.ClientSize = new System.Drawing.Size(350, 270);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.levelCountTextBox);
+            this.Controls.Add(this.label14);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.openMazeButton);
             this.Controls.Add(this.label3);
@@ -380,6 +412,9 @@
         private System.Windows.Forms.Button openMazeButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox levelCountTextBox;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
     }
 }
 

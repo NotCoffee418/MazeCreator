@@ -15,6 +15,8 @@ namespace MazeCreator
     {
         // vars
         bool changedSinceSave = false;
+        int activeGrid = 0;
+        List<Level> LEVELS = new List<Level>();
 
         // Config
         public string[] MAZEDATA;
@@ -26,6 +28,7 @@ namespace MazeCreator
         public bool     FLOOR;
         public bool     ROOF;
         public double[] STARTCOORDS = new double[4]; // x,y,z,map
+        public int      LEVEL_COUNT;
         public bool     CREATE_GO_TEMPLATE;
 
         public Creator()
@@ -33,6 +36,212 @@ namespace MazeCreator
             InitializeComponent();
         }
 
+        public void LoadMaze(string data)
+        {
+            LoadMaze(data.Split('\n'));
+        }
+        public void LoadMaze(string[] rows)
+        {
+            if (rows.Count() > 1)
+                LoadData(rows);
+        }
+
+        /// <summary>
+        /// Adds tabs & grids
+        /// </summary>
+        /// <param name="rows"></param>
+        public void LoadData(string[] rows = null)
+        {
+            LEVELS = new List<Level>();
+            levelTabControl.Controls.Clear();
+
+            for (int i = 0; i < LEVEL_COUNT; i++)
+            {
+                // Create grid
+                var grid = new DataGridView();
+                grid.AllowUserToAddRows = false;
+                grid.AllowUserToDeleteRows = false;
+                grid.AllowUserToResizeColumns = false;
+                grid.AllowUserToResizeRows = false;
+                grid.Dock = DockStyle.Fill;
+                grid.CellValueChanged += new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
+            
+
+                // Add tab
+                var page = new TabPage();
+                page.Location = new System.Drawing.Point(4, 22);
+                page.Name = "levelPage" + (i+1);
+                page.Padding = new System.Windows.Forms.Padding(3);
+                page.Size = new System.Drawing.Size(968, 463);
+                page.TabIndex = 0;
+                page.Text = "Level " + (i+1);
+                page.UseVisualStyleBackColor = true;
+                page.Controls.Add(grid);
+
+                // Add to LEVELS and levelControl
+                Level l = new Level();
+                l.Tab = page;
+                l.Grid = grid;
+                LEVELS.Add(l);
+                levelTabControl.Controls.Add(page);
+                LoadGrid(i, rows, 1+(Y_COUNT * i));
+            }
+        }
+
+        /// <summary>
+        /// Load any maze data
+        /// </summary>
+        /// <param name="rows"></param>
+        private void LoadGrid(int grid, string[] rows = null, int lastRow = 0)
+        {
+            // Clear datagrid
+            while (LEVELS[grid].Grid.Columns.Count > 0)
+                LEVELS[grid].Grid.Columns.RemoveAt(0);
+
+            // Set columns & rows
+            LEVELS[grid].Grid.RowCount = Y_COUNT;
+            for (int i = 0; i < X_COUNT; i++)
+            {
+                DataGridViewColumn c = new DataGridViewCheckBoxColumn();
+                c.Width = 20;
+                c.HeaderText = (i + 1).ToString();
+                LEVELS[grid].Grid.Columns.Add(c);
+            }
+            if (LEVELS[grid].Grid.Columns.Count == 1 + X_COUNT)
+                LEVELS[grid].Grid.Columns.RemoveAt(0);
+
+            // Sets rows if none given
+            if (rows == null) // From existing if no rows were given
+                rows = MAZEDATA;
+
+            // Loads data to grid
+            for (int i = 0; i < Y_COUNT; i++)
+            {
+                int col = 0;
+                if (rows.Count() > 2 && rows[i] != "") // Check if any data were
+                    for (int j = 0; j < X_COUNT; j++)
+                    {
+                        bool v = false;
+                        if (rows[lastRow + i][j] == '1') v = true;
+                        LEVELS[grid].Grid.Rows[i].Cells[col].Value = v;
+                        col++;
+                    }
+            }
+            ReloadColors(grid);
+        }
+
+        private void ReloadColors(int grid)
+        {
+            LEVELS[grid].Grid.ClearSelection();
+            for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+                for (int j = 0; j < X_COUNT; j++) // Loop all columns
+                    SetCellBackColor(grid, i, j);
+        }
+
+        private void SetCellBackColor(int grid, int i, int j)
+        {
+            if (LEVELS[grid].Grid.Rows[i].Cells[j].Value != null &&
+                (bool)LEVELS[grid].Grid.Rows[i].Cells[j].Value)
+                    LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Red;
+            else    LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+        }
+
+        /// <summary>
+        /// Saves current maze data to MAZEDATA
+        /// </summary>
+        public void StoreMazeData()
+        {
+            string[] d = GetMaze().Split('\n');
+            MAZEDATA = new string[d.Count() + 1];
+            for (int i = 0; i < d.Count(); i++)
+                MAZEDATA[i + 1] = d[i];
+        }
+
+        /// <summary>
+        /// Returns maze as string without config
+        /// </summary>
+        /// <returns></returns>
+        public string GetMaze()
+        {
+            // config
+            string content = String.Empty;
+            try
+            {
+                for (int grid = 0; grid < LEVELS.Count; grid++) // Loop all levels
+                {
+                    LEVELS[grid].Grid.EndEdit();
+                    for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+                    {
+                        for (int j = 0; j < X_COUNT; j++)// Loop all columns 
+                        {
+                            if (LEVELS[grid].Grid.Rows[i].Cells[j].Value == null ||
+                                !(bool)LEVELS[grid].Grid.Rows[i].Cells[j].Value)
+                                content += "0";
+                            else content += "1";
+                        }
+                        if (i < (Y_COUNT * LEVELS.Count) - 1) content += "\n";
+                    }
+                }
+            }
+            catch { }
+            return content;
+        }
+
+        private List<double[]> GenerateMazeObjects()
+        {
+            // Generate object locations
+            List<double[]> boxList = new List<double[]>();
+            for (int lev = 0; lev < LEVELS.Count; lev++)
+            {
+                double zPos = SPACING * lev * WALLHEIGHT; // go fix dees
+                for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+                {
+                    for (int j = 0; j < X_COUNT; j++)// Loop all columns 
+                    {
+                        double[] box = new double[4]; // x,y,z,map
+                        // Floor
+                        if (FLOOR || lev > 0)
+                        {
+                            box[0] = SPACING * i + STARTCOORDS[0];
+                            box[1] = SPACING * j + STARTCOORDS[1];
+                            box[2] = STARTCOORDS[2] + zPos;
+                            box[3] = STARTCOORDS[3];
+                            boxList.Add(box);
+                            box = new double[4];
+                        }
+
+                        // Walls
+                        if (LEVELS[lev].Grid.Rows[i].Cells[j].Value != null && (bool)LEVELS[lev].Grid.Rows[i].Cells[j].Value)
+                        {
+                            // Create wall
+                            for (int k = 1; k <= WALLHEIGHT; k++)
+                            {
+                                box[0] = SPACING * i + STARTCOORDS[0];
+                                box[1] = SPACING * j + STARTCOORDS[1];
+                                box[2] = SPACING * k + STARTCOORDS[2] + zPos;
+                                box[3] = STARTCOORDS[3];
+                                boxList.Add(box);
+                                box = new double[4];
+                            }
+                        }
+
+                        // Roof
+                        if (ROOF)
+                        {
+                            box[0] = SPACING * i + STARTCOORDS[0];
+                            box[1] = SPACING * j + STARTCOORDS[1];
+                            box[2] = SPACING * (WALLHEIGHT + 1) + STARTCOORDS[2] + zPos;
+                            box[3] = STARTCOORDS[3];
+                            boxList.Add(box);
+                            box = new double[4];
+                        }
+                    }
+                }
+            }
+            return boxList;
+        }
+
+        #region File menu
         public void OpenFile()
         {
             DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
@@ -46,63 +255,13 @@ namespace MazeCreator
             List<string> cleanData = new List<string>();
             foreach (string s in temp)
             {
-                string v = s.Replace("\r","");
+                string v = s.Replace("\r", "");
                 if (v != String.Empty)
                     cleanData.Add(v);
             }
 
             Program.configForm.LoadConfig(cleanData[0]);
             LoadMaze(saveData);
-        }
-
-        public void LoadMaze(string data)
-        {
-            LoadMaze(data.Split('\n'));
-        }
-        public void LoadMaze(string[] rows)
-        {
-            if (rows.Count() > 1)
-                LoadData(rows);
-        }
-
-        public void LoadData(string[] rows = null)
-        {
-            // Clear datagrid
-            while (mazeGrid.Columns.Count > 0)
-                mazeGrid.Columns.RemoveAt(0);
-
-            // Set columns & rows
-            mazeGrid.RowCount = Y_COUNT;
-            for (int i = 0; i < X_COUNT; i++)
-            {
-                DataGridViewColumn c = new DataGridViewCheckBoxColumn();
-                c.Width = 20;
-                c.HeaderText = (i + 1).ToString();
-                mazeGrid.Columns.Add(c);
-            }
-            if (mazeGrid.Columns.Count == 1 + X_COUNT)
-                mazeGrid.Columns.RemoveAt(0);
-
-            // Sets rows if none given
-            if (rows == null) // From existing if no rows were given
-                rows = MAZEDATA;
-
-            // Loads data to grid
-            for (int i = 1; i <= Y_COUNT; i++)
-            {
-                // -1 because config line
-                int row = i - 1;
-                int col = 0;
-                if (i < rows.Count())
-                    for (int j = 0; j < X_COUNT; j++)
-                    {
-                        bool v = false;
-                        if (rows[i][j] == '1') v = true;
-                        mazeGrid.Rows[row].Cells[col].Value = v;
-                        col++;
-                    }
-            }
-            ReloadColors();
         }
 
         private void Export(string path)
@@ -143,117 +302,9 @@ namespace MazeCreator
             }
             else return false;
         }
+        #endregion
 
-        /// <summary>
-        /// Saves current maze data to MAZEDATA
-        /// </summary>
-        public void StoreMazeData()
-        {
-            string[] d = GetMaze().Split('\n');
-            MAZEDATA = new string[d.Count() + 1];
-            for (int i = 0; i < d.Count(); i++)
-                MAZEDATA[i + 1] = d[i];
-        }
-
-        /// <summary>
-        /// Returns maze as string without config
-        /// </summary>
-        /// <returns></returns>
-        public string GetMaze()
-        {
-            // config
-            string content = String.Empty;
-            try
-            {
-                mazeGrid.EndEdit();
-                // Maze
-                for (int i = 0; i < Y_COUNT; i++) // Loop all rows
-                {
-                    for (int j = 0; j < X_COUNT; j++)// Loop all columns 
-                    {
-                        if (mazeGrid.Rows[i].Cells[j].Value == null || !(bool)mazeGrid.Rows[i].Cells[j].Value)
-                            content += "0";
-                        else content += "1";
-                    }
-                    if (i < Y_COUNT - 1) content += "\n";
-                }
-            }
-            catch { }
-            return content;
-        }
-
-        private List<double[]> GenerateMazeObjects()
-        {
-            // Generate object locations
-            List<double[]> boxList = new List<double[]>();
-            for (int i = 0; i < Y_COUNT; i++) // Loop all rows
-            {
-                for (int j = 0; j < X_COUNT; j++)// Loop all columns 
-                {
-                    double[] box = new double[4]; // x,y,z,map
-                    // Floor
-                    if (FLOOR)
-                    {
-                        box[0] = SPACING * i + STARTCOORDS[0];
-                        box[1] = SPACING * j + STARTCOORDS[1];
-                        box[2] = STARTCOORDS[2];
-                        box[3] = STARTCOORDS[3];
-                        boxList.Add(box);
-                        box = new double[4];
-                    }
-
-                    // Walls
-                    if (mazeGrid.Rows[i].Cells[j].Value != null && (bool)mazeGrid.Rows[i].Cells[j].Value)
-                    {
-                        // Create wall
-                        for (int k = 1; k <= WALLHEIGHT; k++)
-                        {
-                            box[0] = SPACING * i + STARTCOORDS[0];
-                            box[1] = SPACING * j + STARTCOORDS[1];
-                            box[2] = SPACING * k + STARTCOORDS[2];
-                            box[3] = STARTCOORDS[3];
-                            boxList.Add(box);
-                            box = new double[4];
-                        }
-                    }
-
-                    // Roof
-                    if (ROOF)
-                    {
-                        box[0] = SPACING * i + STARTCOORDS[0];
-                        box[1] = SPACING * j + STARTCOORDS[1];
-                        box[2] = SPACING * (WALLHEIGHT + 1) + STARTCOORDS[2];
-                        box[3] = STARTCOORDS[3];
-                        boxList.Add(box);
-                        box = new double[4];
-                    }
-                }
-            }
-
-            return boxList;
-        }
-
-        private void ReloadColors()
-        {
-            mazeGrid.ClearSelection();
-            for (int i = 0; i < Y_COUNT; i++) // Loop all rows
-            {
-                for (int j = 0; j < X_COUNT; j++)
-                {// Loop all columns
-                    SetCellBackColor(i, j);
-                }
-            }
-        }
-
-        private void SetCellBackColor(int i, int j)
-        {
-            if (mazeGrid.Rows[i].Cells[j].Value != null && (bool)mazeGrid.Rows[i].Cells[j].Value)
-                mazeGrid.Rows[i].Cells[j].Style.BackColor = Color.Red;
-            else
-                mazeGrid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
-        }
-
-        #region Edit
+        #region Edit menu
         /// <summary>
         /// Adds an row or column in a specific location
         /// </summary>
@@ -268,12 +319,16 @@ namespace MazeCreator
                 X_COUNT = newCount;
 
                 // Change in creator
-                var c = new DataGridViewCheckBoxColumn();
-                c.Width = 20;
-                if (loc == 1) // left
-                    mazeGrid.Columns.Insert(0, c);
-                else // 2 - right
-                    mazeGrid.Columns.Add(c);
+                for (int i = 0; i < LEVELS.Count; i++)
+                {
+                    var c = new DataGridViewCheckBoxColumn();
+                    c.Width = 20;
+                    if (loc == 1) // left
+                        LEVELS[i].Grid.Columns.Insert(0, c);
+                    else // 2 - right
+                        LEVELS[i].Grid.Columns.Add(c);
+                    ReloadColors(i);
+                }
             }
             else if (loc == 3 || loc == 4)
             {
@@ -283,12 +338,15 @@ namespace MazeCreator
                 Y_COUNT = newCount;
 
                 // Change in creator
-                if (loc == 3) // left
-                    mazeGrid.Rows.Insert(0);
-                else // 2 - right
-                    mazeGrid.Rows.Add();
+                for (int i = 0; i < LEVELS.Count; i++)
+                {
+                    if (loc == 3) // left
+                        LEVELS[i].Grid.Rows.Insert(0);
+                    else // 2 - right
+                        LEVELS[i].Grid.Rows.Add();
+                    ReloadColors(i);
+                }
             }
-            ReloadColors();
         }
 
         /// <summary>
@@ -297,14 +355,14 @@ namespace MazeCreator
         /// <param name="type">1: Row - 2: Column</param>
         private void RemoveLine(int type)
         {
-            var selected = mazeGrid.CurrentCell;
+            var selected = LEVELS[activeGrid].Grid.CurrentCell;
             if (type == 1) // row
             {
                 // Select in grid
                 int i = selected.RowIndex;
-                mazeGrid.Rows[i].Selected = true;
+                LEVELS[activeGrid].Grid.Rows[i].Selected = true;
 
-                var result = MessageBox.Show("Are you sure you want to remove this row?",
+                var result = MessageBox.Show("Are you sure you want to remove this row on all levels?",
                     "Remove row", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
@@ -314,17 +372,18 @@ namespace MazeCreator
                     Y_COUNT = newCount;
 
                     // Change in grid
-                    mazeGrid.Rows.RemoveAt(i);
+                    for (int j = 0; j < LEVELS.Count; j++)
+                        LEVELS[j].Grid.Rows.RemoveAt(i);
                 }
             }
             else if (type == 2) // column
             {
                 // Select in grid
                 int i = selected.ColumnIndex;
-                for (int r = 0; r < mazeGrid.RowCount; r++)
-                    mazeGrid[i, r].Selected = true;
+                for (int r = 0; r < LEVELS[activeGrid].Grid.RowCount; r++)
+                    LEVELS[activeGrid].Grid[i, r].Selected = true;
 
-                var result = MessageBox.Show("Are you sure you want to remove this column?",
+                var result = MessageBox.Show("Are you sure you want to remove this column on all levels?",
                     "Remove column", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
@@ -334,14 +393,14 @@ namespace MazeCreator
                     X_COUNT = newCount;
 
                     // Change in grid
-                    mazeGrid.Columns.RemoveAt(i);
+                    for (int j = 0; j < LEVELS.Count; j++)
+                        LEVELS[j].Grid.Columns.RemoveAt(i);
                 }
             }
         }
         #endregion
 
-
-        #region Tools
+        #region Tools menu
 
         private void FillBorders()
         {
@@ -350,15 +409,15 @@ namespace MazeCreator
                 if (i == 0 || i == Y_COUNT - 1)
                 {
                     for (int j = 0; j < X_COUNT; j++)
-                        mazeGrid.Rows[i].Cells[j].Value = true;
+                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = true;
                 }
                 else
                 {
-                    mazeGrid.Rows[i].Cells[0].Value = true;
-                    mazeGrid.Rows[i].Cells[X_COUNT - 1].Value = true;
+                    LEVELS[activeGrid].Grid.Rows[i].Cells[0].Value = true;
+                    LEVELS[activeGrid].Grid.Rows[i].Cells[X_COUNT - 1].Value = true;
                 }
             }
-            ReloadColors();
+            ReloadColors(activeGrid);
         }
         private void FillMaze(bool empty=false)
         {
@@ -367,15 +426,14 @@ namespace MazeCreator
                 for (int j = 0; j < X_COUNT; j++)// Loop all columns 
                 {
                     if (empty)
-                        mazeGrid.Rows[i].Cells[j].Value = false;
+                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = false;
                     else
-                        mazeGrid.Rows[i].Cells[j].Value = true;
+                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = true;
                 }
             }
-            ReloadColors();
+            ReloadColors(activeGrid);
         }
         #endregion
-
 
         #region UI Handlers
         private void fillBordersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -393,17 +451,6 @@ namespace MazeCreator
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/RStijn/MazeCreator");
-        }
-
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            try
-            {
-                var sel = mazeGrid.SelectedCells[0];
-                SetCellBackColor(sel.RowIndex, sel.ColumnIndex);
-                changedSinceSave = true;
-            }
-            catch { }
         }
 
         private void fillWholeMazeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -427,6 +474,17 @@ namespace MazeCreator
             SaveFile();
         }
 
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                var sel = LEVELS[activeGrid].Grid.SelectedCells[0];
+                SetCellBackColor(activeGrid, sel.RowIndex, sel.ColumnIndex);
+                changedSinceSave = true;
+            }
+            catch { }
+        }
         private void Creator_FormClosed(object sender, FormClosedEventArgs e)
         {
             Environment.Exit(0);
@@ -487,8 +545,10 @@ namespace MazeCreator
         {
             RemoveLine(2);
         }
-        #endregion        
-
-        
+        private void levelTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            activeGrid = levelTabControl.SelectedIndex;
+        }
+        #endregion
     }
 }
