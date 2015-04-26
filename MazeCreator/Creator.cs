@@ -191,52 +191,60 @@ namespace MazeCreator
         {
             // Generate object locations
             List<double[]> boxList = new List<double[]>();
+            int startZ = 0;
             for (int lev = 0; lev < LEVELS.Count; lev++)
             {
-                double zPos = SPACING * lev * WALLHEIGHT; // go fix dees
-                for (int i = 0; i < Y_COUNT; i++) // Loop all rows
+                for (int y = 0; y < Y_COUNT; y++) // Loop all rows
                 {
-                    for (int j = 0; j < X_COUNT; j++)// Loop all columns 
+                    for (int x = 0; x < X_COUNT; x++) // Loop all columns 
                     {
+                        double z = 0;
                         double[] box = new double[4]; // x,y,z,map
                         // Floor
-                        if (FLOOR || lev > 0)
+                        if (FLOOR && lev==0 || lev > 0)
                         {
-                            box[0] = SPACING * i + STARTCOORDS[0];
-                            box[1] = SPACING * j + STARTCOORDS[1];
-                            box[2] = STARTCOORDS[2] + zPos;
+                            box[0] = SPACING * x + STARTCOORDS[0];
+                            box[1] = SPACING * y + STARTCOORDS[1];
+                            box[2] = SPACING * (startZ + z) + STARTCOORDS[2];
                             box[3] = STARTCOORDS[3];
                             boxList.Add(box);
                             box = new double[4];
+                            z++;
                         }
 
                         // Walls
-                        if (LEVELS[lev].Grid.Rows[i].Cells[j].Value != null && (bool)LEVELS[lev].Grid.Rows[i].Cells[j].Value)
+                        if (LEVELS[lev].Grid.Rows[y].Cells[x].Value != null && (bool)LEVELS[lev].Grid.Rows[y].Cells[x].Value)
                         {
                             // Create wall
-                            for (int k = 1; k <= WALLHEIGHT; k++)
+                            for (int k = 0; k < WALLHEIGHT; k++)
                             {
-                                box[0] = SPACING * i + STARTCOORDS[0];
-                                box[1] = SPACING * j + STARTCOORDS[1];
-                                box[2] = SPACING * k + STARTCOORDS[2] + zPos;
+                                box[0] = SPACING * x + STARTCOORDS[0];
+                                box[1] = SPACING * y + STARTCOORDS[1];
+                                box[2] = SPACING * (startZ + z + k) + STARTCOORDS[2];
                                 box[3] = STARTCOORDS[3];
                                 boxList.Add(box);
                                 box = new double[4];
                             }
                         }
+                        z += WALLHEIGHT;
 
                         // Roof
-                        if (ROOF)
+                        if (ROOF && lev == LEVELS.Count - 1) // Last level only
                         {
-                            box[0] = SPACING * i + STARTCOORDS[0];
-                            box[1] = SPACING * j + STARTCOORDS[1];
-                            box[2] = SPACING * (WALLHEIGHT + 1) + STARTCOORDS[2] + zPos;
+                            box[0] = SPACING * x + STARTCOORDS[0];
+                            box[1] = SPACING * y + STARTCOORDS[1];
+                            box[2] = SPACING * (startZ + z) + STARTCOORDS[2];
                             box[3] = STARTCOORDS[3];
                             boxList.Add(box);
                             box = new double[4];
                         }
                     }
                 }
+
+                //setss next startZ
+                startZ += WALLHEIGHT;
+                if (FLOOR && lev == 0 || lev > 0 && lev < LEVELS.Count - 1)
+                    startZ++;
             }
             return boxList;
         }
