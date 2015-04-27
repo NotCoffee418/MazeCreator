@@ -52,6 +52,7 @@
             this.saveToFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.levelTabControl = new System.Windows.Forms.TabControl();
+            this.add3DLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -108,7 +109,8 @@
             this.insertRowTopToolStripMenuItem,
             this.insertRowBottomToolStripMenuItem,
             this.removeSelectedRowToolStripMenuItem,
-            this.removeSelectedColumnsToolStripMenuItem});
+            this.removeSelectedColumnsToolStripMenuItem,
+            this.add3DLevelToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -234,6 +236,13 @@
             this.levelTabControl.TabIndex = 3;
             this.levelTabControl.SelectedIndexChanged += new System.EventHandler(this.levelTabControl_SelectedIndexChanged);
             // 
+            // add3DLevelToolStripMenuItem
+            // 
+            this.add3DLevelToolStripMenuItem.Name = "add3DLevelToolStripMenuItem";
+            this.add3DLevelToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.add3DLevelToolStripMenuItem.Text = "Add 3D level";
+            this.add3DLevelToolStripMenuItem.Click += new System.EventHandler(this.add3DLevelToolStripMenuItem_Click);
+            // 
             // Creator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -279,5 +288,6 @@
         private System.Windows.Forms.ToolStripMenuItem removeSelectedRowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeSelectedColumnsToolStripMenuItem;
         private System.Windows.Forms.TabControl levelTabControl;
+        private System.Windows.Forms.ToolStripMenuItem add3DLevelToolStripMenuItem;
     }
 }

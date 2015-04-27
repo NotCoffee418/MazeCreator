@@ -56,36 +56,44 @@ namespace MazeCreator
             levelTabControl.Controls.Clear();
 
             for (int i = 0; i < LEVEL_COUNT; i++)
-            {
-                // Create grid
-                var grid = new DataGridView();
-                grid.AllowUserToAddRows = false;
-                grid.AllowUserToDeleteRows = false;
-                grid.AllowUserToResizeColumns = false;
-                grid.AllowUserToResizeRows = false;
-                grid.Dock = DockStyle.Fill;
-                grid.CellValueChanged += new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
-            
+                AddLevel(i, rows);
 
-                // Add tab
-                var page = new TabPage();
-                page.Location = new System.Drawing.Point(4, 22);
-                page.Name = "levelPage" + (i+1);
-                page.Padding = new System.Windows.Forms.Padding(3);
-                page.Size = new System.Drawing.Size(968, 463);
-                page.TabIndex = 0;
-                page.Text = "Level " + (i+1);
-                page.UseVisualStyleBackColor = true;
-                page.Controls.Add(grid);
+            activeGrid = 0;
+        }
 
-                // Add to LEVELS and levelControl
-                Level l = new Level();
-                l.Tab = page;
-                l.Grid = grid;
-                LEVELS.Add(l);
-                levelTabControl.Controls.Add(page);
-                LoadGrid(i, rows, 1+(Y_COUNT * i));
-            }
+        private void AddLevel(int id = -1, string[] rows = null)
+        {
+            if (id == -1)
+                id = levelTabControl.Controls.Count;
+
+            // Create grid
+            DataGridView grid = new DataGridView();
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeColumns = false;
+            grid.AllowUserToResizeRows = false;
+            grid.Dock = DockStyle.Fill;
+            grid.CellValueChanged += new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
+
+
+            // Add tab
+            TabPage page = new TabPage();
+            page.Location = new System.Drawing.Point(4, 22);
+            page.Name = "levelPage" + (id + 1);
+            page.Padding = new System.Windows.Forms.Padding(3);
+            page.Size = new System.Drawing.Size(968, 463);
+            page.TabIndex = 0;
+            page.Text = "Level " + (id + 1);
+            page.UseVisualStyleBackColor = true;
+            page.Controls.Add(grid);
+
+            // Add to LEVELS and levelControl
+            Level l = new Level();
+            l.Tab = page;
+            l.Grid = grid;
+            LEVELS.Add(l);
+            levelTabControl.Controls.Add(page);
+            LoadGrid(id, rows, 1 + (Y_COUNT * id));
         }
 
         /// <summary>
@@ -118,7 +126,7 @@ namespace MazeCreator
             for (int i = 0; i < Y_COUNT; i++)
             {
                 int col = 0;
-                if (rows.Count() > 2 && rows[i] != "") // Check if any data were
+                if (rows.Count() > lastRow + i && rows[lastRow + i] != "") // Check if any data were
                     for (int j = 0; j < X_COUNT; j++)
                     {
                         bool v = false;
@@ -556,6 +564,10 @@ namespace MazeCreator
         private void levelTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             activeGrid = levelTabControl.SelectedIndex;
+        }
+        private void add3DLevelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddLevel();
         }
         #endregion
     }

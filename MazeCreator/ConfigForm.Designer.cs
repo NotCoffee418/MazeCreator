@@ -326,18 +326,19 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(12, 192);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(38, 13);
+            this.label14.Size = new System.Drawing.Size(80, 13);
             this.label14.TabIndex = 30;
-            this.label14.Text = "Levels";
+            this.label14.Text = "3D Maze levels";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(247, 192);
+            this.label15.Location = new System.Drawing.Point(244, 192);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(91, 13);
+            this.label15.Size = new System.Drawing.Size(81, 13);
             this.label15.TabIndex = 32;
-            this.label15.Text = "Set for 3D mazing";
+            this.label15.Text = "(Use edit menu)";
+            this.label15.Visible = false;
             // 
             // ConfigForm
             // 

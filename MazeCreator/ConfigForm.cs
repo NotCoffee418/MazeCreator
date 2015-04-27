@@ -27,7 +27,9 @@ namespace MazeCreator
         {
             xCountTextBox.Enabled = false;
             yCountTextBox.Enabled = false;
+            levelCountTextBox.Enabled = false;
             label6.Visible = true;
+            label15.Visible = true;
             Show();
         }
 
