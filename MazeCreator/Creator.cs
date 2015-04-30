@@ -73,7 +73,10 @@ namespace MazeCreator
             grid.AllowUserToResizeColumns = false;
             grid.AllowUserToResizeRows = false;
             grid.Dock = DockStyle.Fill;
+            
+            // Event handlers
             grid.CellValueChanged += new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
+            grid.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
 
 
             // Add tab
@@ -96,6 +99,9 @@ namespace MazeCreator
             LoadGrid(id, rows, 1 + (Y_COUNT * id));
         }
 
+
+        
+
         /// <summary>
         /// Load any maze data
         /// </summary>
@@ -106,17 +112,34 @@ namespace MazeCreator
             while (LEVELS[grid].Grid.Columns.Count > 0)
                 LEVELS[grid].Grid.Columns.RemoveAt(0);
 
-            // Set columns & rows
-            LEVELS[grid].Grid.RowCount = Y_COUNT;
+            // set columns
+            int[] defaultRow = new int[X_COUNT];
             for (int i = 0; i < X_COUNT; i++)
             {
                 DataGridViewColumn c = new DataGridViewCheckBoxColumn();
-                c.Width = 20;
+                c.ValueType = typeof(int);
+                c.Width = 15;
                 c.HeaderText = (i + 1).ToString();
                 LEVELS[grid].Grid.Columns.Add(c);
+                defaultRow[i] = 0;
             }
+
+            // Remove extra column
             if (LEVELS[grid].Grid.Columns.Count == 1 + X_COUNT)
                 LEVELS[grid].Grid.Columns.RemoveAt(0);
+
+
+            // Set rows
+            for (int i = 0; i < Y_COUNT; i++)
+            {
+                DataGridViewRow r = new DataGridViewRow();
+                r.Height = 15;
+                r.HeaderCell.Value = (i + 1).ToString();
+                r.SetValues(defaultRow);
+                LEVELS[grid].Grid.Rows.Add(r);
+            }
+
+            
 
             // Sets rows if none given
             if (rows == null) // From existing if no rows were given
@@ -129,12 +152,13 @@ namespace MazeCreator
                 if (rows.Count() > lastRow + i && rows[lastRow + i] != "") // Check if any data were
                     for (int j = 0; j < X_COUNT; j++)
                     {
-                        bool v = false;
-                        if (rows[lastRow + i][j] == '1') v = true;
+                        int v = 0;
+                        if (rows[lastRow + i][j] == '1') v = 1;
                         LEVELS[grid].Grid.Rows[i].Cells[col].Value = v;
                         col++;
                     }
             }
+
             ReloadColors(grid);
         }
 
@@ -149,7 +173,7 @@ namespace MazeCreator
         private void SetCellBackColor(int grid, int i, int j)
         {
             if (LEVELS[grid].Grid.Rows[i].Cells[j].Value != null &&
-                (bool)LEVELS[grid].Grid.Rows[i].Cells[j].Value)
+                (int)LEVELS[grid].Grid.Rows[i].Cells[j].Value == 1)
                     LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Red;
             else    LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
         }
@@ -173,25 +197,19 @@ namespace MazeCreator
         {
             // config
             string content = String.Empty;
-            try
+            for (int grid = 0; grid < LEVELS.Count; grid++) // Loop all levels
             {
-                for (int grid = 0; grid < LEVELS.Count; grid++) // Loop all levels
+                LEVELS[grid].Grid.EndEdit();
+                for (int i = 0; i < Y_COUNT; i++) // Loop all rows
                 {
-                    LEVELS[grid].Grid.EndEdit();
-                    for (int i = 0; i < Y_COUNT; i++) // Loop all rows
-                    {
-                        for (int j = 0; j < X_COUNT; j++)// Loop all columns 
-                        {
-                            if (LEVELS[grid].Grid.Rows[i].Cells[j].Value == null ||
-                                !(bool)LEVELS[grid].Grid.Rows[i].Cells[j].Value)
-                                content += "0";
-                            else content += "1";
-                        }
-                        if (i < (Y_COUNT * LEVELS.Count) - 1) content += "\n";
-                    }
+                    for (int j = 0; j < X_COUNT; j++)// Loop all columns 
+                        if (LEVELS[grid].Grid.Rows[i].Cells[j].Value == null)
+                            content += 0;
+                        else
+                            content += (int)LEVELS[grid].Grid.Rows[i].Cells[j].Value;
+                    if (i < (Y_COUNT * LEVELS.Count) - 1) content += "\n";
                 }
             }
-            catch { }
             return content;
         }
 
@@ -221,7 +239,7 @@ namespace MazeCreator
                         }
 
                         // Walls
-                        if (LEVELS[lev].Grid.Rows[y].Cells[x].Value != null && (bool)LEVELS[lev].Grid.Rows[y].Cells[x].Value)
+                        if (LEVELS[lev].Grid.Rows[y].Cells[x].Value != null && (int)LEVELS[lev].Grid.Rows[y].Cells[x].Value == 1)
                         {
                             // Create wall
                             for (int k = 0; k < WALLHEIGHT; k++)
@@ -337,7 +355,7 @@ namespace MazeCreator
                 // Change in creator
                 for (int i = 0; i < LEVELS.Count; i++)
                 {
-                    var c = new DataGridViewCheckBoxColumn();
+                    var c = new DataGridViewColumn();
                     c.Width = 20;
                     if (loc == 1) // left
                         LEVELS[i].Grid.Columns.Insert(0, c);
@@ -425,12 +443,12 @@ namespace MazeCreator
                 if (i == 0 || i == Y_COUNT - 1)
                 {
                     for (int j = 0; j < X_COUNT; j++)
-                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = true;
+                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = 1;
                 }
                 else
                 {
-                    LEVELS[activeGrid].Grid.Rows[i].Cells[0].Value = true;
-                    LEVELS[activeGrid].Grid.Rows[i].Cells[X_COUNT - 1].Value = true;
+                    LEVELS[activeGrid].Grid.Rows[i].Cells[0].Value = 1;
+                    LEVELS[activeGrid].Grid.Rows[i].Cells[X_COUNT - 1].Value = 1;
                 }
             }
             ReloadColors(activeGrid);
@@ -442,9 +460,9 @@ namespace MazeCreator
                 for (int j = 0; j < X_COUNT; j++)// Loop all columns 
                 {
                     if (empty)
-                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = false;
+                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = 0;
                     else
-                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = true;
+                        LEVELS[activeGrid].Grid.Rows[i].Cells[j].Value = 1;
                 }
             }
             ReloadColors(activeGrid);
@@ -493,14 +511,36 @@ namespace MazeCreator
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            try
-            {
-                var sel = LEVELS[activeGrid].Grid.SelectedCells[0];
-                SetCellBackColor(activeGrid, sel.RowIndex, sel.ColumnIndex);
-                changedSinceSave = true;
-            }
-            catch { }
+             SetCellBackColor(activeGrid, e.RowIndex, e.ColumnIndex);
         }
+
+
+        // Selected cell looks
+        private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            // Back color
+            if (LEVELS[activeGrid].Grid.SelectedCells.Count > 0)
+                LEVELS[activeGrid].Grid.DefaultCellStyle.SelectionBackColor = LEVELS[activeGrid].Grid.SelectedCells[0].Style.BackColor;
+
+            // Border
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                if (LEVELS[activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected == true)
+                {
+                    e.Paint(e.CellBounds, DataGridViewPaintParts.All & ~DataGridViewPaintParts.Border);
+                    using (Pen p = new Pen(Color.Black, 1))
+                    {
+                        Rectangle rect = e.CellBounds;
+                        rect.Width -= 2;
+                        rect.Height -= 2;
+                        e.Graphics.DrawRectangle(p, rect);
+                    }
+                    e.Handled = true;
+                }
+            }
+        }
+
+
         private void Creator_FormClosed(object sender, FormClosedEventArgs e)
         {
             Environment.Exit(0);
