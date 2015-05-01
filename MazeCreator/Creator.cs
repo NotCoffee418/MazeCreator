@@ -77,6 +77,7 @@ namespace MazeCreator
             // Event handlers
             grid.CellValueChanged += new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
             grid.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
+            grid.CellValueChanged += new DataGridViewCellEventHandler(ConfirmPlaceStairs);
 
 
             // Add tab
@@ -98,9 +99,6 @@ namespace MazeCreator
             levelTabControl.Controls.Add(page);
             LoadGrid(id, rows, 1 + (Y_COUNT * id));
         }
-
-
-        
 
         /// <summary>
         /// Load any maze data
@@ -139,8 +137,6 @@ namespace MazeCreator
                 LEVELS[grid].Grid.Rows.Add(r);
             }
 
-            
-
             // Sets rows if none given
             if (rows == null) // From existing if no rows were given
                 rows = MAZEDATA;
@@ -162,6 +158,85 @@ namespace MazeCreator
             ReloadColors(grid);
         }
 
+        /// <summary>
+        /// Prepare to place stairs
+        /// </summary>
+        /// <param name="direction"></param>
+        int stairsDirection = 0;
+        bool progSel = false;
+        private void PlaceStairs(int direction)
+        {
+            stairsDirection = direction;
+            
+            // Display instructions
+            MessageBox.Show("Activate the block where the bottom of your stairs start.");
+
+            // Let user select start of maze
+            LEVELS[activeGrid].Grid.SelectionChanged += new System.EventHandler(PlacingStairs);
+        }
+        private void PlacingStairs(object sender, EventArgs e)
+        {
+            if (progSel) return;
+
+            var loc = LEVELS[activeGrid].Grid.SelectedCells[0];
+            int reqBlocks = WALLHEIGHT + 1;
+
+            progSel = true;
+            switch (stairsDirection)
+            {
+                case 1: // up
+                    if (loc.RowIndex - reqBlocks + 1 >= 0)
+                        for (int i = 0; i < reqBlocks; i++)
+                            LEVELS[activeGrid].Grid.Rows[loc.RowIndex - i].Cells[loc.ColumnIndex].Selected = true;
+                    else
+                    {
+                        progSel = false;
+                        LEVELS[activeGrid].Grid.Rows[reqBlocks - 1].Cells[loc.ColumnIndex].Selected = true;
+                    }
+                    break;
+                case 2: // down
+                    if (loc.RowIndex + reqBlocks <= LEVELS[activeGrid].Grid.ColumnCount)
+                        for (int i = 0; i < reqBlocks; i++)
+                            LEVELS[activeGrid].Grid.Rows[loc.RowIndex + i].Cells[loc.ColumnIndex].Selected = true;
+                    else 
+                    {
+                        progSel = false;
+                        LEVELS[activeGrid].Grid.Rows[LEVELS[activeGrid].Grid.RowCount - reqBlocks].Cells[loc.ColumnIndex].Selected = true;
+                    }
+                    break;
+                case 3: // left
+                    if (loc.ColumnIndex - reqBlocks + 1 >= 0)
+                        for (int i = 0; i < reqBlocks; i++)
+                            LEVELS[activeGrid].Grid.Rows[loc.RowIndex].Cells[loc.ColumnIndex -i].Selected = true;
+                    else 
+                    {
+                        progSel = false;
+                        LEVELS[activeGrid].Grid.Rows[loc.RowIndex].Cells[reqBlocks - 1].Selected = true;
+                    }
+                    break;
+                case 4: // right
+                    if (loc.ColumnIndex + reqBlocks <= LEVELS[activeGrid].Grid.ColumnCount)
+                        for (int i = 0; i < reqBlocks; i++)
+                            LEVELS[activeGrid].Grid.Rows[loc.RowIndex].Cells[loc.ColumnIndex + i].Selected = true;
+                    else 
+                    {
+                        progSel = false;
+                        LEVELS[activeGrid].Grid.Rows[loc.RowIndex].Cells[LEVELS[activeGrid].Grid.ColumnCount - reqBlocks].Selected = true;
+                    }
+                    break;
+            }
+            progSel = false;
+        }
+        private void ConfirmPlaceStairs(object sender, DataGridViewCellEventArgs e)
+        {
+            // Only trigger when stairs should be placed
+            if (stairsDirection == 0) return;
+
+            throw new NotImplementedException();
+
+            stairsDirection = 0;
+        }
+
         private void ReloadColors(int grid)
         {
             LEVELS[grid].Grid.ClearSelection();
@@ -172,10 +247,14 @@ namespace MazeCreator
 
         private void SetCellBackColor(int grid, int i, int j)
         {
-            if (LEVELS[grid].Grid.Rows[i].Cells[j].Value != null &&
-                (int)LEVELS[grid].Grid.Rows[i].Cells[j].Value == 1)
+            try
+            {
+                if (LEVELS[grid].Grid.Rows[i].Cells[j].Value != null &&
+                    (int)LEVELS[grid].Grid.Rows[i].Cells[j].Value == 1)
                     LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Red;
-            else    LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+                else LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+            }
+            catch { /* Value is an array when editing the same cell too fast */ }
         }
 
         /// <summary>
@@ -508,12 +587,11 @@ namespace MazeCreator
             SaveFile();
         }
 
-
+        // Set Color
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
              SetCellBackColor(activeGrid, e.RowIndex, e.ColumnIndex);
         }
-
 
         // Selected cell looks
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -564,7 +642,6 @@ namespace MazeCreator
                         break;
                 }
             }
-
         }
 
         private void changeConfigToolStripMenuItem_Click(object sender, EventArgs e)
@@ -609,6 +686,31 @@ namespace MazeCreator
         {
             AddLevel();
         }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            PlaceStairs(1);
+        }
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            PlaceStairs(2);
+        }
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            PlaceStairs(3);
+        }
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            PlaceStairs(4);
+        }
+
+        
+
         #endregion
+
+        
+
+
+
     }
 }

@@ -42,6 +42,7 @@
             this.insertRowBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeSelectedRowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeSelectedColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.add3DLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillBordersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,8 +53,13 @@
             this.saveToFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.levelTabControl = new System.Windows.Forms.TabControl();
-            this.add3DLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -164,6 +170,13 @@
             this.removeSelectedColumnsToolStripMenuItem.Text = "Remove selected columns";
             this.removeSelectedColumnsToolStripMenuItem.Click += new System.EventHandler(this.removeSelectedColumnsToolStripMenuItem_Click);
             // 
+            // add3DLevelToolStripMenuItem
+            // 
+            this.add3DLevelToolStripMenuItem.Name = "add3DLevelToolStripMenuItem";
+            this.add3DLevelToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.add3DLevelToolStripMenuItem.Text = "Add 3D level";
+            this.add3DLevelToolStripMenuItem.Click += new System.EventHandler(this.add3DLevelToolStripMenuItem_Click);
+            // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -236,18 +249,66 @@
             this.levelTabControl.TabIndex = 3;
             this.levelTabControl.SelectedIndexChanged += new System.EventHandler(this.levelTabControl_SelectedIndexChanged);
             // 
-            // add3DLevelToolStripMenuItem
+            // toolStrip1
             // 
-            this.add3DLevelToolStripMenuItem.Name = "add3DLevelToolStripMenuItem";
-            this.add3DLevelToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.add3DLevelToolStripMenuItem.Text = "Add 3D level";
-            this.add3DLevelToolStripMenuItem.Click += new System.EventHandler(this.add3DLevelToolStripMenuItem_Click);
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripButton2,
+            this.toolStripButton3,
+            this.toolStripButton4});
+            this.toolStrip1.Location = new System.Drawing.Point(944, 24);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(32, 489);
+            this.toolStrip1.TabIndex = 4;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = global::MazeCreator.Properties.Resources.stairs_up;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Image = global::MazeCreator.Properties.Resources.stairs_down;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButton2.Text = "toolStripButton2";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton3.Image = global::MazeCreator.Properties.Resources.stairs_left;
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButton3.Text = "toolStripButton3";
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
+            // 
+            // toolStripButton4
+            // 
+            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton4.Image = global::MazeCreator.Properties.Resources.stairs_right;
+            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton4.Name = "toolStripButton4";
+            this.toolStripButton4.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButton4.Text = "toolStripButton4";
+            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
             // Creator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(976, 513);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.levelTabControl);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -258,6 +319,8 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Creator_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -289,5 +352,10 @@
         private System.Windows.Forms.ToolStripMenuItem removeSelectedColumnsToolStripMenuItem;
         private System.Windows.Forms.TabControl levelTabControl;
         private System.Windows.Forms.ToolStripMenuItem add3DLevelToolStripMenuItem;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ToolStripButton toolStripButton4;
     }
 }
