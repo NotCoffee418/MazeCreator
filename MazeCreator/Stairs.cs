@@ -19,16 +19,19 @@ namespace MazeCreator
         public static void PlaceStairs(int direction)
         {
             stairsDirection = direction;
-            // Remove wall handler
-            Config.LEVELS[App.activeGrid].Grid.CellValueChanged -= 
-                new DataGridViewCellEventHandler(App.creator.dataGridView1_CellValueChanged);
             Config.LEVELS[App.activeGrid].Grid.MultiSelect = true;
 
             // Display instructions
             MessageBox.Show("Activate the block where the bottom of your stairs start.");
 
+            // Remove wall handler
+            Config.LEVELS[App.activeGrid].Grid.CellValueChanged -=
+                new DataGridViewCellEventHandler(App.creator.dataGridView1_CellValueChanged);
+
             // Let user select start of maze
             Config.LEVELS[App.activeGrid].Grid.SelectionChanged += new System.EventHandler(PlacingStairs);
+            Config.LEVELS[App.activeGrid].Grid.CellValueChanged +=
+                new DataGridViewCellEventHandler(ConfirmPlaceStairs);
         }
         public static void PlacingStairs(object sender, EventArgs e)
         {
@@ -86,6 +89,8 @@ namespace MazeCreator
         }
         public static void ConfirmPlaceStairs(object sender, DataGridViewCellEventArgs e)
         {
+            Config.LEVELS[App.activeGrid].Grid.CellValueChanged -=
+                new DataGridViewCellEventHandler(ConfirmPlaceStairs);
             // Only trigger when stairs should be placed
             if (stairsDirection == 0) return;
             stairsDirection = 0;
@@ -97,24 +102,12 @@ namespace MazeCreator
             var cells = Config.LEVELS[App.activeGrid].Grid.SelectedCells;
 
             // Set stairs location
-            for (int i = 0; i < cells.Count; i++)
+            int next = 5; // Count down from 5 to 2
+            for (int i = 0; i < cells.Count; i++ )
             {
-                switch (i)
-                {
-                    case 3: // bottom
-                        cells[i].Value = 2;
-                        break;
-                    case 2: // place location
-                        cells[i].Value = 3;
-                        break;
-                    case 1: // padding
-                        cells[i].Value = 4;
-                        break;
-                    case 0: // top
-                        cells[i].Value = 5;
-                        break;
-                }
+                cells[i].Value = next;
                 App.creator.SetCellBackColor(App.activeGrid, cells[i].RowIndex, cells[i].ColumnIndex);
+                next--;
             }
 
             // Add wall handler again

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Drawing;
 using System.Collections.Generic;
 
 namespace MazeCreator
@@ -18,51 +19,74 @@ namespace MazeCreator
                     for (int x = 0; x < Config.X_COUNT; x++) // Loop all columns 
                     {
                         double z = 0;
-                        double[] box = new double[6]; // x,y,z,map
+                        double[] box = new double[6];
                         // Floor
                         if (Config.FLOOR && lev == 0 || lev > 0 && NeedsFloorBlock(lev, x, y))
                         {
-                            box[0] = Config.SPACING * x + Config.STARTCOORDS[0];              // x
-                            box[1] = Config.SPACING * y + Config.STARTCOORDS[1];              // y
-                            box[2] = Config.SPACING * (startZ + z) + Config.STARTCOORDS[2];   // z
-                            box[3] = Config.STARTCOORDS[3];                            // map
-                            box[4] = 0;                                          // orientation
-                            box[5] = Config.GAMEOBJECT;                                             // game object
+                            box[0] = Config.SPACING * x + Config.STARTCOORDS[0];                // x
+                            box[1] = Config.SPACING * y + Config.STARTCOORDS[1];                // y
+                            box[2] = Config.SPACING * (startZ + z) + Config.STARTCOORDS[2];     // z
+                            box[3] = Config.STARTCOORDS[3];                                     // map
+                            box[4] = 0;                                                         // orientation
+                            box[5] = Config.GAMEOBJECT;                                         // game object
                             boxList.Add(box);
                             z++;
                         }
 
-                        // Walls
-                        if (Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value != null && 
-                            (int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value == 1)
+                        // Walls, stairs, traps, ...
+                        int value = 0;
+                        try
                         {
-                            // Create wall
+                            value = (int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value;
+                            // Workaround...
+                            if (value == 1 && Config.LEVELS[lev].Grid.Rows[y].Cells[x].Style.BackColor == Color.MediumAquamarine)
+                                value = 2;
+                        }
+                        catch { /* Exception on null */ }
+                        if (value == 1) // wall
+                        {
                             for (int k = 0; k < Config.WALLHEIGHT; k++)
                             {
+                                box = new double[6];
                                 box[0] = Config.SPACING * x + Config.STARTCOORDS[0];
                                 box[1] = Config.SPACING * y + Config.STARTCOORDS[1];
                                 box[2] = Config.SPACING * (startZ + z + k) + Config.STARTCOORDS[2];
                                 box[3] = Config.STARTCOORDS[3];
+                                box[4] = 0;
+                                box[5] = Config.GAMEOBJECT;
                                 boxList.Add(box);
-                                box = new double[4];
+                                box = new double[6];
                             }
                         }
+
+                        // Stairs
+                        else if (value == 2) // bottom of stairs
+                        {
+                            double spawnZ = Config.SPACING * (startZ + z) + Config.STARTCOORDS[2];
+                            box = GetStairsBox(lev, x, y, spawnZ);
+                            boxList.Add(box);
+                        }
+                        
+
+                        // Increase Z for roof or next level
                         z += Config.WALLHEIGHT;
 
                         // Roof
                         if (Config.ROOF && lev == Config.LEVELS.Count - 1) // Last level only
                         {
+                            box = new double[6];
                             box[0] = Config.SPACING * x + Config.STARTCOORDS[0];
                             box[1] = Config.SPACING * y + Config.STARTCOORDS[1];
                             box[2] = Config.SPACING * (startZ + z) + Config.STARTCOORDS[2];
                             box[3] = Config.STARTCOORDS[3];
+                            box[4] = 0;
+                            box[5] = Config.GAMEOBJECT;
                             boxList.Add(box);
-                            box = new double[4];
                         }
                     }
                 }
 
-                //setss next startZ
+                // sets next startZ
                 startZ += Config.WALLHEIGHT;
                 if (Config.FLOOR && lev == 0 || lev > 0 && lev < Config.LEVELS.Count - 1)
                     startZ++;
@@ -70,11 +94,93 @@ namespace MazeCreator
             return boxList;
         }
 
+        /// <summary>
+        /// Disables floor block when there are stairs below
+        /// </summary>
+        /// <param name="lev">Current level</param>
+        /// <param name="x">Column</param>
+        /// <param name="y">Row</param>
+        /// <returns>true if there's no stairs below</returns>
         private bool NeedsFloorBlock(int lev, int x, int y)
         {
-            // Return false when stairs below
-            return true;
-            throw new NotImplementedException();
+            if (lev == 0) return true; // no stairs below
+
+            // Block below 
+            int below = 0;
+            try
+            {
+                below = (int)Config.LEVELS[lev - 1].Grid.Rows[y].Cells[x].Value;
+            }
+            catch { /* Exception on null */ }
+
+            // Check of block should be removed
+            if (below == 3 || below == 4 || below == 5)
+                return false;
+            else return true;
+        }
+
+        /// <summary>
+        /// Returns stairs object box
+        /// </summary>
+        /// <param name="lev">level</param>
+        /// <param name="x">bottom of stairs X</param>
+        /// <param name="y">bottom of stairs Y</param>
+        /// <returns></returns>
+        private double[] GetStairsBox(int lev, int x, int y, double spawnZ)
+        {
+            // Determine object placement location relative to the given coords
+            var grid = Config.LEVELS[lev].Grid; // clearer to work with
+            int placementX = x; // It also spawns a block next to the bottom location
+            int placementY = y;
+            double quarterPi = 3.14159 / 4;
+            double orientation = 0.0; // 0 - Pi
+
+            // vars for spawn location check
+            int left = x - 1;
+            int right = x + 1;
+            int above = y - 1;
+            int below = y + 1;
+
+            // Determine placement location & orientation
+            try {
+                if (left >= 0 && (int)grid.Rows[y].Cells[left].Value == 3)
+                {
+                    placementX = left;
+                    orientation = 0;
+                }
+            } catch {/* improve this */ }
+            try {
+                if (right <= grid.Rows.Count - 1 && (int)grid.Rows[y].Cells[right].Value == 3)
+                {
+                    placementX = right;
+                    orientation = quarterPi * 2;
+                }
+            } catch {/* improve this */ }
+            try {
+                if (above >= 0 && (int)grid.Rows[above].Cells[x].Value == 3)
+                {
+                    placementY = above;
+                    orientation = quarterPi;
+                }
+            } catch {/* improve this */ }
+            try
+            {
+                if (below <= grid.Columns.Count - 1 && (int)grid.Rows[below].Cells[x].Value == 3)
+                {
+                    placementY = below;
+                    orientation = quarterPi * 3;
+                }
+            } catch {/* improve this */ }
+
+            // Create the box
+            double[] box = new double[6];
+            box[0] = Config.SPACING * x + Config.STARTCOORDS[0];
+            box[1] = Config.SPACING * y + Config.STARTCOORDS[1];
+            box[2] = spawnZ;
+            box[3] = Config.STARTCOORDS[3];
+            box[4] = orientation;
+            box[5] = 745001; // Stairs object
+            return box;
         }
 
         /// <summary>
@@ -102,10 +208,14 @@ namespace MazeCreator
                 for (int i = 0; i < Config.Y_COUNT; i++) // Loop all rows
                 {
                     for (int j = 0; j < Config.X_COUNT; j++)// Loop all columns 
-                        if (Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value == null)
-                            content += 0;
-                        else
-                            content += (int)Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value;
+                        try // Exception when null
+                        {
+                            int value = (int)Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value;
+                            if (value == 1 && Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor == Color.MediumAquamarine) // Workaround
+                                value = 2;
+                            content += value;
+                        }
+                        catch { content += 0; }
                     if (i < (Config.Y_COUNT * Config.LEVELS.Count) - 1) content += "\n";
                 }
             }

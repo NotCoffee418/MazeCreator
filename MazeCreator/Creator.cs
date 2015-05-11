@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Data;
 using System.Windows.Forms;
 
 namespace MazeCreator
@@ -56,7 +57,6 @@ namespace MazeCreator
             // Event handlers
             grid.CellValueChanged += new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
             grid.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
-            grid.CellValueChanged += new DataGridViewCellEventHandler(Stairs.ConfirmPlaceStairs);
 
             // Add tab
             TabPage page = new TabPage();
@@ -92,7 +92,7 @@ namespace MazeCreator
             int[] defaultRow = new int[Config.X_COUNT];
             for (int i = 0; i < Config.X_COUNT; i++)
             {
-                DataGridViewColumn c = new DataGridViewCheckBoxColumn();
+                DataGridViewCheckBoxColumn c = new DataGridViewCheckBoxColumn();
                 c.ValueType = typeof(int);
                 c.Width = 15;
                 c.HeaderText = (i + 1).ToString();
@@ -145,46 +145,49 @@ namespace MazeCreator
                     SetCellBackColor(grid, i, j);
         }
 
-        public void SetCellBackColor(int grid, int i, int j)
+        public void SetCellBackColor(int grid, int y, int x)
         {
             try
             {
-                if (Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value != null)
-                    switch ((int)Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value)
+                if (Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value != null)
+                    switch ((int)Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value)
                     {
                         case 1: // wall
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Red;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Red;
                             break;
                         case 2: // bottom of stairs
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.MediumTurquoise;
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                            // !!!If this color is changed, change on save & SQL export too (workaround)
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.MediumAquamarine;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
                             break;
                         case 3: // middle of stairs (object placed here)
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.MediumAquamarine;
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.MediumTurquoise;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
                             break;
                         case 4: // middle of stairs
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aquamarine;
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aquamarine;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
                             break;
                         case 5: // top of stairs
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aqua;
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aqua;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
 
                             // Show top of stairs on next level
                             if (Config.LEVELS.Count > grid + 1)
                             {
-                                Config.LEVELS[grid + 1].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aqua;
-                                Config.LEVELS[grid + 1].Grid.Rows[i].Cells[j].ReadOnly = true;
+                                Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aqua;
+                                Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].ReadOnly = true;
                             }
                             break;
                         default: // 0
-                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Lime;
                             break;
                     }
-                else Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+                else Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Lime;
             }
-            catch { /* Exception when editing too fast */ }
+            catch { /* Exception when editing too fast & on null */
+                Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Lime;
+            }
         }
 
         #region UI Handlers
