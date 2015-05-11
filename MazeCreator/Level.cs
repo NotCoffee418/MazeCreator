@@ -11,7 +11,5 @@ namespace MazeCreator
     {
         public TabPage Tab { get; set; }
         public DataGridView Grid { get; set; }
-        public int[] StairsX { get; set; }
-        public int[] StairsY { get; set; }
     }
 }

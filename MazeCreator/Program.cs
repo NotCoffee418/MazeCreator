@@ -10,6 +10,7 @@ namespace MazeCreator
     {
         public static ConfigForm configForm;
         public static Creator creator;
+        public static FileHandler fileHandler;
 
         /// <summary>
         /// The main entry point for the application.
@@ -22,6 +23,7 @@ namespace MazeCreator
 
             configForm = new ConfigForm();
             creator = new Creator();
+            fileHandler = new FileHandler();
             Application.Run(configForm);
         }
     }

@@ -46,9 +46,8 @@ namespace MazeCreator
         {
             this.Hide();
             Program.creator.Show();
-            Program.creator.OpenFile();
+            Program.fileHandler.OpenFile();
         }
-
        
         /// <summary>
         /// Loads config string to config form

@@ -7,14 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 
 namespace MazeCreator
 {
     public partial class Creator : Form
     {
         // vars
-        bool changedSinceSave = false;
+        public bool changedSinceSave = false;
         int activeGrid = 0;
         List<Level> LEVELS = new List<Level>();
 
@@ -356,7 +355,7 @@ namespace MazeCreator
             return content;
         }
 
-        private List<double[]> GenerateMazeObjects()
+        public List<double[]> GenerateMazeObjects()
         {
             // Generate object locations
             List<double[]> boxList = new List<double[]>();
@@ -418,72 +417,6 @@ namespace MazeCreator
             return boxList;
         }
 
-        #region File menu
-        public void OpenFile()
-        {
-            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
-            string saveData = String.Empty;
-            if (result == DialogResult.OK) // Test result.
-                saveData = File.ReadAllText(openFileDialog1.FileName);
-            else return;
-
-            // Opens and cleans file
-            string[] temp = saveData.Split('\n');
-            List<string> cleanData = new List<string>();
-            foreach (string s in temp)
-            {
-                string v = s.Replace("\r", "");
-                if (v != String.Empty)
-                    cleanData.Add(v);
-            }
-
-            Program.configForm.LoadConfig(cleanData[0]);
-            LoadMaze(saveData);
-        }
-
-        private void Export(string path)
-        {
-            string sql = "INSERT INTO `gameobject`(`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES\n";
-            string endLine = String.Empty;
-            int curr = 0;
-            List<double[]> maze = GenerateMazeObjects();
-            foreach (double[] box in maze)
-            {
-                curr++;
-                if (curr < maze.Count)
-                    endLine = ",\n";
-                else endLine = ";\n";
-                sql += "(" + GAMEOBJECT + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0,0)" + endLine;
-            }
-
-            // Add gameobject_template for Maze Crate
-            if (GAMEOBJECT == 745000)
-                sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
-                    "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
-
-            // Add gameobject_template for Maze Stairs
-            sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
-                "('745001', '5', '7593', 'Maze Stairs', '', '', '', '94', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
-
-            File.WriteAllText(path, sql);
-        }
-
-        // Save file content
-        private bool SaveFile()
-        {
-            var save = saveToFileDialog.ShowDialog();
-            if (save == DialogResult.OK)
-            {
-                Program.creator.StoreMazeData();
-                Program.configForm.SetConfig();
-
-                System.IO.File.WriteAllLines(saveToFileDialog.FileName, MAZEDATA);
-                changedSinceSave = false;
-                return true;
-            }
-            else return false;
-        }
-        #endregion
 
         #region Edit menu
         /// <summary>
@@ -624,9 +557,7 @@ namespace MazeCreator
 
         private void exportToSQLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var save = ExportSqlDialog.ShowDialog();
-            if (save == DialogResult.OK) 
-                Export(ExportSqlDialog.FileName);
+            Program.fileHandler.Export();
         }
 
         private void infoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -652,13 +583,13 @@ namespace MazeCreator
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFile();
+            Program.fileHandler.OpenFile();
         }
 
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFile();
+            Program.fileHandler.SaveFile();
         }
 
         // Set Color
@@ -693,7 +624,6 @@ namespace MazeCreator
             }
         }
 
-
         private void Creator_FormClosed(object sender, FormClosedEventArgs e)
         {
             Environment.Exit(0);
@@ -709,7 +639,7 @@ namespace MazeCreator
                 switch (result)
                 {
                     case DialogResult.Yes:
-                        if (!SaveFile()) 
+                        if (!Program.fileHandler.SaveFile()) 
                             e.Cancel = true;
                         break;
                     case DialogResult.Cancel:

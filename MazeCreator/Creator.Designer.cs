@@ -49,9 +49,6 @@
             this.clearWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExportSqlDialog = new System.Windows.Forms.SaveFileDialog();
-            this.saveToFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.levelTabControl = new System.Windows.Forms.TabControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
@@ -190,21 +187,21 @@
             // fillBordersToolStripMenuItem
             // 
             this.fillBordersToolStripMenuItem.Name = "fillBordersToolStripMenuItem";
-            this.fillBordersToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.fillBordersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.fillBordersToolStripMenuItem.Text = "Fill borders";
             this.fillBordersToolStripMenuItem.Click += new System.EventHandler(this.fillBordersToolStripMenuItem_Click);
             // 
             // fillWholeMazeToolStripMenuItem
             // 
             this.fillWholeMazeToolStripMenuItem.Name = "fillWholeMazeToolStripMenuItem";
-            this.fillWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.fillWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.fillWholeMazeToolStripMenuItem.Text = "Fill maze";
             this.fillWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.fillWholeMazeToolStripMenuItem_Click);
             // 
             // clearWholeMazeToolStripMenuItem
             // 
             this.clearWholeMazeToolStripMenuItem.Name = "clearWholeMazeToolStripMenuItem";
-            this.clearWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.clearWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.clearWholeMazeToolStripMenuItem.Text = "Clear maze";
             this.clearWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.clearWholeMazeToolStripMenuItem_Click);
             // 
@@ -222,22 +219,6 @@
             this.infoToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
-            // 
-            // ExportSqlDialog
-            // 
-            this.ExportSqlDialog.DefaultExt = "sql";
-            this.ExportSqlDialog.FileName = "Maze";
-            this.ExportSqlDialog.Filter = "SQL File|*.sql";
-            // 
-            // saveToFileDialog
-            // 
-            this.saveToFileDialog.DefaultExt = "sql";
-            this.saveToFileDialog.FileName = "MyMaze";
-            this.saveToFileDialog.Filter = "Maze File|*.maze";
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "MyMaze.maze";
             // 
             // levelTabControl
             // 
@@ -333,15 +314,12 @@
         private System.Windows.Forms.ToolStripMenuItem exportToSQLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fillBordersToolStripMenuItem;
-        private System.Windows.Forms.SaveFileDialog ExportSqlDialog;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fillWholeMazeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearWholeMazeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.SaveFileDialog saveToFileDialog;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeConfigToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem insertColumnLeftToolStripMenuItem;
