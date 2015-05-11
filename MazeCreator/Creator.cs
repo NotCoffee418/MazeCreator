@@ -636,12 +636,18 @@ namespace MazeCreator
 
         private void fillWholeMazeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FillMaze();
+            var result = MessageBox.Show("Are you sure you want to fill this whole level with walls?", "Fill maze",
+               MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes) 
+                FillMaze();
         }
 
         private void clearWholeMazeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FillMaze(empty:true);
+            var result = MessageBox.Show("Are you sure you want to empty this whole level?", "Clear maze",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes) 
+                FillMaze(empty:true);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
