@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
@@ -38,18 +35,18 @@ namespace MazeCreator
             string sql = "INSERT INTO `gameobject`(`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES\n";
             string endLine = String.Empty;
             int curr = 0;
-            List<double[]> maze = Program.creator.GenerateMazeObjects();
+            List<double[]> maze = App.objectHandler.GenerateMazeObjects();
             foreach (double[] box in maze)
             {
                 curr++;
                 if (curr < maze.Count)
                     endLine = ",\n";
                 else endLine = ";\n";
-                sql += "(" + Program.creator.GAMEOBJECT + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0,0)" + endLine;
+                sql += "(" + App.config.GAMEOBJECT + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0,0)" + endLine;
             }
 
             // Add gameobject_template for Maze Crate
-            if (Program.creator.GAMEOBJECT == 745000)
+            if (App.config.GAMEOBJECT == 745000)
                 sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
                     "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
 
@@ -78,8 +75,8 @@ namespace MazeCreator
                     cleanData.Add(v);
             }
 
-            Program.configForm.LoadConfig(cleanData[0]);
-            Program.creator.LoadMaze(saveData);
+            App.configForm.LoadConfig(cleanData[0]);
+            App.creator.LoadMaze(saveData);
         }
 
         // Save file content
@@ -88,11 +85,11 @@ namespace MazeCreator
             var save = saveToFileDialog.ShowDialog();
             if (save == DialogResult.OK)
             {
-                Program.creator.StoreMazeData();
-                Program.configForm.SetConfig();
+                App.objectHandler.StoreMazeData();
+                App.configForm.SetConfig();
 
-                System.IO.File.WriteAllLines(saveToFileDialog.FileName, Program.creator.MAZEDATA);
-                Program.creator.changedSinceSave = false;
+                System.IO.File.WriteAllLines(saveToFileDialog.FileName, App.config.MAZEDATA);
+                App.creator.changedSinceSave = false;
                 return true;
             }
             else return false;

@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="Creator.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,8 +64,11 @@
     </Compile>
     <Compile Include="FileHandler.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="ObjectHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stairs.cs" />
+    <Compile Include="Tools.cs" />
     <EmbeddedResource Include="Creator.resx">
       <DependentUpon>Creator.cs</DependentUpon>
     </EmbeddedResource>

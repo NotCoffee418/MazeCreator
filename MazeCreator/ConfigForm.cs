@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Globalization;
@@ -35,18 +29,18 @@ namespace MazeCreator
 
         private void saveConfigButton_Click(object sender, EventArgs e)
         {
-            Program.creator.StoreMazeData();
+            App.objectHandler.StoreMazeData();
             SetConfig();
-            Program.creator.LoadData(); // from stored
+            App.creator.LoadData(); // from stored
             this.Hide();
-            Program.creator.Show();
+            App.creator.Show();
         }
 
         private void openMazeButton_Click(object sender, EventArgs e)
         {
             this.Hide();
-            Program.creator.Show();
-            Program.fileHandler.OpenFile();
+            App.creator.Show();
+            App.fileHandler.OpenFile();
         }
        
         /// <summary>
@@ -58,7 +52,7 @@ namespace MazeCreator
         internal void LoadConfig(string configString = "", int change = -1, string value = "")
         {
             if (configString == "")
-                configString = Program.creator.MAZEDATA[0];
+                configString = App.config.MAZEDATA[0];
             string[] config = configString.Split('|');
 
             // Apply any change
@@ -82,7 +76,7 @@ namespace MazeCreator
                 levelCountTextBox.Text = config[11];
 
             // Set config in Creator
-            Program.configForm.SetConfig();
+            App.configForm.SetConfig();
         }
 
         /// <summary>
@@ -93,24 +87,24 @@ namespace MazeCreator
             try
             {
                 // Set creator data
-                Program.creator.GAMEOBJECT = int.Parse(objectIdTextBox.Text);
-                Program.creator.SPACING = SafeDouble(objectSpacingTextBox.Text);
-                Program.creator.WALLHEIGHT = int.Parse(wallHeightTextBox.Text);
-                Program.creator.X_COUNT = int.Parse(xCountTextBox.Text);
-                Program.creator.Y_COUNT = int.Parse(yCountTextBox.Text);
-                Program.creator.FLOOR = floorCheckBox.Checked;
-                Program.creator.ROOF = roofCheckBox.Checked;
-                Program.creator.STARTCOORDS[0] = SafeDouble(xTextBox.Text);
-                Program.creator.STARTCOORDS[1] = SafeDouble(yTextBox.Text);
-                Program.creator.STARTCOORDS[2] = SafeDouble(zTextBox.Text);
-                Program.creator.STARTCOORDS[3] = int.Parse(mapTextBox.Text);
-                Program.creator.LEVEL_COUNT = int.Parse(levelCountTextBox.Text);
+                App.config.GAMEOBJECT = int.Parse(objectIdTextBox.Text);
+                App.config.SPACING = SafeDouble(objectSpacingTextBox.Text);
+                App.config.WALLHEIGHT = int.Parse(wallHeightTextBox.Text);
+                App.config.X_COUNT = int.Parse(xCountTextBox.Text);
+                App.config.Y_COUNT = int.Parse(yCountTextBox.Text);
+                App.config.FLOOR = floorCheckBox.Checked;
+                App.config.ROOF = roofCheckBox.Checked;
+                App.config.STARTCOORDS[0] = SafeDouble(xTextBox.Text);
+                App.config.STARTCOORDS[1] = SafeDouble(yTextBox.Text);
+                App.config.STARTCOORDS[2] = SafeDouble(zTextBox.Text);
+                App.config.STARTCOORDS[3] = int.Parse(mapTextBox.Text);
+                App.config.LEVEL_COUNT = int.Parse(levelCountTextBox.Text);
 
 
                 // Set config text
-                if (Program.creator.MAZEDATA == null)
-                    Program.creator.MAZEDATA = new string[Program.creator.Y_COUNT + 1];
-                Program.creator.MAZEDATA[0] = objectIdTextBox.Text +
+                if (App.config.MAZEDATA == null)
+                    App.config.MAZEDATA = new string[App.config.Y_COUNT + 1];
+                App.config.MAZEDATA[0] = objectIdTextBox.Text +
                 '|' + SafeDouble(objectSpacingTextBox.Text) +
                 '|' + wallHeightTextBox.Text +
                 '|' + xCountTextBox.Text +
