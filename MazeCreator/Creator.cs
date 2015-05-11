@@ -149,7 +149,8 @@ namespace MazeCreator
                     for (int j = 0; j < X_COUNT; j++)
                     {
                         int v = 0;
-                        if (rows[lastRow + i][j] == '1') v = 1;
+                        if (rows[lastRow + i][j] != '0') 
+                            v = int.Parse(rows[lastRow + i][j].ToString()); // Convert char>String>int, else it uses key of char
                         LEVELS[grid].Grid.Rows[i].Cells[col].Value = v;
                         col++;
                     }
@@ -179,7 +180,7 @@ namespace MazeCreator
             if (progSel) return;
 
             var loc = LEVELS[activeGrid].Grid.SelectedCells[0];
-            int reqBlocks = WALLHEIGHT + 1;
+            int reqBlocks = 4;
 
             progSel = true;
             switch (stairsDirection)
@@ -232,8 +233,33 @@ namespace MazeCreator
             // Only trigger when stairs should be placed
             if (stairsDirection == 0) return;
 
-            throw new NotImplementedException();
+            // Get selected cells in the correct direction/order
+            var cells = LEVELS[activeGrid].Grid.SelectedCells;
 
+            // Set stairs location
+            for (int i = 0; i < cells.Count; i++)
+            {
+                switch (i)
+                {
+                    case 3: // bottom
+                        cells[i].Value = 2;
+                        break;
+                    case 2: // place location
+                        cells[i].Value = 3;
+                        break;
+                    case 1: // padding
+                        cells[i].Value = 4;
+                        break;
+                    case 0: // top
+                        cells[i].Value = 5;
+                        break;
+                }
+                int y = cells[i].ColumnIndex;
+                int x = cells[i].RowIndex;
+                SetCellBackColor(activeGrid, x , y);
+            }
+
+            // Stop placing stairs
             stairsDirection = 0;
         }
 
@@ -247,14 +273,41 @@ namespace MazeCreator
 
         private void SetCellBackColor(int grid, int i, int j)
         {
-            try
-            {
-                if (LEVELS[grid].Grid.Rows[i].Cells[j].Value != null &&
-                    (int)LEVELS[grid].Grid.Rows[i].Cells[j].Value == 1)
-                    LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Red;
-                else LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
-            }
-            catch { /* Value is an array when editing the same cell too fast */ }
+            if (LEVELS[grid].Grid.Rows[i].Cells[j].Value != null)
+                switch ((int)LEVELS[grid].Grid.Rows[i].Cells[j].Value)
+                {
+                    case 1: // wall
+                        LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Red;
+                        break;
+                    case 2: // bottom of stairs
+                        LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.MediumTurquoise;
+                        //LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                        break;
+                    case 3: // middle of stairs (object placed here)
+                        LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.MediumAquamarine;
+                        //LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                        break;
+                    case 4: // middle of stairs
+                        LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aquamarine;
+                        //LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                        break;
+                    case 5: // top of stairs
+                        LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aqua;
+                        // LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true; // stackoverflow for some reason
+
+                        // Show top of stairs on next level
+                        if (LEVELS.Count > grid + 1)
+                        {
+                            LEVELS[grid+1].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aqua;
+                            // LEVELS[grid+1].Grid.Rows[i].Cells[j].ReadOnly = true;
+                        }
+                        break;
+                    default: // 0
+                        LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+                        break;
+
+                }
+            else LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
         }
 
         /// <summary>
@@ -395,7 +448,12 @@ namespace MazeCreator
             // Add gameobject_template for Maze Crate
             if (GAMEOBJECT == 745000)
                 sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
-                    "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');";
+                    "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
+
+            // Add gameobject_template for Maze Stairs
+            if (LEVEL_COUNT > 1)
+                sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
+                    "('745001', '5', '7593', 'Maze Stairs', '', '', '', '94', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
 
             File.WriteAllText(path, sql);
         }
@@ -590,7 +648,8 @@ namespace MazeCreator
         // Set Color
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-             SetCellBackColor(activeGrid, e.RowIndex, e.ColumnIndex);
+            if (stairsDirection == 0) // if not placing stairs
+                SetCellBackColor(activeGrid, e.RowIndex, e.ColumnIndex);
         }
 
         // Selected cell looks
@@ -681,6 +740,7 @@ namespace MazeCreator
         private void levelTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             activeGrid = levelTabControl.SelectedIndex;
+            if (activeGrid == -1) activeGrid = 0;
         }
         private void add3DLevelToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -704,13 +764,7 @@ namespace MazeCreator
             PlaceStairs(4);
         }
 
-        
-
         #endregion
-
-        
-
-
 
     }
 }
