@@ -65,7 +65,7 @@
     <Compile Include="FileHandler.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="ObjectHandler.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stairs.cs" />
     <Compile Include="Tools.cs" />

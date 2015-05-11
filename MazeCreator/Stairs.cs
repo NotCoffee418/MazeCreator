@@ -20,64 +20,65 @@ namespace MazeCreator
         {
             stairsDirection = direction;
             // Remove wall handler
-            App.config.LEVELS[App.activeGrid].Grid.CellValueChanged -= 
+            Config.LEVELS[App.activeGrid].Grid.CellValueChanged -= 
                 new DataGridViewCellEventHandler(App.creator.dataGridView1_CellValueChanged);
-            App.config.LEVELS[App.activeGrid].Grid.MultiSelect = true;
+            Config.LEVELS[App.activeGrid].Grid.MultiSelect = true;
 
             // Display instructions
             MessageBox.Show("Activate the block where the bottom of your stairs start.");
 
             // Let user select start of maze
-            App.config.LEVELS[App.activeGrid].Grid.SelectionChanged += new System.EventHandler(PlacingStairs);
+            Config.LEVELS[App.activeGrid].Grid.SelectionChanged += new System.EventHandler(PlacingStairs);
         }
         public static void PlacingStairs(object sender, EventArgs e)
         {
             if (progSel) return;
 
-            var loc = App.config.LEVELS[App.activeGrid].Grid.SelectedCells[0];
+            var locX = Config.LEVELS[App.activeGrid].Grid.SelectedCells[0].ColumnIndex;
+            var locY = Config.LEVELS[App.activeGrid].Grid.SelectedCells[0].RowIndex;
             int reqBlocks = 4;
 
             progSel = true;
             switch (stairsDirection)
             {
                 case 1: // up
-                    if (loc.RowIndex - reqBlocks + 1 >= 0)
+                    if (locY - reqBlocks + 1 >= 0)
                         for (int i = 0; i < reqBlocks; i++)
-                            App.config.LEVELS[App.activeGrid].Grid.Rows[loc.RowIndex - i].Cells[loc.ColumnIndex].Selected = true;
+                            Config.LEVELS[App.activeGrid].Grid.Rows[locY - i].Cells[locX].Selected = true;
                     else
                     {
                         progSel = false;
-                        App.config.LEVELS[App.activeGrid].Grid.Rows[reqBlocks - 1].Cells[loc.ColumnIndex].Selected = true;
+                        Config.LEVELS[App.activeGrid].Grid.Rows[reqBlocks - 1].Cells[locX].Selected = true;
                     }
                     break;
                 case 2: // down
-                    if (loc.RowIndex + reqBlocks <= App.config.LEVELS[App.activeGrid].Grid.ColumnCount)
+                    if (locY + reqBlocks <= Config.LEVELS[App.activeGrid].Grid.ColumnCount)
                         for (int i = 0; i < reqBlocks; i++)
-                            App.config.LEVELS[App.activeGrid].Grid.Rows[loc.RowIndex + i].Cells[loc.ColumnIndex].Selected = true;
+                            Config.LEVELS[App.activeGrid].Grid.Rows[locY + i].Cells[locX].Selected = true;
                     else
                     {
                         progSel = false;
-                        App.config.LEVELS[App.activeGrid].Grid.Rows[App.config.LEVELS[App.activeGrid].Grid.RowCount - reqBlocks].Cells[loc.ColumnIndex].Selected = true;
+                        Config.LEVELS[App.activeGrid].Grid.Rows[Config.LEVELS[App.activeGrid].Grid.RowCount - reqBlocks].Cells[locX].Selected = true;
                     }
                     break;
                 case 3: // left
-                    if (loc.ColumnIndex - reqBlocks + 1 >= 0)
+                    if (locX - reqBlocks + 1 >= 0)
                         for (int i = 0; i < reqBlocks; i++)
-                            App.config.LEVELS[App.activeGrid].Grid.Rows[loc.RowIndex].Cells[loc.ColumnIndex - i].Selected = true;
+                            Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[locX - i].Selected = true;
                     else
                     {
                         progSel = false;
-                        App.config.LEVELS[App.activeGrid].Grid.Rows[loc.RowIndex].Cells[reqBlocks - 1].Selected = true;
+                        Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[reqBlocks - 1].Selected = true;
                     }
                     break;
                 case 4: // right
-                    if (loc.ColumnIndex + reqBlocks <= App.config.LEVELS[App.activeGrid].Grid.ColumnCount)
+                    if (locX + reqBlocks <= Config.LEVELS[App.activeGrid].Grid.ColumnCount)
                         for (int i = 0; i < reqBlocks; i++)
-                            App.config.LEVELS[App.activeGrid].Grid.Rows[loc.RowIndex].Cells[loc.ColumnIndex + i].Selected = true;
+                            Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[locX + i].Selected = true;
                     else
                     {
                         progSel = false;
-                        App.config.LEVELS[App.activeGrid].Grid.Rows[loc.RowIndex].Cells[App.config.LEVELS[App.activeGrid].Grid.ColumnCount - reqBlocks].Selected = true;
+                        Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[Config.LEVELS[App.activeGrid].Grid.ColumnCount - reqBlocks].Selected = true;
                     }
                     break;
             }
@@ -90,10 +91,10 @@ namespace MazeCreator
             stairsDirection = 0;
 
             // Remove placing stairs handler
-            App.config.LEVELS[App.activeGrid].Grid.SelectionChanged -= new System.EventHandler(PlacingStairs);
+            Config.LEVELS[App.activeGrid].Grid.SelectionChanged -= new System.EventHandler(PlacingStairs);
 
             // Get selected cells in the correct direction/order
-            var cells = App.config.LEVELS[App.activeGrid].Grid.SelectedCells;
+            var cells = Config.LEVELS[App.activeGrid].Grid.SelectedCells;
 
             // Set stairs location
             for (int i = 0; i < cells.Count; i++)
@@ -117,9 +118,9 @@ namespace MazeCreator
             }
 
             // Add wall handler again
-            App.config.LEVELS[App.activeGrid].Grid.CellValueChanged += 
+            Config.LEVELS[App.activeGrid].Grid.CellValueChanged += 
                 new DataGridViewCellEventHandler(App.creator.dataGridView1_CellValueChanged);
-            App.config.LEVELS[App.activeGrid].Grid.MultiSelect = false;
+            Config.LEVELS[App.activeGrid].Grid.MultiSelect = false;
         }
     }
 }

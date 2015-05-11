@@ -7,7 +7,6 @@ namespace MazeCreator
     {
         // Public static classes
         public static ConfigForm configForm;
-        public static Config config;
         public static Creator creator;
         public static FileHandler fileHandler;
         public static ObjectHandler objectHandler;
@@ -25,7 +24,6 @@ namespace MazeCreator
             Application.SetCompatibleTextRenderingDefault(false);
 
             configForm = new ConfigForm();
-            config = new Config();
             creator = new Creator();
             fileHandler = new FileHandler();
             objectHandler = new ObjectHandler();

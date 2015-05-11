@@ -31,10 +31,10 @@ namespace MazeCreator
         /// <param name="rows"></param>
         public void LoadData(string[] rows = null)
         {
-            App.config.LEVELS = new List<Level>();
+            Config.LEVELS = new List<Level>();
             levelTabControl.Controls.Clear();
 
-            for (int i = 0; i < App.config.LEVEL_COUNT; i++)
+            for (int i = 0; i < Config.LEVEL_COUNT; i++)
                 AddLevel(i, rows);
 
             App.activeGrid = 0;
@@ -42,8 +42,7 @@ namespace MazeCreator
 
         private void AddLevel(int id = -1, string[] rows = null)
         {
-            if (id == -1)
-                id = levelTabControl.Controls.Count;
+            if (id == -1) id = levelTabControl.Controls.Count;
 
             // Create grid
             DataGridView grid = new DataGridView();
@@ -58,7 +57,6 @@ namespace MazeCreator
             grid.CellValueChanged += new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
             grid.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
             grid.CellValueChanged += new DataGridViewCellEventHandler(Stairs.ConfirmPlaceStairs);
-
 
             // Add tab
             TabPage page = new TabPage();
@@ -75,9 +73,9 @@ namespace MazeCreator
             Level l = new Level();
             l.Tab = page;
             l.Grid = grid;
-            App.config.LEVELS.Add(l);
+            Config.LEVELS.Add(l);
             levelTabControl.Controls.Add(page);
-            LoadGrid(id, rows, 1 + (App.config.Y_COUNT * id));
+            LoadGrid(id, rows, 1 + (Config.Y_COUNT * id));
         }
 
         /// <summary>
@@ -87,52 +85,52 @@ namespace MazeCreator
         private void LoadGrid(int grid, string[] rows = null, int lastRow = 0)
         {
             // Clear datagrid
-            while (App.config.LEVELS[grid].Grid.Columns.Count > 0)
-                App.config.LEVELS[grid].Grid.Columns.RemoveAt(0);
+            while (Config.LEVELS[grid].Grid.Columns.Count > 0)
+                Config.LEVELS[grid].Grid.Columns.RemoveAt(0);
 
             // set columns
-            int[] defaultRow = new int[App.config.X_COUNT];
-            for (int i = 0; i < App.config.X_COUNT; i++)
+            int[] defaultRow = new int[Config.X_COUNT];
+            for (int i = 0; i < Config.X_COUNT; i++)
             {
                 DataGridViewColumn c = new DataGridViewCheckBoxColumn();
                 c.ValueType = typeof(int);
                 c.Width = 15;
                 c.HeaderText = (i + 1).ToString();
-                App.config.LEVELS[grid].Grid.Columns.Add(c);
+                Config.LEVELS[grid].Grid.Columns.Add(c);
                 defaultRow[i] = 0;
             }
 
             // Remove extra column
-            if (App.config.LEVELS[grid].Grid.Columns.Count == 1 + App.config.X_COUNT)
-                App.config.LEVELS[grid].Grid.Columns.RemoveAt(0);
+            if (Config.LEVELS[grid].Grid.Columns.Count == 1 + Config.X_COUNT)
+                Config.LEVELS[grid].Grid.Columns.RemoveAt(0);
 
 
             // Set rows
-            for (int i = 0; i < App.config.Y_COUNT; i++)
+            for (int i = 0; i < Config.Y_COUNT; i++)
             {
                 DataGridViewRow r = new DataGridViewRow();
                 r.Height = 15;
                 r.HeaderCell.Value = (i + 1).ToString();
                 r.SetValues(defaultRow);
-                App.config.LEVELS[grid].Grid.Rows.Add(r);
+                Config.LEVELS[grid].Grid.Rows.Add(r);
             }
 
             // Sets rows if none given
             if (rows == null) // From existing if no rows were given
-                rows = App.config.MAZEDATA;
+                rows = Config.MAZEDATA;
 
             // Loads data to grid
-            for (int i = 0; i < App.config.Y_COUNT; i++)
+            for (int i = 0; i < Config.Y_COUNT; i++)
             {
                 int col = 0;
                 if (rows.Count() > lastRow + i && rows[lastRow + i] != "") // Check if any data were
-                    for (int j = 0; j < App.config.X_COUNT; j++)
+                    for (int j = 0; j < Config.X_COUNT; j++)
                     {
                         int v = 0;
                         if (rows[lastRow + i][j] != '0')
                             // Convert char>String>int, else it uses key of char
                             v = int.Parse(rows[lastRow + i][j].ToString()); 
-                        App.config.LEVELS[grid].Grid.Rows[i].Cells[col].Value = v;
+                        Config.LEVELS[grid].Grid.Rows[i].Cells[col].Value = v;
                         col++;
                     }
             }
@@ -141,9 +139,9 @@ namespace MazeCreator
 
         public void ReloadColors(int grid)
         {
-            App.config.LEVELS[grid].Grid.ClearSelection();
-            for (int i = 0; i < App.config.Y_COUNT; i++) // Loop all rows
-                for (int j = 0; j < App.config.X_COUNT; j++) // Loop all columns
+            Config.LEVELS[grid].Grid.ClearSelection();
+            for (int i = 0; i < Config.Y_COUNT; i++) // Loop all rows
+                for (int j = 0; j < Config.X_COUNT; j++) // Loop all columns
                     SetCellBackColor(grid, i, j);
         }
 
@@ -151,47 +149,43 @@ namespace MazeCreator
         {
             try
             {
-                if (App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Value != null)
-                    switch ((int)App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Value)
+                if (Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value != null)
+                    switch ((int)Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value)
                     {
                         case 1: // wall
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Red;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Red;
                             break;
                         case 2: // bottom of stairs
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.MediumTurquoise;
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.MediumTurquoise;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
                             break;
                         case 3: // middle of stairs (object placed here)
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.MediumAquamarine;
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.MediumAquamarine;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
                             break;
                         case 4: // middle of stairs
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aquamarine;
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aquamarine;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
                             break;
                         case 5: // top of stairs
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aqua;
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aqua;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].ReadOnly = true;
 
                             // Show top of stairs on next level
-                            if (App.config.LEVELS.Count > grid + 1)
+                            if (Config.LEVELS.Count > grid + 1)
                             {
-                                App.config.LEVELS[grid + 1].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aqua;
-                                App.config.LEVELS[grid + 1].Grid.Rows[i].Cells[j].ReadOnly = true;
+                                Config.LEVELS[grid + 1].Grid.Rows[i].Cells[j].Style.BackColor = Color.Aqua;
+                                Config.LEVELS[grid + 1].Grid.Rows[i].Cells[j].ReadOnly = true;
                             }
                             break;
                         default: // 0
-                            App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+                            Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
                             break;
                     }
-                else App.config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
+                else Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor = Color.Lime;
             }
             catch { /* Exception when editing too fast */ }
         }
-
-        #region Edit menu
-
-        #endregion
 
         #region UI Handlers
         private void fillBordersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -247,14 +241,14 @@ namespace MazeCreator
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             // Back color
-            if (App.config.LEVELS[App.activeGrid].Grid.SelectedCells.Count > 0)
-                App.config.LEVELS[App.activeGrid].Grid.DefaultCellStyle.SelectionBackColor =
-                    App.config.LEVELS[App.activeGrid].Grid.SelectedCells[0].Style.BackColor;
+            if (Config.LEVELS[App.activeGrid].Grid.SelectedCells.Count > 0)
+                Config.LEVELS[App.activeGrid].Grid.DefaultCellStyle.SelectionBackColor =
+                    Config.LEVELS[App.activeGrid].Grid.SelectedCells[0].Style.BackColor;
 
             // Border
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                if (App.config.LEVELS[App.activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected == true)
+                if (Config.LEVELS[App.activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected == true)
                 {
                     e.Paint(e.CellBounds, DataGridViewPaintParts.All & ~DataGridViewPaintParts.Border);
                     using (Pen p = new Pen(Color.Black, 1))

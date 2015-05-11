@@ -42,11 +42,11 @@ namespace MazeCreator
                 if (curr < maze.Count)
                     endLine = ",\n";
                 else endLine = ";\n";
-                sql += "(" + App.config.GAMEOBJECT + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0,0)" + endLine;
+                sql += "(" + Config.GAMEOBJECT + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0,0)" + endLine;
             }
 
             // Add gameobject_template for Maze Crate
-            if (App.config.GAMEOBJECT == 745000)
+            if (Config.GAMEOBJECT == 745000)
                 sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
                     "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
 
@@ -88,7 +88,7 @@ namespace MazeCreator
                 App.objectHandler.StoreMazeData();
                 App.configForm.SetConfig();
 
-                System.IO.File.WriteAllLines(saveToFileDialog.FileName, App.config.MAZEDATA);
+                System.IO.File.WriteAllLines(saveToFileDialog.FileName, Config.MAZEDATA);
                 App.creator.changedSinceSave = false;
                 return true;
             }

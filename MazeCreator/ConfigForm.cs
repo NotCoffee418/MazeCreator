@@ -52,7 +52,7 @@ namespace MazeCreator
         internal void LoadConfig(string configString = "", int change = -1, string value = "")
         {
             if (configString == "")
-                configString = App.config.MAZEDATA[0];
+                configString = Config.MAZEDATA[0];
             string[] config = configString.Split('|');
 
             // Apply any change
@@ -87,24 +87,24 @@ namespace MazeCreator
             try
             {
                 // Set creator data
-                App.config.GAMEOBJECT = int.Parse(objectIdTextBox.Text);
-                App.config.SPACING = SafeDouble(objectSpacingTextBox.Text);
-                App.config.WALLHEIGHT = int.Parse(wallHeightTextBox.Text);
-                App.config.X_COUNT = int.Parse(xCountTextBox.Text);
-                App.config.Y_COUNT = int.Parse(yCountTextBox.Text);
-                App.config.FLOOR = floorCheckBox.Checked;
-                App.config.ROOF = roofCheckBox.Checked;
-                App.config.STARTCOORDS[0] = SafeDouble(xTextBox.Text);
-                App.config.STARTCOORDS[1] = SafeDouble(yTextBox.Text);
-                App.config.STARTCOORDS[2] = SafeDouble(zTextBox.Text);
-                App.config.STARTCOORDS[3] = int.Parse(mapTextBox.Text);
-                App.config.LEVEL_COUNT = int.Parse(levelCountTextBox.Text);
+                Config.GAMEOBJECT = int.Parse(objectIdTextBox.Text);
+                Config.SPACING = SafeDouble(objectSpacingTextBox.Text);
+                Config.WALLHEIGHT = int.Parse(wallHeightTextBox.Text);
+                Config.X_COUNT = int.Parse(xCountTextBox.Text);
+                Config.Y_COUNT = int.Parse(yCountTextBox.Text);
+                Config.FLOOR = floorCheckBox.Checked;
+                Config.ROOF = roofCheckBox.Checked;
+                Config.STARTCOORDS[0] = SafeDouble(xTextBox.Text);
+                Config.STARTCOORDS[1] = SafeDouble(yTextBox.Text);
+                Config.STARTCOORDS[2] = SafeDouble(zTextBox.Text);
+                Config.STARTCOORDS[3] = int.Parse(mapTextBox.Text);
+                Config.LEVEL_COUNT = int.Parse(levelCountTextBox.Text);
 
 
                 // Set config text
-                if (App.config.MAZEDATA == null)
-                    App.config.MAZEDATA = new string[App.config.Y_COUNT + 1];
-                App.config.MAZEDATA[0] = objectIdTextBox.Text +
+                if (Config.MAZEDATA == null)
+                    Config.MAZEDATA = new string[Config.Y_COUNT + 1];
+                Config.MAZEDATA[0] = objectIdTextBox.Text +
                 '|' + SafeDouble(objectSpacingTextBox.Text) +
                 '|' + wallHeightTextBox.Text +
                 '|' + xCountTextBox.Text +
