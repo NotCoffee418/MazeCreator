@@ -131,9 +131,7 @@ namespace MazeCreator
         /// <returns></returns>
         private double SafeDouble(string p)
         {
-            p = p.Replace(',','.'); // I hope this doesn't break stuff again...
-            double result = double.Parse(p, CultureInfo.InvariantCulture);
-            return result;
+            return double.Parse(p.Replace(',','.'), CultureInfo.InvariantCulture);
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
