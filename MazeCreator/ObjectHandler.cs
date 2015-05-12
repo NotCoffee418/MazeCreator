@@ -132,7 +132,7 @@ namespace MazeCreator
             var grid = Config.LEVELS[lev].Grid; // clearer to work with
             int placementX = x; // It also spawns a block next to the bottom location
             int placementY = y;
-            double quarterPi = 3.14159 / 4;
+            double quarter = 6.28318 / 4; // max orientation = pi * 2
             double orientation = 0.0; // 0 - Pi
 
             // vars for spawn location check
@@ -146,21 +146,21 @@ namespace MazeCreator
                 if (left >= 0 && (int)grid.Rows[y].Cells[left].Value == 3)
                 {
                     placementX = left;
-                    orientation = 0;
+                    orientation = quarter;
                 }
             } catch {/* improve this */ }
             try {
                 if (right <= grid.Rows.Count - 1 && (int)grid.Rows[y].Cells[right].Value == 3)
                 {
                     placementX = right;
-                    orientation = quarterPi * 2;
+                    orientation = quarter * 3;
                 }
             } catch {/* improve this */ }
             try {
                 if (above >= 0 && (int)grid.Rows[above].Cells[x].Value == 3)
                 {
                     placementY = above;
-                    orientation = quarterPi;
+                    orientation = 0;
                 }
             } catch {/* improve this */ }
             try
@@ -168,15 +168,15 @@ namespace MazeCreator
                 if (below <= grid.Columns.Count - 1 && (int)grid.Rows[below].Cells[x].Value == 3)
                 {
                     placementY = below;
-                    orientation = quarterPi * 3;
+                    orientation = quarter * 2;
                 }
             } catch {/* improve this */ }
 
             // Create the box
             double[] box = new double[6];
-            box[0] = Config.SPACING * x + Config.STARTCOORDS[0];
-            box[1] = Config.SPACING * y + Config.STARTCOORDS[1];
-            box[2] = spawnZ;
+            box[0] = Config.SPACING * placementX + Config.STARTCOORDS[0];
+            box[1] = Config.SPACING * placementY + Config.STARTCOORDS[1];
+            box[2] = spawnZ + (Config.WALLHEIGHT / 2);
             box[3] = Config.STARTCOORDS[3];
             box[4] = orientation;
             box[5] = 745001; // Stairs object

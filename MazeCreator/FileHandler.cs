@@ -42,7 +42,7 @@ namespace MazeCreator
                 if (curr < maze.Count)
                     endLine = ",\n";
                 else endLine = ";\n";
-                sql += "(" + Config.GAMEOBJECT + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0,0)" + endLine;
+                sql += "(" + box[5] + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + "," + box[4].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0)" + endLine;
             }
 
             // Add gameobject_template for Maze Crate
