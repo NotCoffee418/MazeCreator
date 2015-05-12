@@ -12,7 +12,7 @@ namespace MazeCreator
             // Generate object locations
             List<double[]> boxList = new List<double[]>();
             int startZ = 0;
-            for (int lev = 0; lev < Config.LEVELS.Count; lev++)
+            for (int lev = 0; lev <= Config.LEVELS.Count; lev++)
             {
                 for (int y = 0; y < Config.Y_COUNT; y++) // Loop all rows
                 {
@@ -20,7 +20,7 @@ namespace MazeCreator
                     {
                         double z = 0;
                         double[] box = new double[6];
-                        // Floor
+                        // Floor & roof
                         if (Config.FLOOR && lev == 0 || lev > 0 && NeedsFloorBlock(lev, x, y))
                         {
                             box[0] = Config.SPACING * x + Config.STARTCOORDS[0];                // x
@@ -66,36 +66,19 @@ namespace MazeCreator
                             box = GetStairsBox(lev, x, y, spawnZ);
                             boxList.Add(box);
                         }
-                        
-
-                        // Increase Z for roof or next level
-                        z += Config.WALLHEIGHT;
-
-                        // Roof
-                        if (Config.ROOF && lev == Config.LEVELS.Count - 1) // Last level only
-                        {
-                            box = new double[6];
-                            box[0] = Config.SPACING * x + Config.STARTCOORDS[0];
-                            box[1] = Config.SPACING * y + Config.STARTCOORDS[1];
-                            box[2] = Config.SPACING * (startZ + z) + Config.STARTCOORDS[2];
-                            box[3] = Config.STARTCOORDS[3];
-                            box[4] = 0;
-                            box[5] = Config.GAMEOBJECT;
-                            boxList.Add(box);
-                        }
                     }
                 }
 
                 // sets next startZ
                 startZ += Config.WALLHEIGHT;
-                if (Config.FLOOR && lev == 0 || lev > 0 && lev < Config.LEVELS.Count - 1)
+                if (Config.FLOOR && lev == 0 || lev > 0 && lev < Config.LEVELS.Count)
                     startZ++;
             }
             return boxList;
         }
 
         /// <summary>
-        /// Disables floor block when there are stairs below
+        /// Disables floor block when there are stairs below & allows roof
         /// </summary>
         /// <param name="lev">Current level</param>
         /// <param name="x">Column</param>
@@ -104,6 +87,8 @@ namespace MazeCreator
         private bool NeedsFloorBlock(int lev, int x, int y)
         {
             if (lev == 0) return true; // no stairs below
+            else if (!Config.ROOF && lev == Config.LEVELS.Count)
+                return false; // Roof
 
             // Block below 
             int below = 0;
@@ -130,8 +115,8 @@ namespace MazeCreator
         {
             // Determine object placement location relative to the given coords
             var grid = Config.LEVELS[lev].Grid; // clearer to work with
-            int placementX = x; // It also spawns a block next to the bottom location
-            int placementY = y;
+            double placementX = x; // It also spawns a block next to the bottom location
+            double placementY = y;
             double quarter = 6.28318 / 4; // max orientation = pi * 2
             double orientation = 0.0; // 0 - Pi
 
@@ -145,21 +130,21 @@ namespace MazeCreator
             try {
                 if (left >= 0 && (int)grid.Rows[y].Cells[left].Value == 3)
                 {
-                    placementX = left;
-                    orientation = quarter;
+                    placementX = left - 0.25;
+                    orientation = quarter * 3;
                 }
             } catch {/* improve this */ }
             try {
                 if (right <= grid.Rows.Count - 1 && (int)grid.Rows[y].Cells[right].Value == 3)
                 {
-                    placementX = right;
-                    orientation = quarter * 3;
+                    placementX = right + 0.25;
+                    orientation = quarter;
                 }
             } catch {/* improve this */ }
             try {
                 if (above >= 0 && (int)grid.Rows[above].Cells[x].Value == 3)
                 {
-                    placementY = above;
+                    placementY = above - 0.25;
                     orientation = 0;
                 }
             } catch {/* improve this */ }
@@ -167,7 +152,7 @@ namespace MazeCreator
             {
                 if (below <= grid.Columns.Count - 1 && (int)grid.Rows[below].Cells[x].Value == 3)
                 {
-                    placementY = below;
+                    placementY = below + 0.25;
                     orientation = quarter * 2;
                 }
             } catch {/* improve this */ }
@@ -176,7 +161,7 @@ namespace MazeCreator
             double[] box = new double[6];
             box[0] = Config.SPACING * placementX + Config.STARTCOORDS[0];
             box[1] = Config.SPACING * placementY + Config.STARTCOORDS[1];
-            box[2] = spawnZ + (Config.WALLHEIGHT / 2);
+            box[2] = spawnZ + (Config.WALLHEIGHT / 1.9); // Makes the stairs walkable without jumping
             box[3] = Config.STARTCOORDS[3];
             box[4] = orientation;
             box[5] = 745001; // Stairs object
