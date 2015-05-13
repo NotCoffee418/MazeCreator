@@ -131,6 +131,7 @@ namespace MazeCreator
             for (int i = 0; i < 4; i++ )
             {
                 Config.LEVELS[App.activeGrid].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
+                App.creator.SetCellInfo(App.activeGrid, newLocation[i, 0], newLocation[i, 1]);
                 next--;
             }
 

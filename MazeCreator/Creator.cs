@@ -159,42 +159,16 @@ namespace MazeCreator
 
         public void SetCellInfo(int grid, int y, int x)
         {
-            if (Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value != null)
-                switch ((int)Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value)
-                {
-                    case 1: // wall
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[1];
-                        break;
-                    case 2: // bottom of stairs
-                        // !!!If this color is changed, change on save & SQL export too (workaround)
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[2];
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
-                        break;
-                    case 3: // middle of stairs (object placed here)
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[3];
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
-                        break;
-                    case 4: // middle of stairs
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[4];
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
-                        break;
-                    case 5: // top of stairs
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[5];
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
+            // Get cell value
+            int value = (int)Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value;
 
-                        // Show top of stairs on next level
-                        if (Config.LEVELS.Count > grid + 1)
-                        {
-                            Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].Style.BackColor = App.color[5];
-                            Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].ReadOnly = true;
-                        }
-                        break;
-                    default: // 0
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[0];
-                        break;
-                }
-            else Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[0];
-            
+            // Set info
+            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[value];
+            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ToolTipText = App.tooltip[value];
+
+            // Make stairs read-only
+            if (value >= 2 && value <= 5)
+                Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
         }
 
         #region UI Handlers
