@@ -222,8 +222,7 @@ namespace MazeCreator
         // Set Color
         public void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (Stairs.stairsDirection == 0) // if not placing stairs
-                SetCellInfo(App.activeGrid, e.RowIndex, e.ColumnIndex);
+            SetCellInfo(App.activeGrid, e.RowIndex, e.ColumnIndex);
         }
 
         // Selected cell looks

@@ -5,13 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Reflection;
+using System.ComponentModel;
+
 
 namespace MazeCreator
 {
     class Stairs
     {
-        public static int stairsDirection = 0;
-        private static int[,] newLocation = new int[4,2]; 
+        public int stairsDirection = 0;
+        private int[,] newLocation = new int[4,2]; 
 
         /// <summary>
         /// Prepare to place stairs
@@ -25,8 +28,8 @@ namespace MazeCreator
             MessageBox.Show("Activate the block where the bottom of your stairs start.");
 
             // Let user select start of maze
-            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter += new DataGridViewCellEventHandler(PlacingStairs);
-            Config.LEVELS[App.activeGrid].Grid.CellMouseDown += new DataGridViewCellMouseEventHandler(ConfirmPlaceStairs);
+            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter += PlacingStairs;
+            Config.LEVELS[App.activeGrid].Grid.CellMouseDown += ConfirmPlaceStairs;
         }
 
         public void PlacingStairs(object sender, DataGridViewCellEventArgs e)
@@ -92,8 +95,8 @@ namespace MazeCreator
         public void ConfirmPlaceStairs(object sender, DataGridViewCellMouseEventArgs e)
         {
             // Remove remove handlers
-            //Config.LEVELS[App.activeGrid].Grid.CellMouseClick -= new DataGridViewCellMouseEventHandler(ConfirmPlaceStairs);
-            //Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= new DataGridViewCellEventHandler(PlacingStairs);
+            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingStairs;
+            Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceStairs;
 
             // Only trigger when stairs should be placed
             if (stairsDirection == 0) return;
