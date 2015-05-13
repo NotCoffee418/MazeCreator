@@ -23,10 +23,15 @@ namespace MazeCreator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // Load classes
             configForm = new ConfigForm();
             creator = new Creator();
             fileHandler = new FileHandler();
             objectHandler = new ObjectHandler();
+
+            // Init Stairs colors
+            Stairs.InitStairs();
+
             Application.Run(configForm);
         }
     }

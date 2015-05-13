@@ -4,13 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace MazeCreator
 {
     class Stairs
     {
+
+        public static Color[] stairsColor = new Color[4];
         public static int stairsDirection = 0;
         private static bool progSel = false;
+        private static int[,] newLocation = new int[4,2]; 
+
+
+        // Loads stairs colors
+        public static void InitStairs()
+        {
+            // Set stairsColor
+            stairsColor[0] = Color.MediumAquamarine; // bottom
+            stairsColor[1] = Color.MediumTurquoise; // Placementblock
+            stairsColor[2] = Color.Aquamarine; // middle high
+            stairsColor[3] = Color.Aqua; // top
+        }
 
         /// <summary>
         /// Prepare to place stairs
@@ -19,7 +34,6 @@ namespace MazeCreator
         public static void PlaceStairs(int direction)
         {
             stairsDirection = direction;
-            Config.LEVELS[App.activeGrid].Grid.MultiSelect = true;
 
             // Display instructions
             MessageBox.Show("Activate the block where the bottom of your stairs start.");
@@ -35,19 +49,21 @@ namespace MazeCreator
         }
         public static void PlacingStairs(object sender, EventArgs e)
         {
-            if (progSel) return;
+            if (progSel || Config.LEVELS[App.activeGrid].Grid.SelectedCells.Count == 0) 
+                return;
+            progSel = true;
 
-            var locX = Config.LEVELS[App.activeGrid].Grid.SelectedCells[0].ColumnIndex;
-            var locY = Config.LEVELS[App.activeGrid].Grid.SelectedCells[0].RowIndex;
+            App.creator.ReloadColors(App.activeGrid);
+            int locX = Config.LEVELS[App.activeGrid].Grid.SelectedCells[0].ColumnIndex;
+            int locY = Config.LEVELS[App.activeGrid].Grid.SelectedCells[0].RowIndex;
             int reqBlocks = 4;
 
-            progSel = true;
             switch (stairsDirection)
             {
                 case 1: // up
                     if (locY - reqBlocks + 1 >= 0)
                         for (int i = 0; i < reqBlocks; i++)
-                            Config.LEVELS[App.activeGrid].Grid.Rows[locY - i].Cells[locX].Selected = true;
+                            AddStairsPos(i, locX, locY - i);
                     else
                     {
                         progSel = false;
@@ -57,7 +73,7 @@ namespace MazeCreator
                 case 2: // down
                     if (locY + reqBlocks <= Config.LEVELS[App.activeGrid].Grid.ColumnCount)
                         for (int i = 0; i < reqBlocks; i++)
-                            Config.LEVELS[App.activeGrid].Grid.Rows[locY + i].Cells[locX].Selected = true;
+                            AddStairsPos(i, locX, locY + i);
                     else
                     {
                         progSel = false;
@@ -67,7 +83,7 @@ namespace MazeCreator
                 case 3: // left
                     if (locX - reqBlocks + 1 >= 0)
                         for (int i = 0; i < reqBlocks; i++)
-                            Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[locX - i].Selected = true;
+                            AddStairsPos(i, locX - i, locY);
                     else
                     {
                         progSel = false;
@@ -77,7 +93,7 @@ namespace MazeCreator
                 case 4: // right
                     if (locX + reqBlocks <= Config.LEVELS[App.activeGrid].Grid.ColumnCount)
                         for (int i = 0; i < reqBlocks; i++)
-                            Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[locX + i].Selected = true;
+                            AddStairsPos(i, locX + i, locY);
                     else
                     {
                         progSel = false;
@@ -87,6 +103,30 @@ namespace MazeCreator
             }
             progSel = false;
         }
+
+        /// <summary>
+        /// Sets color for temporary placement
+        /// Fills newLocation to be used by ConfirmPlaceStairs
+        /// </summary>
+        /// <param name="i">part of stairs</param>
+        /// <param name="locX">X location of part</param>
+        /// <param name="locY">Y location of part</param>
+        private static void AddStairsPos(int i, int locX, int locY)
+        {
+            // Set temporary color
+            Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[locX].Style.BackColor = stairsColor[i]; ;
+
+            // Add part
+            i = 3 - i; // Inverted
+            newLocation[i, 0] = locY;
+            newLocation[i, 1] = locX;
+        }
+
+        /// <summary>
+        /// Confirms the stairs location & places it permanently
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public static void ConfirmPlaceStairs(object sender, DataGridViewCellEventArgs e)
         {
             Config.LEVELS[App.activeGrid].Grid.CellValueChanged -=
@@ -98,22 +138,17 @@ namespace MazeCreator
             // Remove placing stairs handler
             Config.LEVELS[App.activeGrid].Grid.SelectionChanged -= new System.EventHandler(PlacingStairs);
 
-            // Get selected cells in the correct direction/order
-            var cells = Config.LEVELS[App.activeGrid].Grid.SelectedCells;
-
             // Set stairs location
             int next = 5; // Count down from 5 to 2
-            for (int i = 0; i < cells.Count; i++ )
+            for (int i = 0; i < 4; i++ )
             {
-                cells[i].Value = next;
-                App.creator.SetCellBackColor(App.activeGrid, cells[i].RowIndex, cells[i].ColumnIndex);
+                Config.LEVELS[App.activeGrid].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
                 next--;
             }
 
             // Add wall handler again
             Config.LEVELS[App.activeGrid].Grid.CellValueChanged += 
                 new DataGridViewCellEventHandler(App.creator.dataGridView1_CellValueChanged);
-            Config.LEVELS[App.activeGrid].Grid.MultiSelect = false;
         }
     }
 }

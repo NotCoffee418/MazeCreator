@@ -39,7 +39,7 @@ namespace MazeCreator
                             int value = (int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value;
 
                             // Workaround...
-                            if (value == 1 && Config.LEVELS[lev].Grid.Rows[y].Cells[x].Style.BackColor == Color.MediumAquamarine)
+                            if (value == 1 && Config.LEVELS[lev].Grid.Rows[y].Cells[x].Style.BackColor == Stairs.stairsColor[0])
                                 value = 2;
 
                             if (value == 1) // wall
@@ -181,8 +181,8 @@ namespace MazeCreator
                     for (int j = 0; j < Config.X_COUNT; j++)// Loop all columns 
                     {
                             int value = (int)Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value;
-                            if (value == 1 && Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor == Color.MediumAquamarine) // Workaround
-                                value = 2;
+                            if (value == 1 && Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor == Stairs.stairsColor[0])
+                                value = 2; // Workaround
                             content += value;
                     }
                     if (i < (Config.Y_COUNT * Config.LEVELS.Count) - 1) content += "\n";

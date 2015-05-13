@@ -142,10 +142,19 @@ namespace MazeCreator
 
         public void ReloadColors(int grid)
         {
+            // handle cell selection
+            if (Config.LEVELS[grid].Grid.SelectedCells.Count == 0)
+                Config.LEVELS[grid].Grid.Rows[0].Cells[0].Selected = true;
+            var sel = Config.LEVELS[grid].Grid.SelectedCells[0];
             Config.LEVELS[grid].Grid.ClearSelection();
+
+            // Reload colors
             for (int i = 0; i < Config.Y_COUNT; i++) // Loop all rows
                 for (int j = 0; j < Config.X_COUNT; j++) // Loop all columns
                     SetCellBackColor(grid, i, j);
+
+            // Select original cell
+            Config.LEVELS[grid].Grid.Rows[sel.RowIndex].Cells[sel.ColumnIndex].Selected = true;
         }
 
         public void SetCellBackColor(int grid, int y, int x)
@@ -158,25 +167,25 @@ namespace MazeCreator
                         break;
                     case 2: // bottom of stairs
                         // !!!If this color is changed, change on save & SQL export too (workaround)
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.MediumAquamarine;
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Stairs.stairsColor[0];
                         Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
                         break;
                     case 3: // middle of stairs (object placed here)
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.MediumTurquoise;
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Stairs.stairsColor[1];
                         Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
                         break;
                     case 4: // middle of stairs
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aquamarine;
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Stairs.stairsColor[2];
                         Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
                         break;
                     case 5: // top of stairs
-                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aqua;
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Stairs.stairsColor[3];
                         Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
 
                         // Show top of stairs on next level
                         if (Config.LEVELS.Count > grid + 1)
                         {
-                            Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aqua;
+                            Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].Style.BackColor = Stairs.stairsColor[3];
                             Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].ReadOnly = true;
                         }
                         break;
