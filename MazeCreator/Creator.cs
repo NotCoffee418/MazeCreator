@@ -159,16 +159,21 @@ namespace MazeCreator
 
         public void SetCellInfo(int grid, int y, int x)
         {
-            // Get cell value
-            int value = (int)Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value;
+            try
+            {
+                // Get cell value
+                int value = (int)Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value;
 
-            // Set info
-            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[value];
-            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ToolTipText = App.tooltip[value];
+                // Set info
+                Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[value];
+                Config.LEVELS[grid].Grid.Rows[y].Cells[x].ToolTipText = App.tooltip[value];
 
-            // Make stairs read-only
-            if (value >= 2 && value <= 5)
-                Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
+                // Make stairs read-only
+                if (value >= 2 && value <= 5)
+                    Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
+            }
+            catch (InvalidCastException)
+            { /* Occurs when editing too fast, can be ignored */ }
         }
 
         #region UI Handlers
