@@ -10,22 +10,10 @@ namespace MazeCreator
 {
     class Stairs
     {
-
-        public static Color[] stairsColor = new Color[4];
         public static int stairsDirection = 0;
         private static bool progSel = false;
         private static int[,] newLocation = new int[4,2]; 
 
-
-        // Loads stairs colors
-        public static void InitStairs()
-        {
-            // Set stairsColor
-            stairsColor[0] = Color.MediumAquamarine; // bottom
-            stairsColor[1] = Color.MediumTurquoise; // Placementblock
-            stairsColor[2] = Color.Aquamarine; // middle high
-            stairsColor[3] = Color.Aqua; // top
-        }
 
         /// <summary>
         /// Prepare to place stairs
@@ -114,7 +102,7 @@ namespace MazeCreator
         private static void AddStairsPos(int i, int locX, int locY)
         {
             // Set temporary color
-            Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[locX].Style.BackColor = stairsColor[i]; ;
+            Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[locX].Style.BackColor = App.color[i + 2];
 
             // Add part
             i = 3 - i; // Inverted
