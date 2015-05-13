@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Reflection;
-using System.ComponentModel;
 
 
 namespace MazeCreator
@@ -102,13 +100,20 @@ namespace MazeCreator
             if (stairsDirection == 0) return;
             stairsDirection = 0;
 
-
             // Set stairs location
             int next = 5; // Count down from 5 to 2
             for (int i = 0; i < 4; i++ )
             {
                 Config.LEVELS[App.activeGrid].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
                 App.creator.SetCellInfo(App.activeGrid, newLocation[i, 0], newLocation[i, 1]);
+
+                // Add top of stairs to next level
+                if (i == 0 && App.activeGrid + 1 < Config.LEVELS.Count)
+                {
+                    Config.LEVELS[App.activeGrid + 1].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
+                    App.creator.SetCellInfo(App.activeGrid + 1, newLocation[i, 0], newLocation[i, 1]);
+                }
+
                 next--;
             }
         }
