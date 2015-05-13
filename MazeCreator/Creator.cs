@@ -113,6 +113,12 @@ namespace MazeCreator
                 r.HeaderCell.Value = (i + 1).ToString();
                 r.SetValues(defaultRow);
                 Config.LEVELS[grid].Grid.Rows.Add(r);
+
+                // Set integer value for all cells
+                for (int j = 0; j < Config.X_COUNT; j++)
+                {
+                    Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value = 0;
+                }
             }
 
             // Sets rows if none given
@@ -126,10 +132,7 @@ namespace MazeCreator
                 if (rows.Count() > lastRow + i && rows[lastRow + i] != "") // Check if any data were
                     for (int j = 0; j < Config.X_COUNT; j++)
                     {
-                        int v = 0;
-                        if (rows[lastRow + i][j] != '0')
-                            // Convert char>String>int, else it uses key of char
-                            v = int.Parse(rows[lastRow + i][j].ToString()); 
+                        int v = int.Parse(rows[lastRow + i][j].ToString()); 
                         Config.LEVELS[grid].Grid.Rows[i].Cells[col].Value = v;
                         col++;
                     }
@@ -147,47 +150,42 @@ namespace MazeCreator
 
         public void SetCellBackColor(int grid, int y, int x)
         {
-            try
-            {
-                if (Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value != null)
-                    switch ((int)Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value)
-                    {
-                        case 1: // wall
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Red;
-                            break;
-                        case 2: // bottom of stairs
-                            // !!!If this color is changed, change on save & SQL export too (workaround)
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.MediumAquamarine;
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
-                            break;
-                        case 3: // middle of stairs (object placed here)
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.MediumTurquoise;
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
-                            break;
-                        case 4: // middle of stairs
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aquamarine;
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
-                            break;
-                        case 5: // top of stairs
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aqua;
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
+            if (Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value != null)
+                switch ((int)Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value)
+                {
+                    case 1: // wall
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Red;
+                        break;
+                    case 2: // bottom of stairs
+                        // !!!If this color is changed, change on save & SQL export too (workaround)
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.MediumAquamarine;
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
+                        break;
+                    case 3: // middle of stairs (object placed here)
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.MediumTurquoise;
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
+                        break;
+                    case 4: // middle of stairs
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aquamarine;
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
+                        break;
+                    case 5: // top of stairs
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aqua;
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
 
-                            // Show top of stairs on next level
-                            if (Config.LEVELS.Count > grid + 1)
-                            {
-                                Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aqua;
-                                Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].ReadOnly = true;
-                            }
-                            break;
-                        default: // 0
-                            Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Lime;
-                            break;
-                    }
-                else Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Lime;
-            }
-            catch { /* Exception when editing too fast & on null */
-                Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Lime;
-            }
+                        // Show top of stairs on next level
+                        if (Config.LEVELS.Count > grid + 1)
+                        {
+                            Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].Style.BackColor = Color.Aqua;
+                            Config.LEVELS[grid + 1].Grid.Rows[y].Cells[x].ReadOnly = true;
+                        }
+                        break;
+                    default: // 0
+                        Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Lime;
+                        break;
+                }
+            else Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = Color.Lime;
+            
         }
 
         #region UI Handlers
