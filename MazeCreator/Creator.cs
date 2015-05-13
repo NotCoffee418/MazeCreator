@@ -318,19 +318,19 @@ namespace MazeCreator
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            Stairs.PlaceStairs(1);
+            new Stairs(1);
         }
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            Stairs.PlaceStairs(2);
+            new Stairs(2);
         }
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            Stairs.PlaceStairs(3);
+            new Stairs(3);
         }
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            Stairs.PlaceStairs(4);
+            new Stairs(4);
         }
         #endregion
     }

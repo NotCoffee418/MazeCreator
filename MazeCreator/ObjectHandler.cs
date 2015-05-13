@@ -38,10 +38,6 @@ namespace MazeCreator
                         {
                             int value = (int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value;
 
-                            // Workaround...
-                            if (value == 1 && Config.LEVELS[lev].Grid.Rows[y].Cells[x].Style.BackColor == App.color[2])
-                                value = 2;
-
                             if (value == 1) // wall
                             {
                                 for (int k = 0; k < Config.WALLHEIGHT; k++)
@@ -179,12 +175,7 @@ namespace MazeCreator
                 for (int i = 0; i < Config.Y_COUNT; i++) // Loop all rows
                 {
                     for (int j = 0; j < Config.X_COUNT; j++)// Loop all columns 
-                    {
-                            int value = (int)Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value;
-                            if (value == 1 && Config.LEVELS[grid].Grid.Rows[i].Cells[j].Style.BackColor == App.color[2])
-                                value = 2; // Workaround
-                            content += value;
-                    }
+                            content += (int)Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value;
                     if (i < (Config.Y_COUNT * Config.LEVELS.Count) - 1) content += "\n";
                 }
             }
