@@ -11,6 +11,7 @@ namespace MazeCreator
 {
     class Stairs
     {
+        private bool allowedLocation = true;
         public int stairsDirection = 0;
         private int[,] newLocation = new int[4,2]; 
 
@@ -32,39 +33,71 @@ namespace MazeCreator
 
         public void PlacingStairs(object sender, DataGridViewCellEventArgs e)
         {
+            allowedLocation = true;
             int locX = e.ColumnIndex;
             int locY = e.RowIndex;
             
             App.creator.ReloadColors(App.activeGrid);
             int reqBlocks = 4;
-
-            switch (stairsDirection)
+            
+            try
             {
-                case 1: // up
-                    if (locY - reqBlocks + 1 < 0)
-                        locY = reqBlocks - 1;
-                    for (int i = 0; i < reqBlocks; i++)
-                        AddStairsPos(i, locX, locY - i);
-                    break;
-                case 2: // down
-                    if (locY + reqBlocks > Config.LEVELS[App.activeGrid].Grid.ColumnCount)
-                        locY = Config.LEVELS[App.activeGrid].Grid.RowCount - reqBlocks;
-                    for (int i = 0; i < reqBlocks; i++)
-                        AddStairsPos(i, locX, locY + i);
-                    break;
-                case 3: // left
-                    if (locX - reqBlocks + 1 < 0)
-                        locX = reqBlocks - 1;
-                    for (int i = 0; i < reqBlocks; i++)
-                        AddStairsPos(i, locX - i, locY);
-                    break;
-                case 4: // right
-                    if (locX + reqBlocks > Config.LEVELS[App.activeGrid].Grid.ColumnCount)
-                        locX = Config.LEVELS[App.activeGrid].Grid.ColumnCount - reqBlocks;
-                    for (int i = 0; i < reqBlocks; i++)
-                        AddStairsPos(i, locX + i, locY);
-                    break;
+                switch (stairsDirection)
+                {
+                    case 1: // up
+                        if (locY - reqBlocks + 1 < 0)
+                            locY = reqBlocks - 1;
+                        for (int i = 0; i < reqBlocks; i++)
+                        {
+                            AddStairsPos(i, locX, locY - i);
+                            CheckAllowedLocation(locX, locY - i);
+                        }
+                        break;
+                    case 2: // down
+                        if (locY + reqBlocks > Config.LEVELS[App.activeGrid].Grid.ColumnCount)
+                            locY = Config.LEVELS[App.activeGrid].Grid.RowCount - reqBlocks;
+                        for (int i = 0; i < reqBlocks; i++)
+                        {
+                            AddStairsPos(i, locX, locY + i);
+                            CheckAllowedLocation(locX, locY + i);
+                        }
+                        break;
+                    case 3: // left
+                        if (locX - reqBlocks + 1 < 0)
+                            locX = reqBlocks - 1;
+                        for (int i = 0; i < reqBlocks; i++)
+                        {
+                            AddStairsPos(i, locX - i, locY);
+                            CheckAllowedLocation(locX - i, locY);
+                        }
+                        break;
+                    case 4: // right
+                        if (locX + reqBlocks > Config.LEVELS[App.activeGrid].Grid.ColumnCount)
+                            locX = Config.LEVELS[App.activeGrid].Grid.ColumnCount - reqBlocks;
+                        for (int i = 0; i < reqBlocks; i++)
+                        {
+                            AddStairsPos(i, locX + i, locY);
+                            CheckAllowedLocation(locX + i, locY);
+                        }
+                        break;
+                }
             }
+            catch (ArgumentOutOfRangeException) // Mouse moved outside of grid 
+            {
+                allowedLocation = false;
+            }
+        }
+
+        /// <summary>
+        /// Sets allowedLocation to false if stairs already exist here
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        private void CheckAllowedLocation(int x, int y)
+        {
+            int value = (int)Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value;
+            if (value >= 2 && value <= 5)
+                allowedLocation = false;
         }
 
         /// <summary>
@@ -92,6 +125,12 @@ namespace MazeCreator
         /// <param name="e"></param>
         public void ConfirmPlaceStairs(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (!allowedLocation)
+            {
+                MessageBox.Show("You can't place stairs here.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // Remove remove handlers
             Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingStairs;
             Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceStairs;
