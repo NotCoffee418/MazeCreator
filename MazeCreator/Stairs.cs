@@ -141,7 +141,7 @@ namespace MazeCreator
 
             // Set stairs location
             int next = 5; // Count down from 5 to 2
-            for (int i = 0; i < 4; i++ )
+            for (int i = 0; i < 4; i++)
             {
                 Config.LEVELS[App.activeGrid].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
                 App.creator.SetCellInfo(App.activeGrid, newLocation[i, 0], newLocation[i, 1]);

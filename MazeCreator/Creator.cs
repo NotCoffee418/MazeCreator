@@ -174,7 +174,9 @@ namespace MazeCreator
                 else Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = false; // for removed stairs 
             }
             catch (InvalidCastException)
-            { /* Occurs when editing too fast, can be ignored */ }
+            { // Occurs when editing too fast and changing >1 values
+                Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value = 0;
+            }
         }
 
         #region UI Handlers
@@ -342,6 +344,11 @@ namespace MazeCreator
         private void removeStairsButton_Click(object sender, EventArgs e)
         {
             Stairs.Remove();
+        }
+
+        private void addTrapButton_Click(object sender, EventArgs e)
+        {
+            new Trap();
         }
     }
 }
