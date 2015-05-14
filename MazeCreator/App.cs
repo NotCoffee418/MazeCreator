@@ -47,7 +47,8 @@ namespace MazeCreator
             color[3] = Color.MediumTurquoise; // Placementblock
             color[4] = Color.Aquamarine; // middle high
             color[5] = Color.Aqua; // top
-            color[6] = Color.Yellow;
+            color[6] = Color.White;
+            color[7] = Color.Yellow;
         }
 
         private static void InitTooltips()
@@ -59,6 +60,8 @@ namespace MazeCreator
             tooltip[4] = "Stairs";
             tooltip[5] = "Top of stairs";
             tooltip[6] = "Floor trap";
+            tooltip[7] = "Concealed floor trap";
+            tooltip[8] = "Secret passage";
         }
     }
 }

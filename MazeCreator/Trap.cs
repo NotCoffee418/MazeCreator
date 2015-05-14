@@ -9,9 +9,18 @@ namespace MazeCreator
 {
     class Trap
     {
-        public Trap()
+        public enum Type
         {
-            // Let user select start of maze
+            HoleTrap = 6,
+            ConcealedTrap = 7,
+            SecretPassage = 8,
+        }
+
+        Type type;
+
+        public Trap(Type t)
+        {
+            type = t;
             Config.LEVELS[App.activeGrid].Grid.CellMouseEnter += PlacingTrap;
             Config.LEVELS[App.activeGrid].Grid.CellMouseDown += ConfirmPlaceTrap;
         }
@@ -24,10 +33,10 @@ namespace MazeCreator
             try
             {
                 App.creator.ReloadColors(App.activeGrid);
-                Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[6];
+                Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[(int)type];
             }
-            catch (ArgumentOutOfRangeException) // Mouse moved outside of grid 
-            { }
+            catch (ArgumentOutOfRangeException)
+            { /* Mouse moved outside of grid */  }
         }
 
         public void ConfirmPlaceTrap(object sender, DataGridViewCellMouseEventArgs e)
@@ -42,7 +51,7 @@ namespace MazeCreator
             }
 
             // Set value
-            Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value = 6;
+            Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value = (int)type;
 
             // Remove handlers
             Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingTrap;

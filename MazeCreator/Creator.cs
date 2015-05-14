@@ -348,7 +348,7 @@ namespace MazeCreator
 
         private void addTrapButton_Click(object sender, EventArgs e)
         {
-            new Trap();
+            new Trap(Trap.Type.HoleTrap);
         }
     }
 }

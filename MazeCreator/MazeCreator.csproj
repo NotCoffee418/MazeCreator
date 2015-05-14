@@ -69,7 +69,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stairs.cs" />
     <Compile Include="Tools.cs" />
-    <Compile Include="FloorTrap.cs" />
+    <Compile Include="Trap.cs" />
     <EmbeddedResource Include="Creator.resx">
       <DependentUpon>Creator.cs</DependentUpon>
     </EmbeddedResource>

@@ -26,7 +26,7 @@ namespace MazeCreator
             // Display instructions
             MessageBox.Show("Activate the block where the bottom of your stairs start.");
 
-            // Let user select start of maze
+            // Let user select start of stairs
             Config.LEVELS[App.activeGrid].Grid.CellMouseEnter += PlacingStairs;
             Config.LEVELS[App.activeGrid].Grid.CellMouseDown += ConfirmPlaceStairs;
         }
