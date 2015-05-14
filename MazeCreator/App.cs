@@ -47,6 +47,7 @@ namespace MazeCreator
             color[3] = Color.MediumTurquoise; // Placementblock
             color[4] = Color.Aquamarine; // middle high
             color[5] = Color.Aqua; // top
+            color[6] = Color.Yellow;
         }
 
         private static void InitTooltips()

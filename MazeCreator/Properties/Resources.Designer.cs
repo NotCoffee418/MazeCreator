@@ -103,6 +103,16 @@ namespace MazeCreator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap stairs_remove {
+            get {
+                object obj = ResourceManager.GetObject("stairs_remove", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap stairs_right {
             get {
                 object obj = ResourceManager.GetObject("stairs_right", resourceCulture);

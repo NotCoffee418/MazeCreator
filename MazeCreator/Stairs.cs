@@ -117,5 +117,60 @@ namespace MazeCreator
                 next--;
             }
         }
+
+        /// <summary>
+        /// Attempt to remove stairs at selected location
+        /// </summary>
+        internal static void Remove()
+        {
+            var grid = Config.LEVELS[App.activeGrid].Grid;
+            var bottom = grid.SelectedCells[0];
+
+            if ((int)bottom.Value != 2) // No stairs selected
+            {
+                MessageBox.Show("Select the bottom of the stairs you want to remove and click Remove Stairs again.", 
+                    "No stairs selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else
+            {
+                var result = MessageBox.Show("Are you sure you want to remove the selected stairs?", "Remove stairs",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result != DialogResult.Yes) return;
+            }
+
+            int x = bottom.ColumnIndex;
+            int y = bottom.RowIndex;
+
+            // vars for spawn location check
+            int left = x - 1;
+            int right = x + 1;
+            int above = y - 1;
+            int below = y + 1;
+
+            // Determine placement location & orientation
+            if (above >= 0 && (int)grid.Rows[above].Cells[x].Value == 3)
+            {
+                for (int i = 0; i < 4; i++)
+                    grid.Rows[y - i].Cells[x].Value = 0;
+            }
+            else if (below <= grid.Columns.Count - 1 && (int)grid.Rows[below].Cells[x].Value == 3)
+            {
+                for (int i = 0; i < 4; i++)
+                    grid.Rows[y + i].Cells[x].Value = 0;
+            }
+            else if (left >= 0 && (int)grid.Rows[y].Cells[left].Value == 3)
+            {
+                for (int i = 0; i < 4; i++)
+                    grid.Rows[y].Cells[x - i].Value = 0;
+            }
+            else if (right <= grid.Rows.Count - 1 && (int)grid.Rows[y].Cells[right].Value == 3)
+            {
+                for (int i = 0; i < 4; i++)
+                    grid.Rows[y].Cells[x + i].Value = 0;
+            }
+
+            App.creator.ReloadColors(App.activeGrid);
+        }
     }
 }

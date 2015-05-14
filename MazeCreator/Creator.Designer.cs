@@ -51,10 +51,11 @@
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.levelTabControl = new System.Windows.Forms.TabControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.stairsUpButton = new System.Windows.Forms.ToolStripButton();
+            this.stairsDownButton = new System.Windows.Forms.ToolStripButton();
+            this.stairsLeftButton = new System.Windows.Forms.ToolStripButton();
+            this.stairsRightButton = new System.Windows.Forms.ToolStripButton();
+            this.removeStairsButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -187,21 +188,21 @@
             // fillBordersToolStripMenuItem
             // 
             this.fillBordersToolStripMenuItem.Name = "fillBordersToolStripMenuItem";
-            this.fillBordersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fillBordersToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.fillBordersToolStripMenuItem.Text = "Fill borders";
             this.fillBordersToolStripMenuItem.Click += new System.EventHandler(this.fillBordersToolStripMenuItem_Click);
             // 
             // fillWholeMazeToolStripMenuItem
             // 
             this.fillWholeMazeToolStripMenuItem.Name = "fillWholeMazeToolStripMenuItem";
-            this.fillWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fillWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.fillWholeMazeToolStripMenuItem.Text = "Fill maze";
             this.fillWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.fillWholeMazeToolStripMenuItem_Click);
             // 
             // clearWholeMazeToolStripMenuItem
             // 
             this.clearWholeMazeToolStripMenuItem.Name = "clearWholeMazeToolStripMenuItem";
-            this.clearWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.clearWholeMazeToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.clearWholeMazeToolStripMenuItem.Text = "Clear maze";
             this.clearWholeMazeToolStripMenuItem.Click += new System.EventHandler(this.clearWholeMazeToolStripMenuItem_Click);
             // 
@@ -234,55 +235,66 @@
             // 
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Right;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
-            this.toolStripButton2,
-            this.toolStripButton3,
-            this.toolStripButton4});
+            this.stairsUpButton,
+            this.stairsDownButton,
+            this.stairsLeftButton,
+            this.stairsRightButton,
+            this.removeStairsButton});
             this.toolStrip1.Location = new System.Drawing.Point(944, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(32, 489);
             this.toolStrip1.TabIndex = 4;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButton1
+            // stairsUpButton
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = global::MazeCreator.Properties.Resources.stairs_up;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.stairsUpButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.stairsUpButton.Image = global::MazeCreator.Properties.Resources.stairs_up;
+            this.stairsUpButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stairsUpButton.Name = "stairsUpButton";
+            this.stairsUpButton.Size = new System.Drawing.Size(29, 20);
+            this.stairsUpButton.Text = "Place stairs up";
+            this.stairsUpButton.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // toolStripButton2
+            // stairsDownButton
             // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Image = global::MazeCreator.Properties.Resources.stairs_down;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButton2.Text = "toolStripButton2";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.stairsDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.stairsDownButton.Image = global::MazeCreator.Properties.Resources.stairs_down;
+            this.stairsDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stairsDownButton.Name = "stairsDownButton";
+            this.stairsDownButton.Size = new System.Drawing.Size(29, 20);
+            this.stairsDownButton.Text = "Place stairs down";
+            this.stairsDownButton.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
-            // toolStripButton3
+            // stairsLeftButton
             // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = global::MazeCreator.Properties.Resources.stairs_left;
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButton3.Text = "toolStripButton3";
-            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
+            this.stairsLeftButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.stairsLeftButton.Image = global::MazeCreator.Properties.Resources.stairs_left;
+            this.stairsLeftButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stairsLeftButton.Name = "stairsLeftButton";
+            this.stairsLeftButton.Size = new System.Drawing.Size(29, 20);
+            this.stairsLeftButton.Text = "Place stairs to left";
+            this.stairsLeftButton.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
-            // toolStripButton4
+            // stairsRightButton
             // 
-            this.toolStripButton4.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton4.Image = global::MazeCreator.Properties.Resources.stairs_right;
-            this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButton4.Text = "toolStripButton4";
-            this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
+            this.stairsRightButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.stairsRightButton.Image = global::MazeCreator.Properties.Resources.stairs_right;
+            this.stairsRightButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stairsRightButton.Name = "stairsRightButton";
+            this.stairsRightButton.Size = new System.Drawing.Size(29, 20);
+            this.stairsRightButton.Text = "Place stairs to right";
+            this.stairsRightButton.Click += new System.EventHandler(this.toolStripButton4_Click);
+            // 
+            // removeStairsButton
+            // 
+            this.removeStairsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.removeStairsButton.Image = global::MazeCreator.Properties.Resources.stairs_remove;
+            this.removeStairsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.removeStairsButton.Name = "removeStairsButton";
+            this.removeStairsButton.Size = new System.Drawing.Size(29, 20);
+            this.removeStairsButton.Text = "Remove Stairs";
+            this.removeStairsButton.Click += new System.EventHandler(this.removeStairsButton_Click);
             // 
             // Creator
             // 
@@ -331,9 +343,10 @@
         private System.Windows.Forms.TabControl levelTabControl;
         private System.Windows.Forms.ToolStripMenuItem add3DLevelToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
-        private System.Windows.Forms.ToolStripButton toolStripButton4;
+        private System.Windows.Forms.ToolStripButton stairsUpButton;
+        private System.Windows.Forms.ToolStripButton stairsDownButton;
+        private System.Windows.Forms.ToolStripButton stairsLeftButton;
+        private System.Windows.Forms.ToolStripButton stairsRightButton;
+        private System.Windows.Forms.ToolStripButton removeStairsButton;
     }
 }

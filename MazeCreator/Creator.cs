@@ -171,6 +171,7 @@ namespace MazeCreator
                 // Make stairs read-only
                 if (value >= 2 && value <= 5)
                     Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
+                else Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = false; // for removed stairs 
             }
             catch (InvalidCastException)
             { /* Occurs when editing too fast, can be ignored */ }
@@ -337,5 +338,10 @@ namespace MazeCreator
             new Stairs(4);
         }
         #endregion
+
+        private void removeStairsButton_Click(object sender, EventArgs e)
+        {
+            Stairs.Remove();
+        }
     }
 }
