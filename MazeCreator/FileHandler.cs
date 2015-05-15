@@ -14,11 +14,13 @@ namespace MazeCreator
         public FileHandler()
         {
             ExportSqlDialog.DefaultExt = "sql";
-            ExportSqlDialog.FileName = "Maze";
+            ExportSqlDialog.FileName = "Maze.sql";
             ExportSqlDialog.Filter = "SQL File|*.sql";
 
             // openFileDialog1
+            ExportSqlDialog.DefaultExt = "maze";
             openFileDialog1.FileName = "MyMaze.maze";
+            ExportSqlDialog.Filter = "Maze File|*.maze";
 
             // saveToFileDialog
             saveToFileDialog.DefaultExt = "sql";
@@ -48,11 +50,9 @@ namespace MazeCreator
             // Add gameobject_template for Maze Crate
             if (Config.GAMEOBJECT == 745000)
                 sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
-                    "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
-
-            // Add gameobject_template for Maze Stairs
-            sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
-                "('745001', '5', '7593', 'Maze Stairs', '', '', '', '94', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
+                    "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', ''),\n" +
+                    "('745001', '5', '7593', 'Maze Stairs', '', '', '', '94', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', ''),\n" +
+                    "('745002', '0', '31', 'Maze Crate (no collision)', '', '', '', '94', '4', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
 
             File.WriteAllText(path, sql);
         }
