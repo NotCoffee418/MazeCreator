@@ -58,6 +58,7 @@
             this.removeStairsButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.addTrapButton = new System.Windows.Forms.ToolStripButton();
+            this.concealedFloorTrapButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -243,7 +244,8 @@
             this.stairsRightButton,
             this.removeStairsButton,
             this.toolStripSeparator1,
-            this.addTrapButton});
+            this.addTrapButton,
+            this.concealedFloorTrapButton});
             this.toolStrip1.Location = new System.Drawing.Point(944, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(32, 489);
@@ -315,6 +317,16 @@
             this.addTrapButton.Text = "Add floor trap";
             this.addTrapButton.Click += new System.EventHandler(this.addTrapButton_Click);
             // 
+            // concealedFloorTrapButton
+            // 
+            this.concealedFloorTrapButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.concealedFloorTrapButton.Image = global::MazeCreator.Properties.Resources.concealed_trap;
+            this.concealedFloorTrapButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.concealedFloorTrapButton.Name = "concealedFloorTrapButton";
+            this.concealedFloorTrapButton.Size = new System.Drawing.Size(29, 20);
+            this.concealedFloorTrapButton.Text = "Concealed Floor Trap";
+            this.concealedFloorTrapButton.Click += new System.EventHandler(this.concealedFloorTrapButton_Click);
+            // 
             // Creator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -369,5 +381,6 @@
         private System.Windows.Forms.ToolStripButton removeStairsButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton addTrapButton;
+        private System.Windows.Forms.ToolStripButton concealedFloorTrapButton;
     }
 }

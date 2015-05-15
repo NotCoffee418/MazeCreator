@@ -376,5 +376,10 @@ namespace MazeCreator
         {
             new Trap(Trap.Type.HoleTrap);
         }
+
+        private void concealedFloorTrapButton_Click(object sender, EventArgs e)
+        {
+            new Trap(Trap.Type.ConcealedTrap);
+        }
     }
 }
