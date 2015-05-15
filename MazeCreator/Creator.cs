@@ -141,8 +141,11 @@ namespace MazeCreator
             ReloadColors(grid);
         }
 
-        public void ReloadColors(int grid)
+        public void ReloadColors(int grid = -1)
         {
+            if (grid == -1) 
+                grid = App.activeGrid;
+
             // handle cell selection
             if (Config.LEVELS[grid].Grid.SelectedCells.Count == 0)
                 Config.LEVELS[grid].Grid.Rows[0].Cells[0].Selected = true;
@@ -152,14 +155,17 @@ namespace MazeCreator
             // Reload colors
             for (int i = 0; i < Config.Y_COUNT; i++) // Loop all rows
                 for (int j = 0; j < Config.X_COUNT; j++) // Loop all columns
-                    SetCellInfo(grid, i, j);
+                    SetCellInfo(j, i, grid);
 
             // Select original cell
             Config.LEVELS[grid].Grid.Rows[sel.RowIndex].Cells[sel.ColumnIndex].Selected = true;
         }
 
-        public void SetCellInfo(int grid, int y, int x)
+        public void SetCellInfo(int x, int y, int grid = -1)
         {
+            if (grid == -1)
+                grid = App.activeGrid;
+
             try
             {
                 // Get cell value
@@ -196,7 +202,7 @@ namespace MazeCreator
                 value = 1;
 
             cell.Value = value;
-            SetCellInfo(App.activeGrid, e.RowIndex, e.ColumnIndex);
+            SetCellInfo(e.ColumnIndex, e.RowIndex);
         }
 
         #region UI Handlers
@@ -245,7 +251,7 @@ namespace MazeCreator
         // Set Color
         public void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            SetCellInfo(App.activeGrid, e.RowIndex, e.ColumnIndex);
+            SetCellInfo(e.ColumnIndex, e.RowIndex);
         }
 
         // Selected cell looks

@@ -37,7 +37,7 @@ namespace MazeCreator
             int locX = e.ColumnIndex;
             int locY = e.RowIndex;
             
-            App.creator.ReloadColors(App.activeGrid);
+            App.creator.ReloadColors();
             int reqBlocks = 4;
             
             try
@@ -144,13 +144,13 @@ namespace MazeCreator
             for (int i = 0; i < 4; i++)
             {
                 Config.LEVELS[App.activeGrid].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
-                App.creator.SetCellInfo(App.activeGrid, newLocation[i, 0], newLocation[i, 1]);
+                App.creator.SetCellInfo(newLocation[i, 1], newLocation[i, 0]);
 
                 // Add top of stairs to next level
                 if (i == 0 && App.activeGrid + 1 < Config.LEVELS.Count)
                 {
                     Config.LEVELS[App.activeGrid + 1].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
-                    App.creator.SetCellInfo(App.activeGrid + 1, newLocation[i, 0], newLocation[i, 1]);
+                    App.creator.SetCellInfo(newLocation[i, 1], newLocation[i, 0], App.activeGrid + 1);
                 }
 
                 next--;
@@ -209,7 +209,7 @@ namespace MazeCreator
                     grid.Rows[y].Cells[x + i].Value = 0;
             }
 
-            App.creator.ReloadColors(App.activeGrid);
+            App.creator.ReloadColors();
         }
     }
 }

@@ -118,7 +118,7 @@ namespace MazeCreator
                     Config.LEVELS[App.activeGrid].Grid.Rows[i].Cells[Config.X_COUNT - 1].Value = 1;
                 }
             }
-            App.creator.ReloadColors(App.activeGrid);
+            App.creator.ReloadColors();
         }
         public static void FillMaze(bool empty = false)
         {
@@ -132,7 +132,7 @@ namespace MazeCreator
                         Config.LEVELS[App.activeGrid].Grid.Rows[i].Cells[j].Value = 1;
                 }
             }
-            App.creator.ReloadColors(App.activeGrid);
+            App.creator.ReloadColors();
         }
     }
 }

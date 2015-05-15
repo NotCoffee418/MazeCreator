@@ -32,7 +32,7 @@ namespace MazeCreator
 
             try
             {
-                App.creator.ReloadColors(App.activeGrid);
+                App.creator.ReloadColors();
                 Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[(int)type];
             }
             catch (ArgumentOutOfRangeException)
