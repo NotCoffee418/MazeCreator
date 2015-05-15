@@ -21,7 +21,7 @@ namespace MazeCreator
                         double z = 0;
                         double[] box = new double[6];
                         // Floor, roof traps
-                        if (Config.FLOOR && lev == 0 && NeedsFloorBlock(lev, x, y))
+                        if (NeedsFloorBlock(lev, x, y))
                         {
                             box[0] = Config.SPACING * x + Config.STARTCOORDS[0];                // x
                             box[1] = Config.SPACING * y + Config.STARTCOORDS[1];                // y
@@ -34,7 +34,7 @@ namespace MazeCreator
                         }
 
                         // Walls, stairs, secret passage
-                        if (lev != Config.LEVELS.Count) // only run floor check on roof
+                        if (lev != Config.LEVELS.Count) // don't run level checks on roof
                         {
                             int value = (int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value;
 
@@ -96,7 +96,7 @@ namespace MazeCreator
                     else return false;
                 }
             }
-            else if (!Config.ROOF) // && roof level
+            else if (lev == Config.LEVELS.Count && !Config.ROOF)
                 return false; // no Roof
             else // check for stairs below
             {
