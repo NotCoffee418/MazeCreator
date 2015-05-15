@@ -211,6 +211,9 @@ namespace MazeCreator
         {
             try
             {
+                if (e.Button == MouseButtons.Right)
+                    return; // right mouse is used to cancel
+
                 var cell = Config.LEVELS[App.activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 int value = 0;
 
