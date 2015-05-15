@@ -280,11 +280,15 @@ namespace MazeCreator
             }
         }
 
+        /// <summary>
+        /// Ask to save before closing
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Creator_FormClosed(object sender, FormClosedEventArgs e)
         {
             Environment.Exit(0);
         }
-
         private void Creator_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (changedSinceSave)
@@ -349,6 +353,7 @@ namespace MazeCreator
             AddLevel();
         }
 
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             new Stairs(1);
@@ -365,8 +370,6 @@ namespace MazeCreator
         {
             new Stairs(4);
         }
-        #endregion
-
         private void removeStairsButton_Click(object sender, EventArgs e)
         {
             Stairs.Remove();
@@ -376,10 +379,14 @@ namespace MazeCreator
         {
             new Trap(Trap.Type.HoleTrap);
         }
-
         private void concealedFloorTrapButton_Click(object sender, EventArgs e)
         {
             new Trap(Trap.Type.ConcealedTrap);
         }
+        private void secretPassageButton_Click(object sender, EventArgs e)
+        {
+            new Trap(Trap.Type.SecretPassage);
+        }
+        #endregion
     }
 }

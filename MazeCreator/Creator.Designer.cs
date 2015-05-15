@@ -59,6 +59,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.addTrapButton = new System.Windows.Forms.ToolStripButton();
             this.concealedFloorTrapButton = new System.Windows.Forms.ToolStripButton();
+            this.secretPassageButton = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -245,7 +246,8 @@
             this.removeStairsButton,
             this.toolStripSeparator1,
             this.addTrapButton,
-            this.concealedFloorTrapButton});
+            this.concealedFloorTrapButton,
+            this.secretPassageButton});
             this.toolStrip1.Location = new System.Drawing.Point(944, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(32, 489);
@@ -327,6 +329,16 @@
             this.concealedFloorTrapButton.Text = "Concealed Floor Trap";
             this.concealedFloorTrapButton.Click += new System.EventHandler(this.concealedFloorTrapButton_Click);
             // 
+            // secretPassageButton
+            // 
+            this.secretPassageButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.secretPassageButton.Image = global::MazeCreator.Properties.Resources.secret_passage;
+            this.secretPassageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.secretPassageButton.Name = "secretPassageButton";
+            this.secretPassageButton.Size = new System.Drawing.Size(29, 20);
+            this.secretPassageButton.Text = "Secret Passage Wall";
+            this.secretPassageButton.Click += new System.EventHandler(this.secretPassageButton_Click);
+            // 
             // Creator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -382,5 +394,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton addTrapButton;
         private System.Windows.Forms.ToolStripButton concealedFloorTrapButton;
+        private System.Windows.Forms.ToolStripButton secretPassageButton;
     }
 }
