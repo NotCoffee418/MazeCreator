@@ -55,8 +55,9 @@ namespace MazeCreator
             grid.Dock = DockStyle.Fill;            
             
             // Event handlers
-            grid.CellValueChanged += new DataGridViewCellEventHandler(dataGridView1_CellValueChanged);
-            grid.CellPainting += new DataGridViewCellPaintingEventHandler(dataGridView1_CellPainting);
+            grid.CellValueChanged += dataGridView1_CellValueChanged;
+            grid.CellPainting += dataGridView1_CellPainting;
+            grid.CellMouseDown += PlaceWall;
 
             // Add tab
             TabPage page = new TabPage();
@@ -177,6 +178,25 @@ namespace MazeCreator
             { // Occurs when editing too fast and changing >1 values
                 Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value = 0;
             }
+        }
+
+        /// <summary>
+        /// Click to place wall
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PlaceWall(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            var cell = Config.LEVELS[App.activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            int value = 0;
+
+            if (cell.ReadOnly)
+                return;
+            else if ((int)cell.Value == 0)
+                value = 1;
+
+            cell.Value = value;
+            SetCellInfo(App.activeGrid, e.RowIndex, e.ColumnIndex);
         }
 
         #region UI Handlers
