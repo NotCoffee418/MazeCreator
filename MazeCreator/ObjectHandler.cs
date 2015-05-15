@@ -202,11 +202,11 @@ namespace MazeCreator
             for (int grid = 0; grid < Config.LEVELS.Count; grid++) // Loop all levels
             {
                 Config.LEVELS[grid].Grid.EndEdit();
-                for (int i = 0; i < Config.Y_COUNT; i++) // Loop all rows
+                for (int row = 0; row < Config.Y_COUNT; row++) // Loop all rows
                 {
-                    for (int j = 0; j < Config.X_COUNT; j++)// Loop all columns 
-                            content += (int)Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value;
-                    if (i < (Config.Y_COUNT * Config.LEVELS.Count) - 1) content += "\n";
+                    for (int col = 0; col < Config.X_COUNT; col++)// Loop all columns 
+                            content += (int)Config.LEVELS[grid].Grid.Rows[row].Cells[col].Value;
+                    if (row < (Config.Y_COUNT * Config.LEVELS.Count) - 1) content += "\n";
                 }
             }
             return content;

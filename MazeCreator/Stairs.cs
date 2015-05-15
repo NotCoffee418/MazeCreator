@@ -214,23 +214,23 @@ namespace MazeCreator
             // Determine placement location & orientation
             if (above >= 0 && (int)grid.Rows[above].Cells[x].Value == 3)
             {
-                for (int i = 0; i < 4; i++)
-                    grid.Rows[y - i].Cells[x].Value = 0;
+                for (int row = 0; row < 4; row++)
+                    grid.Rows[y - row].Cells[x].Value = 0;
             }
             else if (below <= grid.Columns.Count - 1 && (int)grid.Rows[below].Cells[x].Value == 3)
             {
-                for (int i = 0; i < 4; i++)
-                    grid.Rows[y + i].Cells[x].Value = 0;
+                for (int row = 0; row < 4; row++)
+                    grid.Rows[y + row].Cells[x].Value = 0;
             }
             else if (left >= 0 && (int)grid.Rows[y].Cells[left].Value == 3)
             {
-                for (int i = 0; i < 4; i++)
-                    grid.Rows[y].Cells[x - i].Value = 0;
+                for (int col = 0; col < 4; col++)
+                    grid.Rows[y].Cells[x - col].Value = 0;
             }
             else if (right <= grid.Rows.Count - 1 && (int)grid.Rows[y].Cells[right].Value == 3)
             {
-                for (int i = 0; i < 4; i++)
-                    grid.Rows[y].Cells[x + i].Value = 0;
+                for (int col = 0; col < 4; col++)
+                    grid.Rows[y].Cells[x + col].Value = 0;
             }
 
             App.creator.ReloadColors();

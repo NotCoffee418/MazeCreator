@@ -35,8 +35,8 @@ namespace MazeCreator
             Config.LEVELS = new List<Level>();
             levelTabControl.Controls.Clear();
 
-            for (int i = 0; i < Config.LEVEL_COUNT; i++)
-                AddLevel(i, rows);
+            for (int lev = 0; lev < Config.LEVEL_COUNT; lev++)
+                AddLevel(lev, rows);
 
             App.activeGrid = 0;
         }
@@ -107,14 +107,14 @@ namespace MazeCreator
 
             // set columns
             int[] defaultRow = new int[Config.X_COUNT];
-            for (int i = 0; i < Config.X_COUNT; i++)
+            for (int col = 0; col < Config.X_COUNT; col++)
             {
                 DataGridViewCheckBoxColumn c = new DataGridViewCheckBoxColumn();
                 c.ValueType = typeof(int);
                 c.Width = 15;
-                c.HeaderText = (i + 1).ToString();
+                c.HeaderText = (col + 1).ToString();
                 Config.LEVELS[grid].Grid.Columns.Add(c);
-                defaultRow[i] = 0;
+                defaultRow[col] = 0;
             }
 
             // Remove extra column
@@ -123,18 +123,18 @@ namespace MazeCreator
 
 
             // Set rows
-            for (int i = 0; i < Config.Y_COUNT; i++)
+            for (int row = 0; row < Config.Y_COUNT; row++)
             {
                 DataGridViewRow r = new DataGridViewRow();
                 r.Height = 15;
-                r.HeaderCell.Value = (i + 1).ToString();
+                r.HeaderCell.Value = (row + 1).ToString();
                 r.SetValues(defaultRow);
                 Config.LEVELS[grid].Grid.Rows.Add(r);
 
                 // Set integer value for all cells
-                for (int j = 0; j < Config.X_COUNT; j++)
+                for (int col = 0; col < Config.X_COUNT; col++)
                 {
-                    Config.LEVELS[grid].Grid.Rows[i].Cells[j].Value = 0;
+                    Config.LEVELS[grid].Grid.Rows[row].Cells[col].Value = 0;
                 }
             }
 
@@ -143,15 +143,13 @@ namespace MazeCreator
                 rows = Config.MAZEDATA;
 
             // Loads data to grid
-            for (int i = 0; i < Config.Y_COUNT; i++)
+            for (int row = 0; row < Config.Y_COUNT; row++)
             {
-                int col = 0;
-                if (rows.Count() > lastRow + i && rows[lastRow + i] != "") // Check if any data were
-                    for (int j = 0; j < Config.X_COUNT; j++)
+                if (rows.Count() > lastRow + row && rows[lastRow + row] != "") // Check if any data were
+                    for (int col = 0; col < Config.X_COUNT; col++)
                     {
-                        int v = int.Parse(rows[lastRow + i][j].ToString()); 
-                        Config.LEVELS[grid].Grid.Rows[i].Cells[col].Value = v;
-                        col++;
+                        int v = int.Parse(rows[lastRow + row][col].ToString()); 
+                        Config.LEVELS[grid].Grid.Rows[row].Cells[col].Value = v;
                     }
             }
             ReloadColors(grid);
@@ -169,9 +167,9 @@ namespace MazeCreator
             Config.LEVELS[grid].Grid.ClearSelection();
 
             // Reload colors
-            for (int i = 0; i < Config.Y_COUNT; i++) // Loop all rows
-                for (int j = 0; j < Config.X_COUNT; j++) // Loop all columns
-                    SetCellInfo(j, i, grid);
+            for (int row = 0; row < Config.Y_COUNT; row++) // Loop all rows
+                for (int col = 0; col < Config.X_COUNT; col++) // Loop all columns
+                    SetCellInfo(col, row, grid);
 
             // Select original cell
             Config.LEVELS[grid].Grid.Rows[sel.RowIndex].Cells[sel.ColumnIndex].Selected = true;
@@ -196,7 +194,7 @@ namespace MazeCreator
                     Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
                 else Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = false; // for removed stairs 
             }
-            catch (InvalidCastException)
+            catch
             { // Occurs when editing too fast and changing >1 values
                 Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value = 0;
             }
