@@ -11,9 +11,9 @@ namespace MazeCreator
     {
         public enum Type
         {
-            HoleTrap = 6,
-            ConcealedTrap = 7,
-            SecretPassage = 8,
+            HoleTrap = 7,
+            ConcealedTrap = 8,
+            SecretPassage = 9,
         }
 
         Type type;

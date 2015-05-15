@@ -77,6 +77,23 @@ namespace MazeCreator
             Config.LEVELS.Add(l);
             levelTabControl.Controls.Add(page);
             LoadGrid(id, rows, 1 + (Config.Y_COUNT * id));
+
+
+            // register any stairs below
+            if (id > 0)
+            {
+                int below = id - 1;
+                for (int row = 0; row < Config.Y_COUNT; row++)
+                    for (int col = 0; col < Config.X_COUNT; col++)
+                    {
+                        int value = (int)Config.LEVELS[below].Grid.Rows[row].Cells[col].Value;
+                        if (value >= 3 && value <= 5) // lock upper three cells of stairs
+                        {
+                            Config.LEVELS[id].Grid.Rows[row].Cells[col].Value = 6;
+                            SetCellInfo(col, row, id);
+                        }
+                    }
+            }
         }
 
         /// <summary>
@@ -176,7 +193,7 @@ namespace MazeCreator
                 Config.LEVELS[grid].Grid.Rows[y].Cells[x].ToolTipText = App.tooltip[value];
 
                 // Make stairs read-only
-                if (value >= 2 && value <= 5)
+                if (value >= 2 && value <= 6)
                     Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
                 else Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = false; // for removed stairs 
             }
