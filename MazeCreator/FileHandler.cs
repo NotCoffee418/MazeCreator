@@ -13,14 +13,15 @@ namespace MazeCreator
 
         public FileHandler()
         {
+            // ExportSqlDialog
             ExportSqlDialog.DefaultExt = "sql";
             ExportSqlDialog.FileName = "Maze.sql";
             ExportSqlDialog.Filter = "SQL File|*.sql";
 
             // openFileDialog1
-            ExportSqlDialog.DefaultExt = "maze";
+            openFileDialog1.DefaultExt = "maze";
             openFileDialog1.FileName = "MyMaze.maze";
-            ExportSqlDialog.Filter = "Maze File|*.maze";
+            openFileDialog1.Filter = "Maze File|*.maze";
 
             // saveToFileDialog
             saveToFileDialog.DefaultExt = "sql";

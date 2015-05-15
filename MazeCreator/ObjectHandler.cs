@@ -14,41 +14,51 @@ namespace MazeCreator
             int startZ = 0;
             for (int lev = 0; lev <= Config.LEVELS.Count; lev++)
             {
-                for (int y = 0; y < Config.Y_COUNT; y++) // Loop all rows
+                for (int row = 0; row < Config.Y_COUNT; row++) // Loop all rows
                 {
-                    for (int x = 0; x < Config.X_COUNT; x++) // Loop all columns 
+                    for (int col = 0; col < Config.X_COUNT; col++) // Loop all columns 
                     {
+                        bool roof = (lev == Config.LEVELS.Count);
+                        int value = 0;
+
+                        if (!roof)
+                            value = (int)Config.LEVELS[lev].Grid.Rows[row].Cells[col].Value;
+
                         double z = 0;
                         double[] box = new double[6];
                         // Floor, roof traps
-                        if (NeedsFloorBlock(lev, x, y))
+                        if (NeedsFloorBlock(lev, col, row))
                         {
-                            box[0] = Config.SPACING * x + Config.STARTCOORDS[0];                // x
-                            box[1] = Config.SPACING * y + Config.STARTCOORDS[1];                // y
+                            box[0] = Config.SPACING * col + Config.STARTCOORDS[0];                // x
+                            box[1] = Config.SPACING * row + Config.STARTCOORDS[1];                // y
                             box[2] = Config.SPACING * (startZ + z) + Config.STARTCOORDS[2];     // z
                             box[3] = Config.STARTCOORDS[3];                                     // map
                             box[4] = 0;                                                         // orientation
-                            box[5] = Config.GAMEOBJECT;                                         // game object
+                            if (value == (int)Trap.Type.ConcealedTrap)
+                                box[5] = 745002;
+                            else
+                                box[5] = Config.GAMEOBJECT;                                         // game object
                             boxList.Add(box);
                             z++;
                         }
 
                         // Walls, stairs, secret passage
-                        if (lev != Config.LEVELS.Count) // don't run level checks on roof
+                        if (!roof) // don't run level checks on roof
                         {
-                            int value = (int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value;
-
-                            if (value == 1) // wall
+                            if (value == 1 || value == (int)Trap.Type.SecretPassage) // wall
                             {
                                 for (int k = 0; k < Config.WALLHEIGHT; k++)
                                 {
                                     box = new double[6];
-                                    box[0] = Config.SPACING * x + Config.STARTCOORDS[0];
-                                    box[1] = Config.SPACING * y + Config.STARTCOORDS[1];
+                                    box[0] = Config.SPACING * col + Config.STARTCOORDS[0];
+                                    box[1] = Config.SPACING * row + Config.STARTCOORDS[1];
                                     box[2] = Config.SPACING * (startZ + z + k) + Config.STARTCOORDS[2];
                                     box[3] = Config.STARTCOORDS[3];
                                     box[4] = 0;
-                                    box[5] = Config.GAMEOBJECT;
+                                    if (value == (int)Trap.Type.SecretPassage)
+                                        box[5] = 745002;
+                                    else
+                                        box[5] = Config.GAMEOBJECT;  
                                     boxList.Add(box);
                                     box = new double[6];
                                 }
@@ -58,7 +68,7 @@ namespace MazeCreator
                             else if (value == 2) // bottom of stairs
                             {
                                 double spawnZ = Config.SPACING * (startZ + z) + Config.STARTCOORDS[2];
-                                box = GetStairsBox(lev, x, y, spawnZ);
+                                box = GetStairsBox(lev, col, row, spawnZ);
                                 boxList.Add(box);
                             }
                         }
@@ -86,8 +96,10 @@ namespace MazeCreator
             if (lev != Config.LEVELS.Count) // Not roof
             {
                 // Check for trap
-                if ((int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value == 7)
+                if ((int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value == (int)Trap.Type.HoleTrap)
                     return false;
+                else if ((int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value == (int)Trap.Type.ConcealedTrap)
+                    return true; // Needs (different) floor block
                 // Check if floor is configured at bottom level
                 else if (lev == 0)
                 {
