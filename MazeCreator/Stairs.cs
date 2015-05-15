@@ -29,6 +29,14 @@ namespace MazeCreator
             // Let user select start of stairs
             Config.LEVELS[App.activeGrid].Grid.CellMouseEnter += PlacingStairs;
             Config.LEVELS[App.activeGrid].Grid.CellMouseDown += ConfirmPlaceStairs;
+            Config.LEVELS[App.activeGrid].Grid.KeyDown += CancelPlacing;
+            Config.LEVELS[App.activeGrid].Grid.Focus();
+        }
+
+        private void CancelPlacing(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                StopPlacing();
         }
 
         public void PlacingStairs(object sender, DataGridViewCellEventArgs e)
@@ -125,15 +133,19 @@ namespace MazeCreator
         /// <param name="e"></param>
         public void ConfirmPlaceStairs(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (!allowedLocation)
+            if (e.Button == MouseButtons.Right)
+            {
+                StopPlacing();
+                return;
+            }
+            else if (!allowedLocation)
             {
                 MessageBox.Show("You can't place stairs here.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // Remove remove handlers
-            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingStairs;
-            Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceStairs;
+            StopPlacing();
 
             // Only trigger when stairs should be placed
             if (stairsDirection == 0) return;
@@ -155,6 +167,18 @@ namespace MazeCreator
 
                 next--;
             }
+        }
+
+
+        /// <summary>
+        /// Remove handlers for placing
+        /// </summary>
+        private void StopPlacing()
+        {
+            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingStairs;
+            Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceStairs;
+            App.creator.KeyDown -= CancelPlacing;
+            App.creator.ReloadColors();
         }
 
         /// <summary>
