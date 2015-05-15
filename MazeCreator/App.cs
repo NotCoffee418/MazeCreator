@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace MazeCreator
 {
@@ -16,6 +17,9 @@ namespace MazeCreator
         public static int activeGrid = 0;   // Grid currently being viewed
         public static Color[] color = new Color[10]; // All color values
         public static String[] tooltip = new String[10]; // All tooltip values
+
+        // Levels
+        public static List<Level> LEVELS = new List<Level>();
 
         /// <summary>
         /// The main entry point for the application.
@@ -65,6 +69,18 @@ namespace MazeCreator
             tooltip[7] = "Floor trap";
             tooltip[8] = "Concealed floor trap";
             tooltip[9] = "Secret passage";
+        }
+
+        public static DataGridView GetLevel(int lev = -1)
+        {
+            if (lev == -1)
+                lev = activeGrid; 
+            return LEVELS[lev].Grid;
+        }
+
+        public static int GetLevelCount()
+        {
+            return LEVELS.Count;
         }
     }
 }

@@ -12,17 +12,17 @@ namespace MazeCreator
             // Generate object locations
             List<double[]> boxList = new List<double[]>();
             int startZ = 0;
-            for (int lev = 0; lev <= Config.LEVELS.Count; lev++)
+            for (int lev = 0; lev <= App.GetLevelCount(); lev++)
             {
                 for (int row = 0; row < Config.Y_COUNT; row++) // Loop all rows
                 {
                     for (int col = 0; col < Config.X_COUNT; col++) // Loop all columns 
                     {
-                        bool roof = (lev == Config.LEVELS.Count);
+                        bool roof = (lev == App.GetLevelCount());
                         int value = 0;
 
                         if (!roof)
-                            value = (int)Config.LEVELS[lev].Grid.Rows[row].Cells[col].Value;
+                            value = (int)App.GetLevel(lev).Rows[row].Cells[col].Value;
 
                         double z = 0;
                         double[] box = new double[6];
@@ -77,7 +77,7 @@ namespace MazeCreator
 
                 // sets next startZ
                 startZ += Config.WALLHEIGHT;
-                if (Config.FLOOR && lev == 0 || lev > 0 && lev < Config.LEVELS.Count)
+                if (Config.FLOOR && lev == 0 || lev > 0 && lev < App.GetLevelCount())
                     startZ++;
             }
             return boxList;
@@ -93,12 +93,12 @@ namespace MazeCreator
         /// <returns>true if there's no stairs below</returns>
         private bool NeedsFloorBlock(int lev, int x, int y)
         {
-            if (lev != Config.LEVELS.Count) // Not roof
+            if (lev != App.GetLevelCount()) // Not roof
             {
                 // Check for trap
-                if ((int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value == (int)Trap.Type.HoleTrap)
+                if ((int)App.GetLevel(lev).Rows[y].Cells[x].Value == (int)Trap.Type.HoleTrap)
                     return false;
-                else if ((int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value == (int)Trap.Type.ConcealedTrap)
+                else if ((int)App.GetLevel(lev).Rows[y].Cells[x].Value == (int)Trap.Type.ConcealedTrap)
                     return true; // Needs (different) floor block
                 // Check if floor is configured at bottom level
                 else if (lev == 0)
@@ -108,12 +108,12 @@ namespace MazeCreator
                     else return false;
                 }
             }
-            else if (lev == Config.LEVELS.Count && !Config.ROOF)
+            else if (lev == App.GetLevelCount() && !Config.ROOF)
                 return false; // no Roof
             else // check for stairs below
             {
                 // Block below 
-                int below = (int)Config.LEVELS[lev - 1].Grid.Rows[y].Cells[x].Value;
+                int below = (int)App.GetLevel(lev - 1).Rows[y].Cells[x].Value;
 
                 // Check of block should be removed
                 if (below == 3 || below == 4 || below == 5)
@@ -135,7 +135,7 @@ namespace MazeCreator
         private double[] GetStairsBox(int lev, int x, int y, double spawnZ)
         {
             // Determine object placement location relative to the given coords
-            var grid = Config.LEVELS[lev].Grid; // clearer to work with
+            var grid = App.GetLevel(lev); // clearer to work with
             double placementX = x; // It also spawns a block next to the bottom location
             double placementY = y;
             double quarter = 6.28318 / 4; // max orientation = pi * 2
@@ -199,14 +199,14 @@ namespace MazeCreator
         {
             // config
             string content = String.Empty;
-            for (int grid = 0; grid < Config.LEVELS.Count; grid++) // Loop all levels
+            for (int grid = 0; grid < App.GetLevelCount(); grid++) // Loop all levels
             {
-                Config.LEVELS[grid].Grid.EndEdit();
+                App.GetLevel(grid).EndEdit();
                 for (int row = 0; row < Config.Y_COUNT; row++) // Loop all rows
                 {
                     for (int col = 0; col < Config.X_COUNT; col++)// Loop all columns 
-                            content += (int)Config.LEVELS[grid].Grid.Rows[row].Cells[col].Value;
-                    if (row < (Config.Y_COUNT * Config.LEVELS.Count) - 1) content += "\n";
+                        content += (int)App.GetLevel(grid).Rows[row].Cells[col].Value;
+                    if (row < (Config.Y_COUNT * App.GetLevelCount()) - 1) content += "\n";
                 }
             }
             return content;

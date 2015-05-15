@@ -32,7 +32,7 @@ namespace MazeCreator
         /// <param name="rows"></param>
         public void LoadData(string[] rows = null)
         {
-            Config.LEVELS = new List<Level>();
+            App.LEVELS = new List<Level>();
             levelTabControl.Controls.Clear();
 
             for (int lev = 0; lev < Config.LEVEL_COUNT; lev++)
@@ -72,9 +72,8 @@ namespace MazeCreator
 
             // Add to LEVELS and levelControl
             Level l = new Level();
-            l.Tab = page;
             l.Grid = grid;
-            Config.LEVELS.Add(l);
+            App.LEVELS.Add(l);
             levelTabControl.Controls.Add(page);
             LoadGrid(id, rows, 1 + (Config.Y_COUNT * id));
 
@@ -85,10 +84,10 @@ namespace MazeCreator
                 for (int row = 0; row < Config.Y_COUNT; row++)
                     for (int col = 0; col < Config.X_COUNT; col++)
                     {
-                        int value = (int)Config.LEVELS[below].Grid.Rows[row].Cells[col].Value;
+                        int value = (int)App.GetLevel(below).Rows[row].Cells[col].Value;
                         if (value >= 3 && value <= 5) // lock upper three cells of stairs
                         {
-                            Config.LEVELS[id].Grid.Rows[row].Cells[col].Value = 6;
+                            App.GetLevel(id).Rows[row].Cells[col].Value = 6;
                             SetCellInfo(col, row, id);
                         }
                     }
@@ -102,8 +101,8 @@ namespace MazeCreator
         private void LoadGrid(int grid, string[] rows = null, int lastRow = 0)
         {
             // Clear datagrid
-            while (Config.LEVELS[grid].Grid.Columns.Count > 0)
-                Config.LEVELS[grid].Grid.Columns.RemoveAt(0);
+            while (App.GetLevel(grid).Columns.Count > 0)
+                App.GetLevel(grid).Columns.RemoveAt(0);
 
             // set columns
             int[] defaultRow = new int[Config.X_COUNT];
@@ -113,13 +112,13 @@ namespace MazeCreator
                 c.ValueType = typeof(int);
                 c.Width = 15;
                 c.HeaderText = (col + 1).ToString();
-                Config.LEVELS[grid].Grid.Columns.Add(c);
+                App.GetLevel(grid).Columns.Add(c);
                 defaultRow[col] = 0;
             }
 
             // Remove extra column
-            if (Config.LEVELS[grid].Grid.Columns.Count == 1 + Config.X_COUNT)
-                Config.LEVELS[grid].Grid.Columns.RemoveAt(0);
+            if (App.GetLevel(grid).Columns.Count == 1 + Config.X_COUNT)
+                App.GetLevel(grid).Columns.RemoveAt(0);
 
 
             // Set rows
@@ -129,12 +128,12 @@ namespace MazeCreator
                 r.Height = 15;
                 r.HeaderCell.Value = (row + 1).ToString();
                 r.SetValues(defaultRow);
-                Config.LEVELS[grid].Grid.Rows.Add(r);
+                App.GetLevel(grid).Rows.Add(r);
 
                 // Set integer value for all cells
                 for (int col = 0; col < Config.X_COUNT; col++)
                 {
-                    Config.LEVELS[grid].Grid.Rows[row].Cells[col].Value = 0;
+                    App.GetLevel(grid).Rows[row].Cells[col].Value = 0;
                 }
             }
 
@@ -148,8 +147,8 @@ namespace MazeCreator
                 if (rows.Count() > lastRow + row && rows[lastRow + row] != "") // Check if any data were
                     for (int col = 0; col < Config.X_COUNT; col++)
                     {
-                        int v = int.Parse(rows[lastRow + row][col].ToString()); 
-                        Config.LEVELS[grid].Grid.Rows[row].Cells[col].Value = v;
+                        int v = int.Parse(rows[lastRow + row][col].ToString());
+                        App.GetLevel(grid).Rows[row].Cells[col].Value = v;
                     }
             }
             ReloadColors(grid);
@@ -161,10 +160,10 @@ namespace MazeCreator
                 grid = App.activeGrid;
 
             // handle cell selection
-            if (Config.LEVELS[grid].Grid.SelectedCells.Count == 0)
-                Config.LEVELS[grid].Grid.Rows[0].Cells[0].Selected = true;
-            var sel = Config.LEVELS[grid].Grid.SelectedCells[0];
-            Config.LEVELS[grid].Grid.ClearSelection();
+            if (App.GetLevel(grid).SelectedCells.Count == 0)
+                App.GetLevel(grid).Rows[0].Cells[0].Selected = true;
+            var sel = App.GetLevel(grid).SelectedCells[0];
+            App.GetLevel(grid).ClearSelection();
 
             // Reload colors
             for (int row = 0; row < Config.Y_COUNT; row++) // Loop all rows
@@ -172,7 +171,7 @@ namespace MazeCreator
                     SetCellInfo(col, row, grid);
 
             // Select original cell
-            Config.LEVELS[grid].Grid.Rows[sel.RowIndex].Cells[sel.ColumnIndex].Selected = true;
+            App.GetLevel(grid).Rows[sel.RowIndex].Cells[sel.ColumnIndex].Selected = true;
         }
 
         public void SetCellInfo(int x, int y, int grid = -1)
@@ -183,20 +182,20 @@ namespace MazeCreator
             try
             {
                 // Get cell value
-                int value = (int)Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value;
+                int value = (int)App.GetLevel(grid).Rows[y].Cells[x].Value;
 
                 // Set info
-                Config.LEVELS[grid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[value];
-                Config.LEVELS[grid].Grid.Rows[y].Cells[x].ToolTipText = App.tooltip[value];
+                App.GetLevel(grid).Rows[y].Cells[x].Style.BackColor = App.color[value];
+                App.GetLevel(grid).Rows[y].Cells[x].ToolTipText = App.tooltip[value];
 
                 // Make stairs read-only
                 if (value >= 2 && value <= 6)
-                    Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = true;
-                else Config.LEVELS[grid].Grid.Rows[y].Cells[x].ReadOnly = false; // for removed stairs 
+                    App.GetLevel(grid).Rows[y].Cells[x].ReadOnly = true;
+                else App.GetLevel(grid).Rows[y].Cells[x].ReadOnly = false; // for removed stairs 
             }
             catch
             { // Occurs when editing too fast and changing >1 values
-                Config.LEVELS[grid].Grid.Rows[y].Cells[x].Value = 0;
+                App.GetLevel(grid).Rows[y].Cells[x].Value = 0;
             }
         }
 
@@ -212,7 +211,7 @@ namespace MazeCreator
                 if (e.Button == MouseButtons.Right)
                     return; // right mouse is used to cancel
 
-                var cell = Config.LEVELS[App.activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var cell = App.GetLevel().Rows[e.RowIndex].Cells[e.ColumnIndex];
                 int value = 0;
 
                 if (cell.ReadOnly)
@@ -280,14 +279,14 @@ namespace MazeCreator
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             // Back color
-            if (Config.LEVELS[App.activeGrid].Grid.SelectedCells.Count > 0)
-                Config.LEVELS[App.activeGrid].Grid.DefaultCellStyle.SelectionBackColor =
-                    Config.LEVELS[App.activeGrid].Grid.SelectedCells[0].Style.BackColor;
+            if (App.GetLevel().SelectedCells.Count > 0)
+                App.GetLevel().DefaultCellStyle.SelectionBackColor =
+                    App.GetLevel().SelectedCells[0].Style.BackColor;
 
             // Border
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                if (Config.LEVELS[App.activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex].Selected == true)
+                if (App.GetLevel().Rows[e.RowIndex].Cells[e.ColumnIndex].Selected == true)
                 {
                     e.Paint(e.CellBounds, DataGridViewPaintParts.All & ~DataGridViewPaintParts.Border);
                     using (Pen p = new Pen(Color.Black, 1))

@@ -23,15 +23,15 @@ namespace MazeCreator
                 Config.X_COUNT = newCount;
 
                 // Change in creator
-                for (int lev = 0; lev < Config.LEVELS.Count; lev++)
+                for (int lev = 0; lev < App.GetLevelCount(); lev++)
                 {
                     var c = new DataGridViewCheckBoxColumn();
                     c.ValueType = typeof(int);
                     c.Width = 15;
                     if (loc == 1) // left
-                        Config.LEVELS[lev].Grid.Columns.Insert(0, c);
+                        App.GetLevel(lev).Columns.Insert(0, c);
                     else // 2 - right
-                        Config.LEVELS[lev].Grid.Columns.Add(c);
+                        App.GetLevel(lev).Columns.Add(c);
                     App.creator.ReloadColors(lev);
                 }
             }
@@ -43,17 +43,17 @@ namespace MazeCreator
                 Config.Y_COUNT = newCount;
 
                 // Change in creator
-                for (int lev = 0; lev < Config.LEVELS.Count; lev++)
+                for (int lev = 0; lev < App.GetLevelCount(); lev++)
                 {
                     if (loc == 3) // left
                     {
-                        Config.LEVELS[lev].Grid.Rows.Insert(0);
-                        Config.LEVELS[lev].Grid.Rows[0].Height = 15;
+                        App.GetLevel(lev).Rows.Insert(0);
+                        App.GetLevel(lev).Rows[0].Height = 15;
                     }
                     else // 4 - right
                     {
-                        Config.LEVELS[lev].Grid.Rows.Add();
-                        Config.LEVELS[lev].Grid.Rows[Config.LEVELS[lev].Grid.Rows.Count - 1].Height = 15;
+                        App.GetLevel(lev).Rows.Add();
+                        App.GetLevel(lev).Rows[App.GetLevelCount() - 1].Height = 15;
                     }
                     App.creator.ReloadColors(lev);
                 }
@@ -66,12 +66,12 @@ namespace MazeCreator
         /// <param name="type">1: Row - 2: Column</param>
         public static void RemoveLine(int type)
         {
-            var selected = Config.LEVELS[App.activeGrid].Grid.CurrentCell;
+            var selected = App.GetLevel().CurrentCell;
             if (type == 1) // row
             {
                 // Select in grid
                 int row = selected.RowIndex;
-                Config.LEVELS[App.activeGrid].Grid.Rows[row].Selected = true;
+                App.GetLevel().Rows[row].Selected = true;
 
                 var result = MessageBox.Show("Are you sure you want to remove this row on all levels?",
                     "Remove row", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -83,16 +83,16 @@ namespace MazeCreator
                     Config.Y_COUNT = newCount;
 
                     // Change in grid
-                    for (int lev = 0; lev < Config.LEVELS.Count; lev++)
-                        Config.LEVELS[lev].Grid.Rows.RemoveAt(row);
+                    for (int lev = 0; lev < App.GetLevelCount(); lev++)
+                        App.GetLevel(lev).Rows.RemoveAt(row);
                 }
             }
             else if (type == 2) // column
             {
                 // Select in grid
                 int col = selected.ColumnIndex;
-                for (int r = 0; r < Config.LEVELS[App.activeGrid].Grid.RowCount; r++)
-                    Config.LEVELS[App.activeGrid].Grid[col, r].Selected = true;
+                for (int r = 0; r < App.GetLevel().RowCount; r++)
+                    App.GetLevel()[col, r].Selected = true;
 
                 var result = MessageBox.Show("Are you sure you want to remove this column on all levels?",
                     "Remove column", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -104,8 +104,8 @@ namespace MazeCreator
                     Config.X_COUNT = newCount;
 
                     // Change in grid
-                    for (int lev = 0; lev < Config.LEVELS.Count; lev++)
-                        Config.LEVELS[lev].Grid.Columns.RemoveAt(col);
+                    for (int lev = 0; lev < App.GetLevelCount(); lev++)
+                        App.GetLevel(lev).Columns.RemoveAt(col);
                 }
             }
         }
@@ -117,12 +117,12 @@ namespace MazeCreator
                 if (row == 0 || row == Config.Y_COUNT - 1)
                 {
                     for (int col = 0; col < Config.X_COUNT; col++)
-                        Config.LEVELS[App.activeGrid].Grid.Rows[row].Cells[col].Value = 1;
+                        App.GetLevel().Rows[row].Cells[col].Value = 1;
                 }
                 else
                 {
-                    Config.LEVELS[App.activeGrid].Grid.Rows[row].Cells[0].Value = 1;
-                    Config.LEVELS[App.activeGrid].Grid.Rows[row].Cells[Config.X_COUNT - 1].Value = 1;
+                    App.GetLevel().Rows[row].Cells[0].Value = 1;
+                    App.GetLevel().Rows[row].Cells[Config.X_COUNT - 1].Value = 1;
                 }
             }
             App.creator.ReloadColors();
@@ -134,9 +134,9 @@ namespace MazeCreator
                 for (int col = 0; col < Config.X_COUNT; col++)// Loop all columns 
                 {
                     if (empty)
-                        Config.LEVELS[App.activeGrid].Grid.Rows[row].Cells[col].Value = 0;
+                        App.GetLevel().Rows[row].Cells[col].Value = 0;
                     else
-                        Config.LEVELS[App.activeGrid].Grid.Rows[row].Cells[col].Value = 1;
+                        App.GetLevel().Rows[row].Cells[col].Value = 1;
                 }
             }
             App.creator.ReloadColors();

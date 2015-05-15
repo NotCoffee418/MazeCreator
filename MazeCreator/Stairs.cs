@@ -27,10 +27,10 @@ namespace MazeCreator
             MessageBox.Show("Activate the block where the bottom of your stairs start.");
 
             // Let user select start of stairs
-            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter += PlacingStairs;
-            Config.LEVELS[App.activeGrid].Grid.CellMouseDown += ConfirmPlaceStairs;
-            Config.LEVELS[App.activeGrid].Grid.KeyDown += CancelPlacing;
-            Config.LEVELS[App.activeGrid].Grid.Focus();
+            App.GetLevel().CellMouseEnter += PlacingStairs;
+            App.GetLevel().CellMouseDown += ConfirmPlaceStairs;
+            App.GetLevel().KeyDown += CancelPlacing;
+            App.GetLevel().Focus();
         }
 
         private void CancelPlacing(object sender, KeyEventArgs e)
@@ -62,8 +62,8 @@ namespace MazeCreator
                         }
                         break;
                     case 2: // down
-                        if (locY + reqBlocks > Config.LEVELS[App.activeGrid].Grid.ColumnCount)
-                            locY = Config.LEVELS[App.activeGrid].Grid.RowCount - reqBlocks;
+                        if (locY + reqBlocks > App.GetLevel().ColumnCount)
+                            locY = App.GetLevel().RowCount - reqBlocks;
                         for (int i = 0; i < reqBlocks; i++)
                         {
                             AddStairsPos(i, locX, locY + i);
@@ -80,8 +80,8 @@ namespace MazeCreator
                         }
                         break;
                     case 4: // right
-                        if (locX + reqBlocks > Config.LEVELS[App.activeGrid].Grid.ColumnCount)
-                            locX = Config.LEVELS[App.activeGrid].Grid.ColumnCount - reqBlocks;
+                        if (locX + reqBlocks > App.GetLevel().ColumnCount)
+                            locX = App.GetLevel().ColumnCount - reqBlocks;
                         for (int i = 0; i < reqBlocks; i++)
                         {
                             AddStairsPos(i, locX + i, locY);
@@ -103,7 +103,7 @@ namespace MazeCreator
         /// <param name="y"></param>
         private void CheckAllowedLocation(int x, int y)
         {
-            int value = (int)Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value;
+            int value = (int)App.GetLevel().Rows[y].Cells[x].Value;
             if (value >= 2 && value <= 5)
                 allowedLocation = false;
         }
@@ -118,7 +118,7 @@ namespace MazeCreator
         private void AddStairsPos(int i, int locX, int locY)
         {
             // Set temporary color
-            Config.LEVELS[App.activeGrid].Grid.Rows[locY].Cells[locX].Style.BackColor = App.color[i + 2];
+            App.GetLevel().Rows[locY].Cells[locX].Style.BackColor = App.color[i + 2];
 
             // Add part
             i = 3 - i; // Inverted
@@ -155,13 +155,13 @@ namespace MazeCreator
             int next = 5; // Count down from 5 to 2
             for (int i = 0; i < 4; i++)
             {
-                Config.LEVELS[App.activeGrid].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
+                App.GetLevel().Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
                 App.creator.SetCellInfo(newLocation[i, 1], newLocation[i, 0]);
 
                 // Add top of stairs to next level
-                if (i < 3 && App.activeGrid + 1 < Config.LEVELS.Count)
+                if (i < 3 && App.activeGrid + 1 < App.GetLevelCount())
                 {
-                    Config.LEVELS[App.activeGrid + 1].Grid.Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = 6;
+                    App.GetLevel(App.activeGrid + 1).Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = 6;
                     App.creator.SetCellInfo(newLocation[i, 1], newLocation[i, 0], App.activeGrid + 1);
                 }
 
@@ -175,8 +175,8 @@ namespace MazeCreator
         /// </summary>
         private void StopPlacing()
         {
-            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingStairs;
-            Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceStairs;
+            App.GetLevel().CellMouseEnter -= PlacingStairs;
+            App.GetLevel().CellMouseDown -= ConfirmPlaceStairs;
             App.creator.KeyDown -= CancelPlacing;
             App.creator.ReloadColors();
         }
@@ -186,7 +186,7 @@ namespace MazeCreator
         /// </summary>
         internal static void Remove()
         {
-            var grid = Config.LEVELS[App.activeGrid].Grid;
+            var grid = App.GetLevel();
             var bottom = grid.SelectedCells[0];
 
             if ((int)bottom.Value != 2) // No stairs selected

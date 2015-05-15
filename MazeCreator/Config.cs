@@ -4,9 +4,6 @@ namespace MazeCreator
 {
     class Config
     {
-        // Levels
-        public static List<Level> LEVELS = new List<Level>();
-
         // Config
         public static string[] MAZEDATA;
         public static int GAMEOBJECT;

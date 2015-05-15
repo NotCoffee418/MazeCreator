@@ -21,10 +21,10 @@ namespace MazeCreator
         public Trap(Type t)
         {
             type = t;
-            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter += PlacingTrap;
-            Config.LEVELS[App.activeGrid].Grid.CellMouseDown += ConfirmPlaceTrap;
-            Config.LEVELS[App.activeGrid].Grid.KeyDown += CancelPlacing;
-            Config.LEVELS[App.activeGrid].Grid.Focus();
+            App.GetLevel().CellMouseEnter += PlacingTrap;
+            App.GetLevel().CellMouseDown += ConfirmPlaceTrap;
+            App.GetLevel().KeyDown += CancelPlacing;
+            App.GetLevel().Focus();
         }
 
         private void CancelPlacing(object sender, KeyEventArgs e)
@@ -41,7 +41,7 @@ namespace MazeCreator
             try
             {
                 App.creator.ReloadColors();
-                Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Style.BackColor = App.color[(int)type];
+                App.GetLevel().Rows[y].Cells[x].Style.BackColor = App.color[(int)type];
             }
             catch (ArgumentOutOfRangeException)
             { /* Mouse moved outside of grid */  }
@@ -61,7 +61,7 @@ namespace MazeCreator
                 MessageBox.Show("You can't place a trap here.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else // Set value
             {
-                Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value = (int)type;
+                App.GetLevel().Rows[y].Cells[x].Value = (int)type;
                 StopPlacing(x, y);
             }
         }
@@ -74,10 +74,10 @@ namespace MazeCreator
         /// <returns></returns>
         private bool isAllowedHere(int x, int y)
         {
-            int value = (int)Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value;
+            int value = (int)App.GetLevel().Rows[y].Cells[x].Value;
             int below = 0;
             if (App.activeGrid > 0)
-                below = (int)Config.LEVELS[App.activeGrid - 1].Grid.Rows[y].Cells[x].Value;
+                below = (int)App.GetLevel(App.activeGrid - 1).Rows[y].Cells[x].Value;
 
             // not allowed when stairs here
             if (value >= 2 && value <= 6 || below == 1)
@@ -89,9 +89,9 @@ namespace MazeCreator
 
         private void StopPlacing(int x = -1, int y = -1)
         {
-            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingTrap;
-            Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceTrap;
-            Config.LEVELS[App.activeGrid].Grid.KeyDown -= CancelPlacing;
+            App.GetLevel().CellMouseEnter -= PlacingTrap;
+            App.GetLevel().CellMouseDown -= ConfirmPlaceTrap;
+            App.GetLevel().KeyDown -= CancelPlacing;
 
             if (x == -1 || y == -1)
                 App.creator.ReloadColors();
