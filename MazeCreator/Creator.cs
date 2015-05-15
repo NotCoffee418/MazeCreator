@@ -193,16 +193,21 @@ namespace MazeCreator
         /// <param name="e"></param>
         private void PlaceWall(object sender, DataGridViewCellMouseEventArgs e)
         {
-            var cell = Config.LEVELS[App.activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            int value = 0;
+            try
+            {
+                var cell = Config.LEVELS[App.activeGrid].Grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                int value = 0;
 
-            if (cell.ReadOnly)
-                return;
-            else if ((int)cell.Value == 0)
-                value = 1;
+                if (cell.ReadOnly)
+                    return;
+                else if ((int)cell.Value == 0)
+                    value = 1;
 
-            cell.Value = value;
-            SetCellInfo(e.ColumnIndex, e.RowIndex);
+                cell.Value = value;
+                SetCellInfo(e.ColumnIndex, e.RowIndex);
+            }
+            catch (ArgumentOutOfRangeException)
+            { /* Mouse moved out of grid */}
         }
 
         #region UI Handlers
