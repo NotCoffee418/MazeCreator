@@ -21,7 +21,7 @@ namespace MazeCreator
                         double z = 0;
                         double[] box = new double[6];
                         // Floor, roof traps
-                        if (Config.FLOOR && lev == 0 || NeedsFloorBlock(lev, x, y))
+                        if (Config.FLOOR && lev == 0 && NeedsFloorBlock(lev, x, y))
                         {
                             box[0] = Config.SPACING * x + Config.STARTCOORDS[0];                // x
                             box[1] = Config.SPACING * y + Config.STARTCOORDS[1];                // y
@@ -83,20 +83,34 @@ namespace MazeCreator
         /// <returns>true if there's no stairs below</returns>
         private bool NeedsFloorBlock(int lev, int x, int y)
         {
-            if ((int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value == 6)
-                return false;// Floor trap (hole)
-            else if (lev == 0) 
-                return true; // no stairs below
-            else if (!Config.ROOF && lev == Config.LEVELS.Count)
-                return false; // Roof
+            if (lev != Config.LEVELS.Count) // Not roof
+            {
+                // Check for trap
+                if ((int)Config.LEVELS[lev].Grid.Rows[y].Cells[x].Value == 7)
+                    return false;
+                // Check if floor is configured at bottom level
+                else if (lev == 0)
+                {
+                    if (Config.FLOOR)
+                        return true;
+                    else return false;
+                }
+            }
+            else if (!Config.ROOF) // && roof level
+                return false; // no Roof
+            else // check for stairs below
+            {
+                // Block below 
+                int below = (int)Config.LEVELS[lev - 1].Grid.Rows[y].Cells[x].Value;
 
-            // Block below 
-            int below = (int)Config.LEVELS[lev - 1].Grid.Rows[y].Cells[x].Value;
+                // Check of block should be removed
+                if (below == 3 || below == 4 || below == 5)
+                    return false;
+                else return true;
+            }
 
-            // Check of block should be removed
-            if (below == 3 || below == 4 || below == 5)
-                return false;
-            else return true;
+            // This shouldn't happen
+            return false;
         }
 
         /// <summary>

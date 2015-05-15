@@ -78,7 +78,6 @@ namespace MazeCreator
             levelTabControl.Controls.Add(page);
             LoadGrid(id, rows, 1 + (Config.Y_COUNT * id));
 
-
             // register any stairs below
             if (id > 0)
             {
