@@ -45,17 +45,16 @@ namespace MazeCreator
             int y = e.RowIndex;
 
             if (!isAllowedHere(x, y))
-            {
                 MessageBox.Show("You can't place a trap here.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+            else // Set value
+            {
+                Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value = (int)type;
+
+                // Remove handlers
+                Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingTrap;
+                Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceTrap;
             }
 
-            // Set value
-            Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value = (int)type;
-
-            // Remove handlers
-            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingTrap;
-            Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceTrap;
         }
 
         /// <summary>
@@ -67,9 +66,12 @@ namespace MazeCreator
         private bool isAllowedHere(int x, int y)
         {
             int value = (int)Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value;
+            int below = 0;
+            if (App.activeGrid > 0)
+                below = (int)Config.LEVELS[App.activeGrid - 1].Grid.Rows[y].Cells[x].Value;
 
             // not allowed when stairs here
-            if (value >= 2 && value <= 5)
+            if (value >= 2 && value <= 6 || below == 1)
                 return false;
 
             // Is allowed
