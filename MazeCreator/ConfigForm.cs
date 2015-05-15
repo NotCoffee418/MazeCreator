@@ -140,6 +140,7 @@ namespace MazeCreator
             {
                 objectIdTextBox.Enabled = true;
                 objectSpacingTextBox.Enabled = true;
+                wallHeightTextBox.Enabled = true;
             }
             else
             {
@@ -148,7 +149,23 @@ namespace MazeCreator
 
                 objectSpacingTextBox.Text = "2.5";
                 objectSpacingTextBox.Enabled = false;
+
+                wallHeightTextBox.Text = "2";
+                wallHeightTextBox.Enabled = false;
             }
+        }
+
+        /// <summary>
+        /// Warning label about stairs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void wallHeightTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (wallHeightTextBox.Text != "2")
+                heightWarningLabel.Visible = true;
+            else
+                heightWarningLabel.Visible = false;
         }
     }
 }

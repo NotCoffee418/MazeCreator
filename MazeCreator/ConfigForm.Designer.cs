@@ -60,6 +60,7 @@
             this.levelCountTextBox = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.heightWarningLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // objectIdTextBox
@@ -118,16 +119,18 @@
             // 
             // wallHeightTextBox
             // 
+            this.wallHeightTextBox.Enabled = false;
             this.wallHeightTextBox.Location = new System.Drawing.Point(137, 163);
             this.wallHeightTextBox.Name = "wallHeightTextBox";
             this.wallHeightTextBox.Size = new System.Drawing.Size(100, 20);
             this.wallHeightTextBox.TabIndex = 10;
             this.wallHeightTextBox.Text = "2";
+            this.wallHeightTextBox.TextChanged += new System.EventHandler(this.wallHeightTextBox_TextChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(244, 166);
+            this.label7.Location = new System.Drawing.Point(244, 160);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(94, 13);
             this.label7.TabIndex = 10;
@@ -274,9 +277,9 @@
             this.advancedCheckBox.AutoSize = true;
             this.advancedCheckBox.Location = new System.Drawing.Point(15, 86);
             this.advancedCheckBox.Name = "advancedCheckBox";
-            this.advancedCheckBox.Size = new System.Drawing.Size(231, 17);
+            this.advancedCheckBox.Size = new System.Drawing.Size(186, 17);
             this.advancedCheckBox.TabIndex = 7;
-            this.advancedCheckBox.Text = "I\'ll choose my own GameObject (advanced)";
+            this.advancedCheckBox.Text = "I know what I\'m doing (advanced)";
             this.advancedCheckBox.UseVisualStyleBackColor = true;
             this.advancedCheckBox.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
@@ -340,11 +343,23 @@
             this.label15.Text = "(Use edit menu)";
             this.label15.Visible = false;
             // 
+            // heightWarningLabel
+            // 
+            this.heightWarningLabel.AutoSize = true;
+            this.heightWarningLabel.ForeColor = System.Drawing.Color.Red;
+            this.heightWarningLabel.Location = new System.Drawing.Point(244, 173);
+            this.heightWarningLabel.Name = "heightWarningLabel";
+            this.heightWarningLabel.Size = new System.Drawing.Size(136, 13);
+            this.heightWarningLabel.TabIndex = 33;
+            this.heightWarningLabel.Text = "Stairs won\'t place correctly!";
+            this.heightWarningLabel.Visible = false;
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(350, 270);
+            this.ClientSize = new System.Drawing.Size(388, 270);
+            this.Controls.Add(this.heightWarningLabel);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.levelCountTextBox);
             this.Controls.Add(this.label14);
@@ -416,6 +431,7 @@
         private System.Windows.Forms.TextBox levelCountTextBox;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label heightWarningLabel;
     }
 }
 

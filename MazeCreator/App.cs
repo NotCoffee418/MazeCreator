@@ -49,6 +49,7 @@ namespace MazeCreator
             color[5] = Color.Aqua; // top
             color[6] = Color.White;
             color[7] = Color.Yellow;
+            color[8] = Color.Orange;
         }
 
         private static void InitTooltips()
