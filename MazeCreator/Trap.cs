@@ -23,6 +23,14 @@ namespace MazeCreator
             type = t;
             Config.LEVELS[App.activeGrid].Grid.CellMouseEnter += PlacingTrap;
             Config.LEVELS[App.activeGrid].Grid.CellMouseDown += ConfirmPlaceTrap;
+            Config.LEVELS[App.activeGrid].Grid.KeyDown += CancelPlacing;
+            Config.LEVELS[App.activeGrid].Grid.Focus();
+        }
+
+        private void CancelPlacing(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                StopPlacing();
         }
 
         public void PlacingTrap(object sender, DataGridViewCellEventArgs e)
@@ -44,17 +52,18 @@ namespace MazeCreator
             int x = e.ColumnIndex;
             int y = e.RowIndex;
 
-            if (!isAllowedHere(x, y))
+            if (e.Button == MouseButtons.Right)
+            {
+                StopPlacing(x, y);
+                return;
+            }
+            else if (!isAllowedHere(x, y))
                 MessageBox.Show("You can't place a trap here.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else // Set value
             {
                 Config.LEVELS[App.activeGrid].Grid.Rows[y].Cells[x].Value = (int)type;
-
-                // Remove handlers
-                Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingTrap;
-                Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceTrap;
+                StopPlacing(x, y);
             }
-
         }
 
         /// <summary>
@@ -76,6 +85,18 @@ namespace MazeCreator
 
             // Is allowed
             return true;
+        }
+
+        private void StopPlacing(int x = -1, int y = -1)
+        {
+            Config.LEVELS[App.activeGrid].Grid.CellMouseEnter -= PlacingTrap;
+            Config.LEVELS[App.activeGrid].Grid.CellMouseDown -= ConfirmPlaceTrap;
+            Config.LEVELS[App.activeGrid].Grid.KeyDown -= CancelPlacing;
+
+            if (x == -1 || y == -1)
+                App.creator.ReloadColors();
+            else
+                App.creator.SetCellInfo(x, y);
         }
     }
 }
