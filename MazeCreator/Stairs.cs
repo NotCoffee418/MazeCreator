@@ -11,6 +11,7 @@ namespace MazeCreator
 {
     class Stairs
     {
+        public static bool alreadyPlacing = false;
         private bool allowedLocation = true;
         public int stairsDirection = 0;
         private int[,] newLocation = new int[4,2]; 
@@ -22,6 +23,7 @@ namespace MazeCreator
         public Stairs(int direction)
         {
             stairsDirection = direction;
+            alreadyPlacing = true;
 
             // Display instructions
             MessageBox.Show("Activate the block where the bottom of your stairs start.");
@@ -169,16 +171,16 @@ namespace MazeCreator
             }
         }
 
-
         /// <summary>
         /// Remove handlers for placing
         /// </summary>
-        private void StopPlacing()
+        public void StopPlacing()
         {
             App.GetLevel().CellMouseEnter -= PlacingStairs;
             App.GetLevel().CellMouseDown -= ConfirmPlaceStairs;
             App.creator.KeyDown -= CancelPlacing;
             App.creator.ReloadColors();
+            alreadyPlacing = false;
         }
 
         /// <summary>

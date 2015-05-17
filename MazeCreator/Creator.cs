@@ -375,21 +375,30 @@ namespace MazeCreator
         }
 
 
+        Stairs stairs;
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            new Stairs(1);
+            if (Stairs.alreadyPlacing)
+                stairs.StopPlacing();
+            stairs = new Stairs(1);
         }
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            new Stairs(2);
+            if (Stairs.alreadyPlacing)
+                stairs.StopPlacing();
+            stairs = new Stairs(2);
         }
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            new Stairs(3);
+            if (Stairs.alreadyPlacing)
+                stairs.StopPlacing();
+            stairs = new Stairs(3);
         }
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            new Stairs(4);
+            if (Stairs.alreadyPlacing)
+                stairs.StopPlacing();
+            stairs = new Stairs(4);
         }
         private void removeStairsButton_Click(object sender, EventArgs e)
         {
