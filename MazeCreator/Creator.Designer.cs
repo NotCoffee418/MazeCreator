@@ -60,6 +60,7 @@
             this.addTrapButton = new System.Windows.Forms.ToolStripButton();
             this.concealedFloorTrapButton = new System.Windows.Forms.ToolStripButton();
             this.secretPassageButton = new System.Windows.Forms.ToolStripButton();
+            this.remove3DLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -118,7 +119,8 @@
             this.insertRowBottomToolStripMenuItem,
             this.removeSelectedRowToolStripMenuItem,
             this.removeSelectedColumnsToolStripMenuItem,
-            this.add3DLevelToolStripMenuItem});
+            this.add3DLevelToolStripMenuItem,
+            this.remove3DLevelToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -339,6 +341,13 @@
             this.secretPassageButton.Text = "Secret Passage Wall";
             this.secretPassageButton.Click += new System.EventHandler(this.secretPassageButton_Click);
             // 
+            // remove3DLevelToolStripMenuItem
+            // 
+            this.remove3DLevelToolStripMenuItem.Name = "remove3DLevelToolStripMenuItem";
+            this.remove3DLevelToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.remove3DLevelToolStripMenuItem.Text = "Remove 3D level";
+            this.remove3DLevelToolStripMenuItem.Click += new System.EventHandler(this.remove3DLevelToolStripMenuItem_Click);
+            // 
             // Creator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -395,5 +404,6 @@
         private System.Windows.Forms.ToolStripButton concealedFloorTrapButton;
         private System.Windows.Forms.ToolStripButton secretPassageButton;
         public System.Windows.Forms.TabControl levelTabControl;
+        private System.Windows.Forms.ToolStripMenuItem remove3DLevelToolStripMenuItem;
     }
 }

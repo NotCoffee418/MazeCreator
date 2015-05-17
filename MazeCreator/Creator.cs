@@ -94,6 +94,19 @@ namespace MazeCreator
             }
         }
 
+        private void RemoveLevel()
+        {
+            var result = MessageBox.Show("Are you sure you want to remove this level?", "Remove Level",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                App.LEVELS.RemoveAt(App.activeGrid);
+                levelTabControl.Controls.RemoveAt(App.activeGrid);
+                Config.LEVEL_COUNT -= 1;
+                App.configForm.levelCountTextBox.Text = Config.LEVEL_COUNT.ToString();
+            }
+        }
+
         /// <summary>
         /// Load any maze data
         /// </summary>
@@ -371,7 +384,13 @@ namespace MazeCreator
         }
         private void add3DLevelToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Config.LEVEL_COUNT += 1;
+            App.configForm.levelCountTextBox.Text = Config.LEVEL_COUNT.ToString();
             AddLevel();
+        }
+        private void remove3DLevelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RemoveLevel();
         }
 
 
@@ -418,5 +437,7 @@ namespace MazeCreator
             new Trap(Trap.Type.SecretPassage);
         }
         #endregion
+
+        
     }
 }
