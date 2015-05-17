@@ -184,7 +184,7 @@ namespace MazeCreator
         /// <summary>
         /// Attempt to remove stairs at selected location
         /// </summary>
-        internal static void Remove()
+        internal static void Remove(int newValue = 0)
         {
             var grid = App.GetLevel();
             var bottom = grid.SelectedCells[0];
@@ -216,7 +216,7 @@ namespace MazeCreator
             {
                 for (int row = 0; row < 4; row++)
                 {
-                    grid.Rows[y - row].Cells[x].Value = 0;
+                    grid.Rows[y - row].Cells[x].Value = newValue;
                     RemoveAbove(x, y - row);
                 }
             }
@@ -224,7 +224,7 @@ namespace MazeCreator
             {
                 for (int row = 0; row < 4; row++)
                 {
-                    grid.Rows[y + row].Cells[x].Value = 0;
+                    grid.Rows[y + row].Cells[x].Value = newValue;
                     RemoveAbove(x, y + row);
                 }
             }
@@ -232,7 +232,7 @@ namespace MazeCreator
             {
                 for (int col = 0; col < 4; col++)
                 {
-                    grid.Rows[y].Cells[x - col].Value = 0;
+                    grid.Rows[y].Cells[x - col].Value = newValue;
                     RemoveAbove(x - col, y);
                 }
             }
@@ -240,7 +240,7 @@ namespace MazeCreator
             {
                 for (int col = 0; col < 4; col++)
                 {
-                    grid.Rows[y].Cells[x + col].Value = 0;
+                    grid.Rows[y].Cells[x + col].Value = newValue;
                     RemoveAbove(x + col, y);
                 }
             }

@@ -133,10 +133,19 @@ namespace MazeCreator
             {
                 for (int col = 0; col < Config.X_COUNT; col++)// Loop all columns 
                 {
-                    if (empty)
-                        App.GetLevel().Rows[row].Cells[col].Value = 0;
-                    else
-                        App.GetLevel().Rows[row].Cells[col].Value = 1;
+                    int value = (int)App.GetLevel().Rows[row].Cells[col].Value;
+                    int next = 1;
+                    if (empty) next = 0;
+
+                    if (value >= 2 && value <= 6)
+                    {
+                        if (value == 2)
+                        {
+                            App.GetLevel().Rows[row].Cells[col].Selected = true;
+                            Stairs.Remove(next);
+                        }
+                    }
+                    else App.GetLevel().Rows[row].Cells[col].Value = next;
                 }
             }
             App.creator.ReloadColors();
