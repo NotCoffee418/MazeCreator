@@ -472,7 +472,6 @@
         private System.Windows.Forms.Button openMazeButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox levelCountTextBox;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label heightWarningLabel;
@@ -480,6 +479,7 @@
         private System.Windows.Forms.TabPage basicConfigTab;
         private System.Windows.Forms.TabPage advancedConfigTab;
         private System.Windows.Forms.Button advancedSaveConfigButton;
+        public System.Windows.Forms.TextBox levelCountTextBox;
     }
 }
 

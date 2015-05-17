@@ -93,12 +93,26 @@ namespace MazeCreator
         /// <returns>true if there's no stairs below</returns>
         private bool NeedsFloorBlock(int lev, int x, int y)
         {
-            if (lev != App.GetLevelCount()) // Not roof
+            int current = 0;
+            int below = 0;
+            if (lev != 0)
+                below = (int)App.GetLevel(lev - 1).Rows[y].Cells[x].Value;
+            if (lev != App.LEVELS.Count)
+                current = (int)App.GetLevel(lev).Rows[y].Cells[x].Value;
+
+            // check for roof
+            if (lev == App.GetLevelCount())
+            {
+                if (!Config.ROOF || below == 3 || below == 4 || below == 5)
+                    return false; // no Roof
+                else return true;
+            }
+            else  // Not roof
             {
                 // Check for trap
-                if ((int)App.GetLevel(lev).Rows[y].Cells[x].Value == (int)Trap.Type.HoleTrap)
+                if (current == (int)Trap.Type.HoleTrap)
                     return false;
-                else if ((int)App.GetLevel(lev).Rows[y].Cells[x].Value == (int)Trap.Type.ConcealedTrap)
+                else if (current == (int)Trap.Type.ConcealedTrap)
                     return true; // Needs (different) floor block
                 // Check if floor is configured at bottom level
                 else if (lev == 0)
@@ -107,22 +121,11 @@ namespace MazeCreator
                         return true;
                     else return false;
                 }
-            }
-            else if (lev == App.GetLevelCount() && !Config.ROOF)
-                return false; // no Roof
-            else // check for stairs below
-            {
-                // Block below 
-                int below = (int)App.GetLevel(lev - 1).Rows[y].Cells[x].Value;
-
                 // Check of block should be removed
-                if (below == 3 || below == 4 || below == 5)
+                else if (below == 3 || below == 4 || below == 5)
                     return false;
-                else return true;
+                else return true; // floor below upper level
             }
-
-            // This shouldn't happen
-            return false;
         }
 
         /// <summary>
