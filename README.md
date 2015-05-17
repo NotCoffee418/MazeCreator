@@ -4,7 +4,7 @@ You can probably find other uses for it as well.
 
 ### Requirements ###
 * TrinityCore or cMangos
-* Windows 7 or better
+* Windows 7 or newer
 * [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)
 
 ### How to build a maze ###
