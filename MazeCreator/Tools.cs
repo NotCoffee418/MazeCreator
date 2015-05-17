@@ -114,15 +114,21 @@ namespace MazeCreator
         {
             for (int row = 0; row < Config.Y_COUNT; row++)
             {
-                if (row == 0 || row == Config.Y_COUNT - 1)
+                for (int col = 0; col < Config.X_COUNT; col++)
                 {
-                    for (int col = 0; col < Config.X_COUNT; col++)
-                        App.GetLevel().Rows[row].Cells[col].Value = 1;
-                }
-                else
-                {
-                    App.GetLevel().Rows[row].Cells[0].Value = 1;
-                    App.GetLevel().Rows[row].Cells[Config.X_COUNT - 1].Value = 1;
+                    if (row == 0 || row == Config.Y_COUNT - 1 || col == 0 || col == Config.X_COUNT - 1)
+                    {
+                        int value = (int)App.GetLevel().Rows[row].Cells[col].Value;
+                        if (value >= 2 && value <= 6)
+                        {
+                            if (value == 2)
+                            {
+                                App.GetLevel().Rows[row].Cells[col].Selected = true;
+                                Stairs.Remove(1);
+                            }
+                        }
+                        else App.GetLevel().Rows[row].Cells[col].Value = 1;
+                    }
                 }
             }
             App.creator.ReloadColors();
