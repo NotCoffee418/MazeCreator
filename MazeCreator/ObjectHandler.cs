@@ -176,7 +176,7 @@ namespace MazeCreator
             double[] box = new double[6];
             box[0] = Config.SPACING * placementX + Config.STARTCOORDS[0];
             box[1] = Config.SPACING * placementY + Config.STARTCOORDS[1];
-            box[2] = spawnZ + (Config.WALLHEIGHT / 1.9); // Makes the stairs walkable without jumping
+            box[2] = spawnZ + (Config.WALLHEIGHT / 2.05); // Dranei can fit
             box[3] = Config.STARTCOORDS[3];
             box[4] = orientation;
             box[5] = 745001; // Stairs object
