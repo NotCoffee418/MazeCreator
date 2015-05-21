@@ -35,7 +35,8 @@ namespace MazeCreator
             if (save != DialogResult.OK) return;
             string path = ExportSqlDialog.FileName;
 
-            string sql = "INSERT INTO `gameobject`(`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES\n";
+            string createSql = "INSERT INTO `gameobject`(`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES\n";
+            string removeSql = String.Empty;
             string endLine = String.Empty;
             int curr = 0;
             List<double[]> maze = App.objectHandler.GenerateMazeObjects();
@@ -45,17 +46,42 @@ namespace MazeCreator
                 if (curr < maze.Count)
                     endLine = ",\n";
                 else endLine = ";\n";
-                sql += "(" + box[5] + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + "," + box[4].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0)" + endLine;
+                createSql += "(" + box[5] + "," + box[3] + ",1,1," + box[0].ToString().Replace(',', '.') + "," + box[1].ToString().Replace(',', '.') + "," + box[2].ToString().Replace(',', '.') + "," + box[4].ToString().Replace(',', '.') + ",0,0,0,0,0,0,0)" + endLine;
+                removeSql += "DELETE FROM `gameobject` WHERE `id`=" + box[5].ToString().Replace(',', '.') + " AND `map`=" + box[3].ToString().Replace(',', '.') + " AND `position_x`=" + box[0].ToString().Replace(',', '.') + " AND `position_y`=" + box[1].ToString().Replace(',', '.') + " AND `position_z`=" + box[2].ToString().Replace(',', '.') + ";\n";
             }
 
             // Add gameobject_template for Maze Crate
             if (Config.GAMEOBJECT == 745000)
-                sql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
+                createSql += "INSERT IGNORE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES\n" +
                     "('745000', '5', '31', 'Maze Crate', '', '', '', '94', '0', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', ''),\n" +
                     "('745001', '5', '7593', 'Maze Stairs', '', '', '', '94', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', ''),\n" +
                     "('745002', '0', '31', 'Maze Crate (no collision)', '', '', '', '94', '4', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '');\n";
+            
+            // Write SQL files
+            File.WriteAllText(path, createSql);
+            WriteRemoveSqlFile(path, removeSql);
+        }
 
-            File.WriteAllText(path, sql);
+        /// <summary>
+        /// Writes the remove maze file without overwriting a previous one
+        /// </summary>
+        /// <param name="createPath">File path of creation SQL file</param>
+        /// <param name="removeSql">SQL queries</param>
+        private void WriteRemoveSqlFile(string createPath, string removeSql)
+        {
+            // Determine file name of remove SQL file
+            string fileName = Path.GetFileNameWithoutExtension(createPath) + "-remove";
+            string dir = Path.GetDirectoryName(createPath);
+            string fullPath = dir + "\\" + fileName + ".sql";
+
+            int count = 2;
+            while (File.Exists(fullPath))
+            {
+                fullPath = dir + "\\" + fileName + "-" + count + ".sql";
+                count++;
+            }
+
+            File.WriteAllText(fullPath, removeSql);
         }
 
         public void OpenFile()
