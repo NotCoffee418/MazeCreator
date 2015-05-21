@@ -32,7 +32,7 @@ namespace MazeCreator
         /// <param name="rows"></param>
         public void LoadData(string[] rows = null)
         {
-            App.LEVELS = new List<Level>();
+            App.LEVELS = new List<DataGridView>();
             levelTabControl.Controls.Clear();
 
             for (int lev = 0; lev < Config.LEVEL_COUNT; lev++)
@@ -71,9 +71,7 @@ namespace MazeCreator
             page.Controls.Add(grid);
 
             // Add to LEVELS and levelControl
-            Level l = new Level();
-            l.Grid = grid;
-            App.LEVELS.Add(l);
+            App.LEVELS.Add(grid);
             levelTabControl.Controls.Add(page);
             LoadGrid(id, rows, 1 + (Config.Y_COUNT * id));
 

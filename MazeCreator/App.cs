@@ -19,7 +19,7 @@ namespace MazeCreator
         public static String[] tooltip = new String[10]; // All tooltip values
 
         // Levels
-        public static List<Level> LEVELS = new List<Level>();
+        public static List<DataGridView> LEVELS = new List<DataGridView>();
 
         /// <summary>
         /// The main entry point for the application.
@@ -75,7 +75,7 @@ namespace MazeCreator
         {
             if (lev == -1)
                 lev = activeGrid; 
-            return LEVELS[lev].Grid;
+            return LEVELS[lev];
         }
 
         public static int GetLevelCount()

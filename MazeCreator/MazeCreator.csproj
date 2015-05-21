@@ -63,7 +63,6 @@
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FileHandler.cs" />
-    <Compile Include="Level.cs" />
     <Compile Include="ObjectHandler.cs" />
     <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
