@@ -97,5 +97,11 @@ namespace MazeCreator
             // Select original cell
             App.GetLevel(grid).Rows[sel.RowIndex].Cells[sel.ColumnIndex].Selected = true;
         }
+
+        public static bool PlacementAllowed(int col, int row, int grid = -1)
+        {
+            if (grid == -1) grid = App.activeGrid;
+            return !Get(col, row, grid).ReadOnly;
+        }
     }
 }

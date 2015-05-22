@@ -57,7 +57,7 @@ namespace MazeCreator
                 StopPlacing(col, row);
                 return;
             }
-            else if (!isAllowedHere(col, row))
+            else if (!Cell.PlacementAllowed(col, row))
                 MessageBox.Show("You can't place a trap here.", "Not allowed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else // Set value
             {
@@ -66,17 +66,6 @@ namespace MazeCreator
                     Cell.SetValue(10, col, row, App.activeGrid - 1);
                 StopPlacing(col, row);
             }
-        }
-
-        /// <summary>
-        /// True if a trap can be placed here
-        /// </summary>
-        /// <param name="col"></param>
-        /// <param name="row"></param>
-        /// <returns></returns>
-        private bool isAllowedHere(int col, int row)
-        {
-            return Cell.Get(col, row).ReadOnly;
         }
 
         private void StopPlacing(int x = -1, int y = -1)

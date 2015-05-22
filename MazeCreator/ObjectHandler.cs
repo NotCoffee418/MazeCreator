@@ -103,7 +103,7 @@ namespace MazeCreator
             // check for roof
             if (lev == App.GetLevelCount())
             {
-                if (!Config.ROOF || below == 3 || below == 4 || below == 5)
+                if (!Config.ROOF || (below >= 2 && below <= 5))
                     return false; // no Roof
                 else return true;
             }
@@ -122,7 +122,7 @@ namespace MazeCreator
                     else return false;
                 }
                 // Check of block should be removed
-                else if (below == 3 || below == 4 || below == 5)
+                else if (below >= 2 && below <= 5)
                     return false;
                 else return true; // floor below upper level
             }
