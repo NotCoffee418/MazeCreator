@@ -22,7 +22,7 @@ namespace MazeCreator
                         int value = 0;
 
                         if (!roof)
-                            value = (int)App.GetLevel(lev).Rows[row].Cells[col].Value;
+                            value = Cell.GetValue(col, row, lev);
 
                         double z = 0;
                         double[] box = new double[6];
@@ -91,14 +91,14 @@ namespace MazeCreator
         /// <param name="x">Column</param>
         /// <param name="y">Row</param>
         /// <returns>true if there's no stairs below</returns>
-        private bool NeedsFloorBlock(int lev, int x, int y)
+        private bool NeedsFloorBlock(int lev, int col, int row)
         {
             int current = 0;
             int below = 0;
             if (lev != 0)
-                below = (int)App.GetLevel(lev - 1).Rows[y].Cells[x].Value;
+                below = Cell.GetValue(row, col, lev - 1);
             if (lev != App.LEVELS.Count)
-                current = (int)App.GetLevel(lev).Rows[y].Cells[x].Value;
+                current = Cell.GetValue(col, row, lev);
 
             // check for roof
             if (lev == App.GetLevelCount())
@@ -132,41 +132,40 @@ namespace MazeCreator
         /// Returns stairs object box
         /// </summary>
         /// <param name="lev">level</param>
-        /// <param name="x">bottom of stairs X</param>
-        /// <param name="y">bottom of stairs Y</param>
+        /// <param name="col">bottom of stairs X</param>
+        /// <param name="row">bottom of stairs Y</param>
         /// <returns></returns>
-        private double[] GetStairsBox(int lev, int x, int y, double spawnZ)
+        private double[] GetStairsBox(int lev, int col, int row, double spawnZ)
         {
             // Determine object placement location relative to the given coords
-            var grid = App.GetLevel(lev); // clearer to work with
-            double placementX = x; // It also spawns a block next to the bottom location
-            double placementY = y;
+            double placementX = col; // It also spawns a block next to the bottom location
+            double placementY = row;
             double quarter = 6.28318 / 4; // max orientation = pi * 2
             double orientation = 0.0; // 0 - Pi
 
             // vars for spawn location check
-            int left = x - 1;
-            int right = x + 1;
-            int above = y - 1;
-            int below = y + 1;
+            int left = col - 1;
+            int right = col + 1;
+            int above = row - 1;
+            int below = row + 1;
 
             // Determine placement location & orientation
-            if (left >= 0 && (int)grid.Rows[y].Cells[left].Value == 3)
+            if (left >= 0 && Cell.GetValue(left, row, lev) == 3)
             {
                 placementX = left - 0.25;
                 orientation = quarter * 3;
             }
-            else if (right <= grid.Rows.Count - 1 && (int)grid.Rows[y].Cells[right].Value == 3)
+            else if (right <= Config.Y_COUNT - 1 && Cell.GetValue(right, row, lev) == 3)
             {
                 placementX = right + 0.25;
                 orientation = quarter;
             }
-            else if (above >= 0 && (int)grid.Rows[above].Cells[x].Value == 3)
+            else if (above >= 0 && Cell.GetValue(col, above, lev) == 3)
             {
                 placementY = above - 0.25;
                 orientation = 0;
             }
-            else if (below <= grid.Columns.Count - 1 && (int)grid.Rows[below].Cells[x].Value == 3)
+            else if (below <= Config.X_COUNT - 1 && Cell.GetValue(col, below, lev) == 3)
             {
                 placementY = below + 0.25;
                 orientation = quarter * 2;
@@ -209,7 +208,7 @@ namespace MazeCreator
                 {
                     for (int col = 0; col < Config.X_COUNT; col++)// Loop all columns 
                     {
-                        content += (int)App.GetLevel(grid).Rows[row].Cells[col].Value;
+                        content += Cell.GetValue(col, row, grid);
                         if (col < Config.X_COUNT - 1) // not last in column
                             content += ',';
                     }

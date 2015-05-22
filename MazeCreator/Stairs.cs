@@ -46,8 +46,8 @@ namespace MazeCreator
             allowedLocation = true;
             int locX = e.ColumnIndex;
             int locY = e.RowIndex;
-            
-            App.creator.ReloadColors();
+
+            Cell.ReloadAllInfo();
             int reqBlocks = 4;
             
             try
@@ -105,7 +105,7 @@ namespace MazeCreator
         /// <param name="y"></param>
         private void CheckAllowedLocation(int x, int y)
         {
-            int value = (int)App.GetLevel().Rows[y].Cells[x].Value;
+            int value = Cell.GetValue(x, y);
             if (value >= 2 && value <= 5)
                 allowedLocation = false;
         }
@@ -120,7 +120,7 @@ namespace MazeCreator
         private void AddStairsPos(int i, int locX, int locY)
         {
             // Set temporary color
-            App.GetLevel().Rows[locY].Cells[locX].Style.BackColor = App.color[i + 2];
+            Cell.Get(locX, locY).Style.BackColor = App.color[i + 2];
 
             // Add part
             i = 3 - i; // Inverted
@@ -157,15 +157,11 @@ namespace MazeCreator
             int next = 5; // Count down from 5 to 2
             for (int i = 0; i < 4; i++)
             {
-                App.GetLevel().Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = next;
-                App.creator.SetCellInfo(newLocation[i, 1], newLocation[i, 0]);
+                Cell.SetValue(next, newLocation[i, 1], newLocation[i, 0]);
 
                 // Add top of stairs to next level
                 if (i < 3 && App.activeGrid + 1 < App.GetLevelCount())
-                {
-                    App.GetLevel(App.activeGrid + 1).Rows[newLocation[i, 0]].Cells[newLocation[i, 1]].Value = 6;
-                    App.creator.SetCellInfo(newLocation[i, 1], newLocation[i, 0], App.activeGrid + 1);
-                }
+                    Cell.SetValue(next, newLocation[i, 1], newLocation[i, 0], App.activeGrid + 1);
 
                 next--;
             }
@@ -179,7 +175,7 @@ namespace MazeCreator
             App.GetLevel().CellMouseEnter -= PlacingStairs;
             App.GetLevel().CellMouseDown -= ConfirmPlaceStairs;
             App.creator.KeyDown -= CancelPlacing;
-            App.creator.ReloadColors();
+            Cell.ReloadAllInfo();
             alreadyPlacing = false;
         }
 
@@ -188,8 +184,7 @@ namespace MazeCreator
         /// </summary>
         internal static void Remove(int newValue = 0)
         {
-            var grid = App.GetLevel();
-            var bottom = grid.SelectedCells[0];
+            var bottom = App.GetLevel().SelectedCells[0];
 
             if ((int)bottom.Value != 2) // No stairs selected
             {
@@ -204,52 +199,52 @@ namespace MazeCreator
                 if (result != DialogResult.Yes) return;
             }
 
-            int x = bottom.ColumnIndex;
-            int y = bottom.RowIndex;
+            int col = bottom.ColumnIndex;
+            int row = bottom.RowIndex;
 
             // vars for spawn location check
-            int left = x - 1;
-            int right = x + 1;
-            int above = y - 1;
-            int below = y + 1;
+            int left = col - 1;
+            int right = col + 1;
+            int above = row - 1;
+            int below = row + 1;
 
             // Determine placement location & orientation
-            if (above >= 0 && (int)grid.Rows[above].Cells[x].Value == 3)
+            if (above >= 0 && Cell.GetValue(col, above) == 3)
             {
-                for (int row = 0; row < 4; row++)
+                for (int offset = 0; offset < 4; offset++)
                 {
-                    grid.Rows[y - row].Cells[x].Value = newValue;
-                    RemoveIndicator(x, y - row);
+                    Cell.SetValue(newValue, col, row - offset);
+                    RemoveIndicator(col, row - offset);
                 }
             }
-            else if (below <= grid.Columns.Count - 1 && (int)grid.Rows[below].Cells[x].Value == 3)
+            else if (below <= Config.Y_COUNT - 1 && Cell.GetValue(col, below) == 3)
             {
-                for (int row = 0; row < 4; row++)
+                for (int offset = 0; offset < 4; offset++)
                 {
-                    grid.Rows[y + row].Cells[x].Value = newValue;
-                    RemoveIndicator(x, y + row);
+                    Cell.SetValue(newValue, col, row + offset);
+                    RemoveIndicator(col, row + offset);
                 }
             }
-            else if (left >= 0 && (int)grid.Rows[y].Cells[left].Value == 3)
+            else if (left >= 0 && Cell.GetValue(col, left) == 3)
             {
-                for (int col = 0; col < 4; col++)
+                for (int offset = 0; offset < 4; offset++)
                 {
-                    grid.Rows[y].Cells[x - col].Value = newValue;
-                    RemoveIndicator(x - col, y);
+                    Cell.SetValue(newValue, col - offset, row);
+                    RemoveIndicator(col - offset, row);
                 }
             }
-            else if (right <= grid.Rows.Count - 1 && (int)grid.Rows[y].Cells[right].Value == 3)
+            else if (right <= Config.X_COUNT - 1 && Cell.GetValue(right, row) == 3)
             {
-                for (int col = 0; col < 4; col++)
+                for (int offset = 0; offset < 4; offset++)
                 {
-                    grid.Rows[y].Cells[x + col].Value = newValue;
-                    RemoveIndicator(x + col, y);
+                    Cell.SetValue(newValue, col + offset, row);
+                    RemoveIndicator(col + offset, row);
                 }
             }
 
-            App.creator.ReloadColors();
+            Cell.ReloadAllInfo();
             if (App.activeGrid + 1 < App.LEVELS.Count)
-                App.creator.ReloadColors(App.activeGrid + 1);
+                Cell.ReloadAllInfo(App.activeGrid + 1);
         }
 
         /// <summary>
@@ -259,8 +254,8 @@ namespace MazeCreator
         {
             if (App.activeGrid + 1 < App.LEVELS.Count) // not max level
             {
-                if ((int)App.GetLevel(App.activeGrid + 1).Rows[y].Cells[x].Value == 6) // above is stairs indicator
-                    App.GetLevel(App.activeGrid + 1).Rows[y].Cells[x].Value = 0;
+                if (Cell.GetValue(x, y, App.activeGrid + 1) == 6) // above is stairs indicator
+                    Cell.SetValue(0, x, y, App.activeGrid + 1);
             }
 
         }

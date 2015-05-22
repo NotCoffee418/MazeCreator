@@ -82,12 +82,9 @@ namespace MazeCreator
                 for (int row = 0; row < Config.Y_COUNT; row++)
                     for (int col = 0; col < Config.X_COUNT; col++)
                     {
-                        int value = (int)App.GetLevel(below).Rows[row].Cells[col].Value;
+                        int value = Cell.GetValue(col, row);
                         if (value >= 3 && value <= 5) // lock upper three cells of stairs
-                        {
-                            App.GetLevel(id).Rows[row].Cells[col].Value = 6;
-                            SetCellInfo(col, row, id);
-                        }
+                            Cell.SetValue(6, col, row, id);
                     }
             }
         }
@@ -142,7 +139,7 @@ namespace MazeCreator
 
                 // Set integer value for all cells
                 for (int col = 0; col < Config.X_COUNT; col++)
-                    App.GetLevel(grid).Rows[row].Cells[col].Value = 0;
+                    Cell.SetValue(0, col, row, grid);
             }
 
             // Sets rows if none given
@@ -156,49 +153,8 @@ namespace MazeCreator
                 {
                     String[] rowValues = rows[startRow + row].Split(',');
                     for (int col = 0; col < Config.X_COUNT; col++)
-                        App.GetLevel(grid).Rows[row].Cells[col].Value = int.Parse(rowValues[col]);
+                        Cell.SetValue(int.Parse(rowValues[col]), col, row, grid);
                 }
-            }
-            ReloadColors(grid);
-        }
-
-        public void ReloadColors(int grid = -1)
-        {
-            if (grid == -1) 
-                grid = App.activeGrid;
-
-            // handle cell selection
-            if (App.GetLevel(grid).SelectedCells.Count == 0)
-                App.GetLevel(grid).Rows[0].Cells[0].Selected = true;
-            var sel = App.GetLevel(grid).SelectedCells[0];
-            App.GetLevel(grid).ClearSelection();
-
-            // Reload colors
-            for (int row = 0; row < Config.Y_COUNT; row++) // Loop all rows
-                for (int col = 0; col < Config.X_COUNT; col++) // Loop all columns
-                    SetCellInfo(col, row, grid);
-
-            // Select original cell
-            App.GetLevel(grid).Rows[sel.RowIndex].Cells[sel.ColumnIndex].Selected = true;
-        }
-
-        public void SetCellInfo(int x, int y, int grid = -1)
-        {
-            if (grid == -1) grid = App.activeGrid;
-
-            try
-            {
-                // Get cell value
-                int value = (int)App.GetLevel(grid).Rows[y].Cells[x].Value;
-
-                // Set info
-                App.GetLevel(grid).Rows[y].Cells[x].Style.BackColor = App.color[value];
-                App.GetLevel(grid).Rows[y].Cells[x].ToolTipText = App.tooltip[value];
-                App.GetLevel(grid).Rows[y].Cells[x].ReadOnly = App.readOnly[value];
-            }
-            catch
-            { // Occurs when editing too fast and changing >1 values
-                App.GetLevel(grid).Rows[y].Cells[x].Value = 0;
             }
         }
 
@@ -214,7 +170,7 @@ namespace MazeCreator
                 if (e.Button == MouseButtons.Right)
                     return; // right mouse is used to cancel
 
-                var cell = App.GetLevel().Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var cell = Cell.Get(e.ColumnIndex, e.RowIndex);
                 int value = 0;
 
                 if (cell.ReadOnly)
@@ -222,8 +178,7 @@ namespace MazeCreator
                 else if ((int)cell.Value == 0)
                     value = 1;
 
-                cell.Value = value;
-                SetCellInfo(e.ColumnIndex, e.RowIndex);
+                Cell.SetValue(value, e.ColumnIndex, e.RowIndex);
             }
             catch (ArgumentOutOfRangeException)
             { /* Mouse moved out of grid */}
@@ -275,7 +230,7 @@ namespace MazeCreator
         // Set Color
         public void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            SetCellInfo(e.ColumnIndex, e.RowIndex);
+            Cell.SetInfo(e.ColumnIndex, e.RowIndex);
         }
 
         // Selected cell looks
@@ -289,7 +244,7 @@ namespace MazeCreator
             // Border
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                if (App.GetLevel().Rows[e.RowIndex].Cells[e.ColumnIndex].Selected == true)
+                if (Cell.Get(e.ColumnIndex, e.RowIndex).Selected == true)
                 {
                     e.Paint(e.CellBounds, DataGridViewPaintParts.All & ~DataGridViewPaintParts.Border);
                     using (Pen p = new Pen(Color.Black, 1))

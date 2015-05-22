@@ -136,7 +136,6 @@ namespace MazeCreator
                 return;
 
             string newSaveData = String.Empty;
-
             for (int i = 0; i < lines.Length; i++)
             {
                 string saveLine = String.Empty;

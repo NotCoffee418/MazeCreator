@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cell.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Creator.cs">
       <SubType>Form</SubType>

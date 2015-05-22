@@ -32,7 +32,6 @@ namespace MazeCreator
                         App.GetLevel(lev).Columns.Insert(0, c);
                     else // 2 - right
                         App.GetLevel(lev).Columns.Add(c);
-                    App.creator.ReloadColors(lev);
                 }
             }
             else if (loc == 3 || loc == 4)
@@ -55,9 +54,9 @@ namespace MazeCreator
                         App.GetLevel(lev).Rows.Add();
                         App.GetLevel(lev).Rows[App.GetLevelCount() - 1].Height = 15;
                     }
-                    App.creator.ReloadColors(lev);
                 }
             }
+            Cell.ReloadAllInfo();
         }
 
         /// <summary>
@@ -118,20 +117,20 @@ namespace MazeCreator
                 {
                     if (row == 0 || row == Config.Y_COUNT - 1 || col == 0 || col == Config.X_COUNT - 1)
                     {
-                        int value = (int)App.GetLevel().Rows[row].Cells[col].Value;
+                        int value = Cell.GetValue(col, row);
                         if (value >= 2 && value <= 6)
                         {
                             if (value == 2)
                             {
-                                App.GetLevel().Rows[row].Cells[col].Selected = true;
+                                Cell.Get(col, row).Selected = true;
                                 Stairs.Remove(1);
                             }
                         }
-                        else App.GetLevel().Rows[row].Cells[col].Value = 1;
+                        else Cell.SetValue(1, col, row);
                     }
                 }
             }
-            App.creator.ReloadColors();
+            Cell.ReloadAllInfo();
         }
         public static void FillMaze(bool empty = false)
         {
@@ -139,7 +138,7 @@ namespace MazeCreator
             {
                 for (int col = 0; col < Config.X_COUNT; col++)// Loop all columns 
                 {
-                    int value = (int)App.GetLevel().Rows[row].Cells[col].Value;
+                    int value = Cell.GetValue(col, row);
                     int next = 1;
                     if (empty) next = 0;
 
@@ -147,14 +146,14 @@ namespace MazeCreator
                     {
                         if (value == 2)
                         {
-                            App.GetLevel().Rows[row].Cells[col].Selected = true;
+                            Cell.Get(col, row).Selected = true;
                             Stairs.Remove(next);
                         }
                     }
-                    else App.GetLevel().Rows[row].Cells[col].Value = next;
+                    else Cell.SetValue(next, col, row);
                 }
             }
-            App.creator.ReloadColors();
+            Cell.ReloadAllInfo();
         }
     }
 }
