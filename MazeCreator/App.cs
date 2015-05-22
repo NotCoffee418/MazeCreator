@@ -31,6 +31,10 @@ namespace MazeCreator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // Check for updates
+            Updater.CheckLatestVersion();
+
+            // Load cell info
             InitCellInfo();
 
             // Load classes

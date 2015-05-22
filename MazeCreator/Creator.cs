@@ -383,6 +383,11 @@ namespace MazeCreator
         }
         #endregion
 
+        private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Updater.CheckLatestVersion();
+        }
+
         
     }
 }

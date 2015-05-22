@@ -43,6 +43,7 @@
             this.removeSelectedRowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeSelectedColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.add3DLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.remove3DLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillBordersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillWholeMazeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +61,7 @@
             this.addTrapButton = new System.Windows.Forms.ToolStripButton();
             this.concealedFloorTrapButton = new System.Windows.Forms.ToolStripButton();
             this.secretPassageButton = new System.Windows.Forms.ToolStripButton();
-            this.remove3DLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -181,6 +182,13 @@
             this.add3DLevelToolStripMenuItem.Text = "Add 3D level";
             this.add3DLevelToolStripMenuItem.Click += new System.EventHandler(this.add3DLevelToolStripMenuItem_Click);
             // 
+            // remove3DLevelToolStripMenuItem
+            // 
+            this.remove3DLevelToolStripMenuItem.Name = "remove3DLevelToolStripMenuItem";
+            this.remove3DLevelToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.remove3DLevelToolStripMenuItem.Text = "Remove 3D level";
+            this.remove3DLevelToolStripMenuItem.Click += new System.EventHandler(this.remove3DLevelToolStripMenuItem_Click);
+            // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -215,7 +223,8 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.infoToolStripMenuItem});
+            this.infoToolStripMenuItem,
+            this.updateToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -223,7 +232,7 @@
             // infoToolStripMenuItem
             // 
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
-            this.infoToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
+            this.infoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.infoToolStripMenuItem.Text = "Info";
             this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
@@ -341,12 +350,12 @@
             this.secretPassageButton.Text = "Secret Passage Wall";
             this.secretPassageButton.Click += new System.EventHandler(this.secretPassageButton_Click);
             // 
-            // remove3DLevelToolStripMenuItem
+            // updateToolStripMenuItem
             // 
-            this.remove3DLevelToolStripMenuItem.Name = "remove3DLevelToolStripMenuItem";
-            this.remove3DLevelToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.remove3DLevelToolStripMenuItem.Text = "Remove 3D level";
-            this.remove3DLevelToolStripMenuItem.Click += new System.EventHandler(this.remove3DLevelToolStripMenuItem_Click);
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.updateToolStripMenuItem.Text = "Update";
+            this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
             // 
             // Creator
             // 
@@ -405,5 +414,6 @@
         private System.Windows.Forms.ToolStripButton secretPassageButton;
         public System.Windows.Forms.TabControl levelTabControl;
         private System.Windows.Forms.ToolStripMenuItem remove3DLevelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
     }
 }

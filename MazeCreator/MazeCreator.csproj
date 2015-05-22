@@ -70,6 +70,7 @@
     <Compile Include="Stairs.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Trap.cs" />
+    <Compile Include="Updater.cs" />
     <EmbeddedResource Include="Creator.resx">
       <DependentUpon>Creator.cs</DependentUpon>
     </EmbeddedResource>
