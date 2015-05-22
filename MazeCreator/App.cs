@@ -15,8 +15,9 @@ namespace MazeCreator
 
         // Global variables
         public static int activeGrid = 0;   // Grid currently being viewed
-        public static Color[] color = new Color[10]; // All color values
-        public static String[] tooltip = new String[10]; // All tooltip values
+        public static Color[] color = new Color[11]; // All color values
+        public static String[] tooltip = new String[11]; // All tooltip values
+        public static bool[] readOnly = new bool[11]; // All readonly cell types
 
         // Levels
         public static List<DataGridView> LEVELS = new List<DataGridView>();
@@ -30,9 +31,7 @@ namespace MazeCreator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Define colors per value
-            InitColors();
-            InitTooltips();
+            InitCellInfo();
 
             // Load classes
             configForm = new ConfigForm();
@@ -43,32 +42,55 @@ namespace MazeCreator
             Application.Run(configForm);
         }
 
-        private static void InitColors()
+        private static void InitCellInfo()
         {
-            color[0] = Color.Lime;
-            color[1] = Color.Red;
-            color[2] = Color.MediumAquamarine; // bottom
-            color[3] = Color.Aquamarine; // Placementblock
-            color[4] = Color.Aquamarine; // middle high
-            color[5] = Color.Aqua; // top
-            color[6] = Color.Green;
-            color[7] = Color.White;
-            color[8] = Color.Yellow;
-            color[9] = Color.Orange;
-        }
+            // Set all readonly to false by default
+            for (int i = 0; i < readOnly.Length; i++)
+                readOnly[i] = false;
 
-        private static void InitTooltips()
-        {
+            color[0] = Color.Lime;
             tooltip[0] = "Empty";
+
+            color[1] = Color.Red;
             tooltip[1] = "Wall";
+
+            color[2] = Color.MediumAquamarine; // bottom
             tooltip[2] = "Bottom of stairs";
-            tooltip[3] = "Stairs"; // Object placed here
+            readOnly[2] = true;
+
+            color[3] = Color.Aquamarine; // Object placed here
+            tooltip[3] = "Stairs";
+            readOnly[3] = true;
+
+            color[4] = Color.Aquamarine; // middle high
             tooltip[4] = "Stairs";
+            readOnly[4] = true;
+
+            color[5] = Color.Aqua; // top
             tooltip[5] = "Top of stairs";
-            tooltip[6] = "Stairs below"; // Can't be edited
+            readOnly[5] = true;
+
+            // Indicator of stairs on level below
+            color[6] = Color.Green;
+            tooltip[6] = "Stairs below";
+            readOnly[6] = true;
+
+            // No floor block
+            color[7] = Color.White;
             tooltip[7] = "Floor trap";
+
+            // Visible floor block you can fall through
+            color[8] = Color.Yellow;
             tooltip[8] = "Concealed floor trap";
+
+            // Visible walls with no collision you can walk through
+            color[9] = Color.Orange;
             tooltip[9] = "Secret passage";
+
+            // Indicator that there's a fall trap above
+            color[10] = Color.LightGoldenrodYellow;
+            tooltip[10] = "Trap Above";
+            readOnly[10] = true;
         }
 
         public static DataGridView GetLevel(int lev = -1)

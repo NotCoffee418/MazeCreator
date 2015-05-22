@@ -194,11 +194,7 @@ namespace MazeCreator
                 // Set info
                 App.GetLevel(grid).Rows[y].Cells[x].Style.BackColor = App.color[value];
                 App.GetLevel(grid).Rows[y].Cells[x].ToolTipText = App.tooltip[value];
-
-                // Make stairs read-only
-                if (value >= 2 && value <= 6)
-                    App.GetLevel(grid).Rows[y].Cells[x].ReadOnly = true;
-                else App.GetLevel(grid).Rows[y].Cells[x].ReadOnly = false; // for removed stairs 
+                App.GetLevel(grid).Rows[y].Cells[x].ReadOnly = App.readOnly[value];
             }
             catch
             { // Occurs when editing too fast and changing >1 values
