@@ -103,6 +103,7 @@ namespace MazeCreator
             }
 
             App.configForm.LoadConfig(cleanData[0]);
+            ConvertOldSaveData(ref saveData);
             App.creator.LoadMaze(saveData);
         }
 
@@ -120,6 +121,37 @@ namespace MazeCreator
                 return true;
             }
             else return false;
+        }
+
+        /// <summary>
+        /// Turns old save data into new save data
+        /// </summary>
+        /// <param name="saveData"></param>
+        private void ConvertOldSaveData(ref string saveData)
+        {
+            String[] lines = saveData.Split('\n');
+
+            // Already new savedata
+            if (lines.Length > 1 && lines[1].Contains(","))
+                return;
+
+            string newSaveData = String.Empty;
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string saveLine = String.Empty;
+                foreach (char c in lines[i])
+                    if (c != '\r')
+                    {
+                        saveLine += c.ToString() + ',';
+                    }
+                if (saveLine != "")
+                {
+                    saveLine = saveLine.Remove(saveLine.Length - 1); // remove final comma
+                    newSaveData += saveLine + '\n';
+                }
+            }
+            saveData = newSaveData;
         }
     }
 }

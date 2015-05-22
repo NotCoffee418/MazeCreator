@@ -109,7 +109,7 @@ namespace MazeCreator
         /// Load any maze data
         /// </summary>
         /// <param name="rows"></param>
-        private void LoadGrid(int grid, string[] rows = null, int lastRow = 0)
+        private void LoadGrid(int grid, string[] rows = null, int startRow = 0)
         {
             // Clear datagrid
             while (App.GetLevel(grid).Columns.Count > 0)
@@ -131,7 +131,6 @@ namespace MazeCreator
             if (App.GetLevel(grid).Columns.Count == 1 + Config.X_COUNT)
                 App.GetLevel(grid).Columns.RemoveAt(0);
 
-
             // Set rows
             for (int row = 0; row < Config.Y_COUNT; row++)
             {
@@ -143,9 +142,7 @@ namespace MazeCreator
 
                 // Set integer value for all cells
                 for (int col = 0; col < Config.X_COUNT; col++)
-                {
                     App.GetLevel(grid).Rows[row].Cells[col].Value = 0;
-                }
             }
 
             // Sets rows if none given
@@ -155,12 +152,12 @@ namespace MazeCreator
             // Loads data to grid
             for (int row = 0; row < Config.Y_COUNT; row++)
             {
-                if (rows.Count() > lastRow + row && rows[lastRow + row] != "") // Check if any data were
+                if (rows.Count() > startRow + row && rows[startRow + row] != "") // Check if row contains data
+                {
+                    String[] rowValues = rows[startRow + row].Split(',');
                     for (int col = 0; col < Config.X_COUNT; col++)
-                    {
-                        int v = int.Parse(rows[lastRow + row][col].ToString());
-                        App.GetLevel(grid).Rows[row].Cells[col].Value = v;
-                    }
+                        App.GetLevel(grid).Rows[row].Cells[col].Value = int.Parse(rowValues[col]);
+                }
             }
             ReloadColors(grid);
         }
@@ -187,8 +184,7 @@ namespace MazeCreator
 
         public void SetCellInfo(int x, int y, int grid = -1)
         {
-            if (grid == -1)
-                grid = App.activeGrid;
+            if (grid == -1) grid = App.activeGrid;
 
             try
             {

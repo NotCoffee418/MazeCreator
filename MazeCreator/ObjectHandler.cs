@@ -208,8 +208,13 @@ namespace MazeCreator
                 for (int row = 0; row < Config.Y_COUNT; row++) // Loop all rows
                 {
                     for (int col = 0; col < Config.X_COUNT; col++)// Loop all columns 
+                    {
                         content += (int)App.GetLevel(grid).Rows[row].Cells[col].Value;
-                    if (row < (Config.Y_COUNT * App.GetLevelCount()) - 1) content += "\n";
+                        if (col < Config.X_COUNT - 1) // not last in column
+                            content += ',';
+                    }
+                    if (row < (Config.Y_COUNT * App.GetLevelCount()) - 1)
+                        content += "\n";
                 }
             }
             return content;
