@@ -76,17 +76,7 @@ namespace MazeCreator
         /// <returns></returns>
         private bool isAllowedHere(int col, int row)
         {
-            int value = Cell.GetValue(col, row);
-            int below = 0;
-            if (App.activeGrid > 0)
-                below = Cell.GetValue(col, row, App.activeGrid - 1);
-
-            // not allowed when stairs here
-            if (value >= 2 && value <= 6 || below == 1)
-                return false;
-
-            // Is allowed
-            return true;
+            return Cell.Get(col, row).ReadOnly;
         }
 
         private void StopPlacing(int x = -1, int y = -1)

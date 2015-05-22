@@ -105,9 +105,7 @@ namespace MazeCreator
         /// <param name="y"></param>
         private void CheckAllowedLocation(int x, int y)
         {
-            int value = Cell.GetValue(x, y);
-            if (value >= 2 && value <= 5)
-                allowedLocation = false;
+            allowedLocation = Cell.PlacementAllowed(x, y);
         }
 
         /// <summary>
