@@ -90,7 +90,6 @@ namespace MazeCreator
             // Indicator that there's a fall trap above
             color[10] = Color.LightGoldenrodYellow;
             tooltip[10] = "Trap Above";
-            readOnly[10] = true;
         }
 
         public static DataGridView GetLevel(int lev = -1)

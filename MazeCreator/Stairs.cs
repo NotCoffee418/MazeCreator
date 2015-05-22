@@ -219,7 +219,7 @@ namespace MazeCreator
                 for (int row = 0; row < 4; row++)
                 {
                     grid.Rows[y - row].Cells[x].Value = newValue;
-                    RemoveAbove(x, y - row);
+                    RemoveIndicator(x, y - row);
                 }
             }
             else if (below <= grid.Columns.Count - 1 && (int)grid.Rows[below].Cells[x].Value == 3)
@@ -227,7 +227,7 @@ namespace MazeCreator
                 for (int row = 0; row < 4; row++)
                 {
                     grid.Rows[y + row].Cells[x].Value = newValue;
-                    RemoveAbove(x, y + row);
+                    RemoveIndicator(x, y + row);
                 }
             }
             else if (left >= 0 && (int)grid.Rows[y].Cells[left].Value == 3)
@@ -235,7 +235,7 @@ namespace MazeCreator
                 for (int col = 0; col < 4; col++)
                 {
                     grid.Rows[y].Cells[x - col].Value = newValue;
-                    RemoveAbove(x - col, y);
+                    RemoveIndicator(x - col, y);
                 }
             }
             else if (right <= grid.Rows.Count - 1 && (int)grid.Rows[y].Cells[right].Value == 3)
@@ -243,7 +243,7 @@ namespace MazeCreator
                 for (int col = 0; col < 4; col++)
                 {
                     grid.Rows[y].Cells[x + col].Value = newValue;
-                    RemoveAbove(x + col, y);
+                    RemoveIndicator(x + col, y);
                 }
             }
 
@@ -255,7 +255,7 @@ namespace MazeCreator
         /// <summary>
         /// Remove stairs indicator blocks above stairs
         /// </summary>
-        internal static void RemoveAbove(int x, int y)
+        internal static void RemoveIndicator(int x, int y)
         {
             if (App.activeGrid + 1 < App.LEVELS.Count) // not max level
             {

@@ -62,6 +62,11 @@ namespace MazeCreator
             else // Set value
             {
                 App.GetLevel().Rows[y].Cells[x].Value = (int)type;
+                if (App.activeGrid > 0) // Place indicator
+                {
+                    App.GetLevel(App.activeGrid - 1).Rows[y].Cells[x].Value = 10;
+                    App.creator.SetCellInfo(x,y, App.activeGrid - 1);
+                }
                 StopPlacing(x, y);
             }
         }
