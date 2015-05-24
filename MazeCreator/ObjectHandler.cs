@@ -96,7 +96,7 @@ namespace MazeCreator
             int current = 0;
             int below = 0;
             if (lev != 0)
-                below = Cell.GetValue(row, col, lev - 1);
+                below = Cell.GetValue(col, row, lev - 1);
             if (lev != App.LEVELS.Count)
                 current = Cell.GetValue(col, row, lev);
 

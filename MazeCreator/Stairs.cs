@@ -159,7 +159,7 @@ namespace MazeCreator
 
                 // Add top of stairs to next level
                 if (i < 3 && App.activeGrid + 1 < App.GetLevelCount())
-                    Cell.SetValue(next, newLocation[i, 1], newLocation[i, 0], App.activeGrid + 1);
+                    Cell.SetValue(6, newLocation[i, 1], newLocation[i, 0], App.activeGrid + 1);
 
                 next--;
             }
