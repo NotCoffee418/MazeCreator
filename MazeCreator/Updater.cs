@@ -16,38 +16,52 @@ namespace MazeCreator
     {
         public static void CheckLatestVersion()
         {
+            string local = GetLocalVersionNumber();
+            string latest = String.Empty;
             try
             {
-                string local = GetLocalVersionNumber();
-                string latest = GetLatestVersionNumber(); 
-                if (local != latest)
-                {
-                    DialogResult result = MessageBox.Show("A newer version of Maze Creator is available. Would you like to quick-install it?", "Update available",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.Yes)
-                        StartUpdate();
-                }
+                latest = GetLatestVersionNumber(); 
             }
             catch
             {
                 MessageBox.Show("Could not check the latest version online", "Can't check version", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                latest = local;
+            }
+
+            if (local != latest)
+            {
+                DialogResult result = MessageBox.Show("A newer version of Maze Creator is available. Would you like to quick-install it?", "Update available",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                    StartUpdate();
             }
         }
 
         private static void StartUpdate()
         {
-            string updateFile = Path.GetTempFileName() + ".exe";
-            WebClient c = new WebClient();
-            c.DownloadFile("https://github.com/RStijn/MazeCreator/blob/master/MazeUpdater/bin/Release/MazeUpdater.exe?raw=true", updateFile);
-            Process.Start(updateFile);
-            Environment.Exit(0);
+            try
+            {
+                string updateFile = Path.GetTempFileName() + ".exe";
+                WebClient c = new WebClient();
+                c.DownloadFile("https://github.com/RStijn/MazeCreator/blob/master/MazeUpdater/bin/Release/MazeUpdater.exe?raw=true", updateFile);
+                string currentExe = Assembly.GetExecutingAssembly().Location;
+
+                ProcessStartInfo proc = new ProcessStartInfo(updateFile);
+                proc.Arguments = "\"" + currentExe + "\"";
+                Process.Start(proc);
+                Environment.Exit(0);
+            }
+            catch
+            {
+                MessageBox.Show("Please update manually", "Update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// <summary>
         /// Reads AssemblyFileVersion from GitHub
         /// </summary>
         /// <returns></returns>
-        private static string GetLatestVersionNumber()
+        public static string GetLatestVersionNumber()
         {
             string version = String.Empty;
             WebClient client = new WebClient();
@@ -62,7 +76,7 @@ namespace MazeCreator
             throw new Exception();
         }
 
-        private static string GetLocalVersionNumber()
+        public static string GetLocalVersionNumber()
         {
             Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
