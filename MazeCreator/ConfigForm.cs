@@ -141,6 +141,7 @@ namespace MazeCreator
                 objectIdTextBox.Enabled = true;
                 objectSpacingTextBox.Enabled = true;
                 wallHeightTextBox.Enabled = true;
+
             }
             else
             {
@@ -166,6 +167,21 @@ namespace MazeCreator
                 heightWarningLabel.Visible = true;
             else
                 heightWarningLabel.Visible = false;
+        }
+
+        private void basicConfigTab_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void heightWarningLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void advancedCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+             
         }
     }
 }
