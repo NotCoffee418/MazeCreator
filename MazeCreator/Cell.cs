@@ -62,18 +62,23 @@ namespace MazeCreator
             try
             {
                 // Get cell value
-                int value = (int)Get(col, row, grid).Value;
+                DataGridViewCell cell = Get(col, row, grid);
+                if (cell != null && cell.Value != null)
+                {
+                    int value = (int)cell.Value;
 
-                // Set info
-                Get(col, row, grid).Style.BackColor = App.color[value];
-                Get(col, row, grid).ToolTipText = App.tooltip[value];
-                Get(col, row, grid).ReadOnly = App.readOnly[value];
+                    // Set info
+                    cell.Style.BackColor = App.color[value];
+                    cell.ToolTipText = App.tooltip[value];
+                    cell.ReadOnly = App.readOnly[value];
+                }
             }
             catch
             { // Occurs when editing too fast and changing >1 values
                 Get(col, row, grid).Value = 0;
             }
         }
+
 
         /// <summary>
         /// Reloads info of all cells on a grid
