@@ -191,6 +191,7 @@ namespace MazeCreator
             Config.MAZEDATA = new string[d.Count() + 1];
             for (int i = 0; i < d.Count(); i++)
                 Config.MAZEDATA[i + 1] = d[i];
+            
         }
 
         /// <summary>
