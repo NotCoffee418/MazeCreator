@@ -1,14 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeCreator", "MazeCreator\MazeCreator.csproj", "{AECDAF67-212C-4812-8E04-147C85F5AF77}"
-	ProjectSection(ProjectDependencies) = postProject
-		{43370AC0-0F89-4FCA-BC85-C6412E785DA6} = {43370AC0-0F89-4FCA-BC85-C6412E785DA6}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeUpdater", "MazeUpdater\MazeUpdater.csproj", "{43370AC0-0F89-4FCA-BC85-C6412E785DA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,12 +15,11 @@ Global
 		{AECDAF67-212C-4812-8E04-147C85F5AF77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AECDAF67-212C-4812-8E04-147C85F5AF77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AECDAF67-212C-4812-8E04-147C85F5AF77}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43370AC0-0F89-4FCA-BC85-C6412E785DA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43370AC0-0F89-4FCA-BC85-C6412E785DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43370AC0-0F89-4FCA-BC85-C6412E785DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43370AC0-0F89-4FCA-BC85-C6412E785DA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C0866FB7-F10E-4573-8FCB-A24F9D30446F}
 	EndGlobalSection
 EndGlobal
